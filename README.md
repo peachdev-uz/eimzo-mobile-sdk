@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -39,7 +39,7 @@ Tamom. Integrator faqat **kachachi/launcher** rolini bajaradi — qolganini SDK 
 
 ### Android
 
-📥 **[eimzo-sdk-1.0.1.aar](android/eimzo-sdk-1.0.1.aar)** (994 KB) — to'liq UI bundlanган
+📥 **[eimzo-sdk-1.0.2.aar](android/eimzo-sdk-1.0.2.aar)** (1.0 MB) — to'liq UI bundlanган
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -47,7 +47,7 @@ Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-u
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^1.0.1
+  eimzo_flutter: ^1.0.5
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -85,7 +85,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:1.0.1'
+    implementation 'uz.eimzo:eimzo-sdk:1.0.2'
 }
 ```
 
@@ -154,15 +154,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-1.0.1.aar
+    └── eimzo-sdk-1.0.2.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-1.0.1.aar](android/eimzo-sdk-1.0.1.aar)** (994 KB)
+Yuklab olish: **[android/eimzo-sdk-1.0.2.aar](android/eimzo-sdk-1.0.2.aar)** (1.0 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-1.0.1.aar')
+    implementation files('libs/eimzo-sdk-1.0.2.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'

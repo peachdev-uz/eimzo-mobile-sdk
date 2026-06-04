@@ -1,3 +1,22 @@
+## 1.0.2 — 2026-06-04
+
+🔐 **Security hardening.**
+
+- **Saved passwords encrypted in Room.** `PasswordCipher.kt` uses
+  AndroidKeyStore-bound AES-256-GCM to wrap the saved-password column.
+  Rooted-device SQLite reads and `adb backup` extracts yield ciphertext
+  only — the symmetric key is bound to the application UID via
+  AndroidKeyStore and cannot be exfiltrated.
+- **Backup exclusion.** New `res/xml/eimzo_backup_rules.xml` +
+  `eimzo_data_extraction_rules.xml` exclude `eimzo_keys.db` and the
+  SDK's encrypted SharedPreferences from `auto-backup`, Google Drive
+  cloud backup, and Android 12+ device-transfer. Consumer-app data is
+  unaffected — only the SDK's storage paths are filtered.
+- Manifest declares `android:fullBackupContent` +
+  `android:dataExtractionRules` with `tools:replace` so the exclusion
+  applies even if the host app sets `android:allowBackup="true"` for
+  its own data.
+
 # Changelog
 
 E-IMZO Mobile SDK uchun barcha muhim o'zgartirishlar shu yerda yoziladi.
