@@ -1,3 +1,53 @@
+## 1.2.2 — 2026-06-06
+
+🔌 **USB token avtomatik aniqlash + ommaviy API tozalandi.**
+
+### Yangiliklar
+
+- **USB token avtomatik aniqlash.** "USB Token orqali imzolash" tugmasi
+  endi faqat FEITIAN / CCID smart-card reader telefonga ulanganda
+  faollashadi. SDK `USB_DEVICE_ATTACHED` / `DETACHED` broadcastlarini
+  real vaqtda kuzatadi (yangi `UsbTokenDetector` klassi) va tugmani
+  yoqadi / o'chiradi. Ulanmagan paytda matn "USB tokenni ulang" ga
+  o'zgaradi.
+
+### Tuzatishlar
+
+- **USB ulanganda ilova endi avtomatik ochilmaydi.** Avvalgi
+  versiyalarning birida `USB_DEVICE_ATTACHED` intent-filter
+  qo'shilgan edi — natijada foydalanuvchi tokenni boshqa maqsadda
+  ulasa ham OS native UI'ni majburan ochib yuborardi. Intent-filter
+  olib tashlandi; aniqlash hali ham ishlaydi — faqat foydalanuvchi
+  native UI ichida bo'lganida.
+
+### Ichki o'zgarishlar
+
+- **Ommaviy API tozalandi.** Barcha ichki implementatsiya klasslari
+  (`UsbTokenManager`, `NfcManager`, `EImzoApiClient`, Room
+  `KeyDao`/`KeyDatabase`/`KeyEntity`, `LicenseGuard`,
+  `QrCryptoManager`, `PkiUtils`, `HexUtils`, ViewModel'lar,
+  adapterlar va boshqalar) Kotlin `internal` deb belgilandi. Endi
+  AAR consumer'larida IDE autocomplete faqat haqiqatan zarur
+  APIlarni ko'rsatadi: `EImzoSDK`, `EImzoConfig`, callback
+  interfeyslar va model klasslar.
+- **Past darajali `signUsbHash` primitivi yashirildi.** USB token
+  imzolash uchun yagona ommaviy API endi
+  `signWithUsbToken(pin, deepLink, callback)`.
+- Manifest'da `USB_DEVICE_ATTACHED` intent-filter va
+  `res/xml/eimzo_usb_device_filter.xml` olib tashlandi.
+
+### Migratsiya
+
+`1.0.2` dan o'tish uchun **kod o'zgartirish kerak emas** — `EImzoSDK`
+fasadi va public callback'lar saqlangan. Faqat versiya raqamini
+yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.2'
+```
+
+---
+
 ## 1.0.2 — 2026-06-04
 
 🔐 **Security hardening.**
@@ -98,5 +148,6 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.2]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.2
 [1.0.1]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.1
 [1.0.0]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.0
