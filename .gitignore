@@ -6,3 +6,4 @@ build/
 local.properties
 *.swp
 node_modules/
+.claude/
