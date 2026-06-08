@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">E-IMZO Demo</string>
+    <string name="subtitle">Official E-IMZO Mobile SDK integration example</string>
+    <string name="btn_open_sdk">Open E-IMZO</string>
+    <string name="btn_sign_with_deep_link">Sign with demo deep link</string>
+</resources>
