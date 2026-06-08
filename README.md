@@ -54,6 +54,24 @@ dependencies:
 
 ---
 
+## 🎯 Ishlovchi misol
+
+Tezda boshlash uchun **`example/android-kotlin/`** ichidagi to'liq
+ishlovchi misol proyektga qarang:
+
+```bash
+git clone https://github.com/peachdev-uz/eimzo-mobile-sdk.git
+cd eimzo-mobile-sdk/example/android-kotlin
+./gradlew installDebug
+```
+
+📁 **[example/android-kotlin/](example/android-kotlin/)** — minimal Kotlin
+ilova, 2 tugma, `eimzo://sign?qc=...` deep link qo'llab-quvvatlash.
+
+Yoki quyidagi 4 qadamni qo'lda bajaring:
+
+---
+
 ## ⚡ Tezkor integratsiya — 4 qadam
 
 ### 1. Maven repo'ni qo'shing
