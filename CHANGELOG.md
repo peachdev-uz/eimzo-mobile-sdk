@@ -1,3 +1,54 @@
+## 1.2.3 — 2026-06-09
+
+🎨 **UX yaxshilanishlar va NFC imzolashda muhim bug-fix.**
+
+### Yangiliklar
+
+- **Sessiya taymeri deeplink uchun (103 sekund).** Tashqi
+  `eimzo://sign?qc=...` deeplink kelganida endi sarlavhada toza,
+  qisqa taymer ko'rsatiladi (`Sessiya: 1:43 qoldi`). Foydalanuvchi
+  kerak bo'lsa kalit qo'shishi va keyin imzolashi mumkin —
+  deeplink ushlab turiladi. QR hash matni endi ekranga
+  chiqarilmaydi (ortiqcha, foydalanuvchiga ma'nosiz edi).
+- **Orqaga qaytish tugmasi.** AppBar'ga back tugmasi qo'shildi:
+  Home ekranida deeplink orqali ochilganda integrator ilovasiga
+  qaytish, AddKey va Keys ekranlarida toolbar-back navigatsiyasi.
+- **NFC imzolashda bottom sheet.** Endi NFC kalit bilan
+  imzolashda ham xuddi kalit qo'shishda bo'lganidek 3 ta Lottie
+  animatsiyasi (kartani yaqinlashtiring → o'qilmoqda → bajarildi)
+  ko'rsatiladi. Avval faqat oddiy Toast bor edi.
+
+### Tuzatishlar
+
+- 🐛 **NFC tag tashlanmasdi.** `dispatchNfcTag` resumed
+  fragment'larni qidirgan, lekin OS NFC intent'ini yuborganda
+  Activity qisqa vaqtga pause→resume tsikliga kiradi va o'sha
+  paytda hech bir fragment "resumed" emas — natijada tag jim
+  tashlanardi. Endi `NavController.primaryNavigationFragment`
+  ishlatiladi.
+- 🐛 **Imzolashda crash.** `HomeFragment.disableNfcForeground`
+  Activity hali resumed bo'lmaganida chaqirilib
+  `IllegalStateException: You must disable foreground dispatching
+  while your activity is still resumed` xatosi bilan crash
+  qilardi. Endi try-catch ichida.
+- 🐛 **Sessiya tugaganda app yopilib qolardi.** 103 sekundlik
+  taymer NFC kalit qo'shish vaqtidan tezroq tugar edi va keyin
+  app majburan yopilib ketardi — foydalanuvchi imzolay olmasdi.
+  Endi taymer faqat informatsion: tugaganida "Sessiya tugadi"
+  toast chiqadi, lekin deeplink saqlanib qoladi va foydalanuvchi
+  imzolashga harakat qilishi mumkin.
+
+### Migratsiya
+
+`1.2.2` dan o'tish uchun **kod o'zgartirish kerak emas**. Faqat
+versiya raqamini yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.3'
+```
+
+---
+
 ## 1.2.2 — 2026-06-06
 
 🔌 **USB token avtomatik aniqlash + ommaviy API tozalandi.**
@@ -148,6 +199,7 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.3]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.3
 [1.2.2]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.2
 [1.0.1]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.1
 [1.0.0]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.0
