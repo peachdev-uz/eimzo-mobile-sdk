@@ -1,3 +1,40 @@
+## 1.2.4 — 2026-06-10
+
+🐛 **Muhim tuzatish: PFX fayldan import ommaviy Maven foydalanuvchilarida ishlamayotgan edi.**
+
+### Tuzatishlar
+
+- 🚨 **PFX import crash.** `1.0.0`–`1.2.3` versiyalarda ommaviy
+  Maven repodan SDK o'rnatgan integratorlar fayl orqali kalit
+  qo'shganda quyidagi crash bilan to'qnashardi:
+  ```
+  java.lang.UnsatisfiedLinkError: dlopen failed:
+    library "libgojni.so" not found
+  ```
+  Sabab: SDK `uz.yt:pfx2qr:1.0` ga bog'liq edi, lekin u kutubxona
+  faqat YT ichki Nexus repositorysida joylashgan — ommaviy Maven
+  consumer'larida hech qachon resolve qila olmasdi. PFX faylni o'qish
+  uchun zarur bo'lgan `libgojni.so` (4.5 MB native lib) va `pfx2qr.jar`
+  (Java wrapper) endi to'g'ridan-to'g'ri AAR ichiga bundled qilingan
+  — barcha 4 ABI (arm64-v8a, armeabi-v7a, x86, x86_64) uchun.
+
+### Hajm
+
+- AAR endi **~11 MB** (avval ~989 KB). O'sish to'liq `libgojni.so` × 4
+  ABI = ~18 MB native code bundlanganidan. R8 hech qanday native
+  kodni olib tashlay olmaydi.
+
+### Migratsiya
+
+`1.2.3` dan o'tish uchun **kod o'zgartirish kerak emas**. Faqat
+versiya raqamini yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.4'
+```
+
+---
+
 ## 1.2.3 — 2026-06-09
 
 🎨 **UX yaxshilanishlar va NFC imzolashda muhim bug-fix.**
@@ -199,6 +236,7 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.4]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4
 [1.2.3]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.3
 [1.2.2]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.2
 [1.0.1]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.1
