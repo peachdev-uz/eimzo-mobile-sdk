@@ -1,3 +1,47 @@
+## 1.2.5 — 2026-06-10
+
+🐛 **PFX import hot-fix №2: R8 minifying consumer apps still crashed even with 1.2.4.**
+
+### Tuzatish
+
+1.2.4 versiyada `libgojni.so` va `pfx2qr.jar` AAR ichiga bundle qilingan
+edi, lekin `R8 minification` yoqilgan integrator app'lar (`uz.soliq.edo.mobile`
+kabi) hali ham PFX qo'shganda crash qilardi:
+
+```
+F/go/Seq : failed to find method Seq.getRef
+F/libc   : Fatal signal 6 (SIGABRT) in Java_go_Seq_init
+```
+
+**Sabab:** `libgojni.so` JNI orqali Java tomondagi `go.Seq.getRef`,
+`go.Seq.incRef` kabi metodlarni nom orqali topadi. Integrator
+app'ning R8 minification'i Kotlin/Java koddan hech kim ularni
+chaqirmasligini ko'rib, ularni rename/strip qilar edi — keyin
+native kod ularni topa olmasdi va class loader `<clinit>` paytida
+abort qilardi.
+
+**Yechim:** SDK ning `consumer-rules.pro` ga `go.**` paketini
+butunlay saqlash qoidalari qo'shildi:
+
+```proguard
+-keep class go.** { *; }
+-keepclassmembers class go.** { *; }
+-dontwarn go.**
+```
+
+Bu qoidalar AAR ichida ship qilinadi va consumer app R8 ga
+avtomatik ravishda qo'shiladi — qo'shimcha sozlash kerak emas.
+
+### Migratsiya
+
+`1.2.4` dan o'tish uchun **kod o'zgartirish kerak emas**:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.5'
+```
+
+---
+
 ## 1.2.4 — 2026-06-10
 
 🐛 **Muhim tuzatish: PFX fayldan import ommaviy Maven foydalanuvchilarida ishlamayotgan edi.**
@@ -236,6 +280,7 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.5]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.5
 [1.2.4]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4
 [1.2.3]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.3
 [1.2.2]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.2

@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-1.2.4-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-1.2.5-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -39,7 +39,7 @@ Tamom. Integrator faqat **kachachi/launcher** rolini bajaradi — qolganini SDK 
 
 ### Android
 
-📥 **[eimzo-sdk-1.2.4.aar](android/eimzo-sdk-1.2.4.aar)** (11 MB) — to'liq UI bundlanган
+📥 **[eimzo-sdk-1.2.5.aar](android/eimzo-sdk-1.2.5.aar)** (11 MB) — to'liq UI bundlanган
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -103,7 +103,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:1.2.4'
+    implementation 'uz.eimzo:eimzo-sdk:1.2.5'
 }
 ```
 
@@ -172,15 +172,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-1.2.4.aar
+    └── eimzo-sdk-1.2.5.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-1.2.4.aar](android/eimzo-sdk-1.2.4.aar)** (11 MB)
+Yuklab olish: **[android/eimzo-sdk-1.2.5.aar](android/eimzo-sdk-1.2.5.aar)** (11 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-1.2.4.aar')
+    implementation files('libs/eimzo-sdk-1.2.5.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -248,7 +248,7 @@ E-IMZO SDK **license-gated** — har bir integrator ilovasi Firebase orqali ro'y
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[1.2.4](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4)** (2026-06-10)
+So'nggi versiya: **[1.2.5](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.5)** (2026-06-10)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 
