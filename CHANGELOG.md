@@ -1,3 +1,36 @@
+## 1.2.6 — 2026-06-11
+
+🔒 **Muddati tugagan sertifikat bilan imzolash bloklandi.**
+
+### Yangiliklar
+
+- **Muddati o'tgan kalit bilan imzolab bo'lmaydi.** Sertifikatning
+  `validTo` sanasi o'tgan bo'lsa:
+  - Kalit kartochkasida qizil **"Muddati tugagan"** badge chiqadi.
+  - Home ekranida **IMZOLASH** tugmasi o'chiriladi (alpha 0.4) va
+    kartochka biroz xira ko'rinadi (alpha 0.75) — foydalanuvchiga
+    kalit ishlamasligi darhol bildiriladi.
+  - "Mening kalitlarim" ro'yxatida ham har bir muddati o'tgan
+    kartochka badge bilan belgilanadi va xira ko'rinadi (alpha 0.7),
+    lekin tanlash / o'chirish uchun bosish mumkin.
+  - Defence-in-depth: agar tugma holati biror sabab bilan o'tib
+    ketsa ham, bosilganda "Bu kalit muddati tugagan — imzolab
+    bo'lmaydi" toast chiqadi va imzolash boshlanmaydi.
+- **`PfxKey.isExpired()` public helper.** `validTo` timestamp'ini
+  joriy vaqt bilan solishtiradi (Soliq `yyyy.MM.dd HH:mm:ss` va NFC
+  `yyyy.MM.dd` formatlari qo'llab-quvvatlanadi). Parse qilib bo'lmasa
+  import paytidagi `validNow` ga fallback qiladi.
+
+### Migratsiya
+
+`1.2.5` dan o'tish uchun **kod o'zgartirish kerak emas**:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.6'
+```
+
+---
+
 ## 1.2.5 — 2026-06-10
 
 🐛 **PFX import hot-fix №2: R8 minifying consumer apps still crashed even with 1.2.4.**
@@ -280,6 +313,7 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.6]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.6
 [1.2.5]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.5
 [1.2.4]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4
 [1.2.3]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.3
