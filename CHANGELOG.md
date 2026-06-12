@@ -1,3 +1,28 @@
+## 1.2.8 — 2026-06-12
+
+🔌 **USB token orqali imzolash tuzatildi** (FEITIAN 2.0.1.7 oqimi,
+jismoniy JavaCard Token V1.0 bilan tasdiqlangan).
+
+### Tuzatishlar
+
+- **Birinchi urinishda "USB token topilmadi" xatosi.** FEITIAN
+  2.0.1.7 kutubxonasi USB ruxsat so'ralayotganda darhol "Device Not
+  Found" tashlaydi. Endi token jismonan ulangan bo'lsa bu xato
+  yutiladi va ruxsat kutiladi.
+- **Ruxsat berilgach jarayon osilib qolishi.** Kutubxona ruxsatdan
+  keyin `USB_IN` xabarini yubormaydi — endi ruxsat broadcast'i
+  ko'ringach `readerFind()` avtomatik qayta chaqiriladi.
+- **Reader noto'g'ri adreslanardi.** 2.0.1.7 slot chaqiruvlari
+  Android `UsbDevice` nomini (`/dev/bus/usb/...`) kutadi —
+  `readerOpen(null)` o'rniga endi device nomi uzatiladi.
+- **Tokenlarda karta hech aniqlanmasdi.** FT JavaCard tokenlarда
+  interrupt endpoint yo'q, shuning uchun kutubxonaning karta-poller'i
+  `CARD_IN` yubora olmaydi. Endi reader ochilgach slot holati
+  to'g'ridan-to'g'ri so'raladi va karta bor bo'lsa imzolash darhol
+  boshlanadi.
+- Sessiya yakunida slot endi kanal yopilishidan **oldin**
+  o'chiriladi (soxta "no device connected" cleanup xatosi yo'q).
+
 ## 1.2.7 — 2026-06-12
 
 📐 **16 KB page size muvofiqligi (Android 15+).**
