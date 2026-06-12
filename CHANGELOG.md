@@ -1,3 +1,51 @@
+## 1.2.7 — 2026-06-12
+
+📐 **16 KB page size muvofiqligi (Android 15+).**
+
+Android 15+ va 16 KB xotira sahifali qurilmalar native `.so`
+kutubxonalarning ELF LOAD segmentlari 16 KB ga tekislanishini
+talab qiladi. Aks holda qurilma ogohlantiradi va haqiqiy 16 KB
+rejimda `dlopen` ishlamaydi. Google Play SDK 35 ni target qiluvchi
+yuklamalar uchun 2025-yil 1-noyabrdan majburiy.
+
+### Tuzatishlar
+
+- **`libgojni.so` (pfx2qr) 16 KB ga tekislandi.** Go manbasidan
+  `-Wl,-z,max-page-size=16384` bilan qayta build qilindi. ELF LOAD
+  segmentlari endi `2**14` (16 KB).
+- **FEITIAN kutubxonasi `1.0.9.6 → 2.0.1.7` ga yangilandi.** Eski
+  `libFTReaderPCSC_1.0.9.6.so` 4 KB tekislangan edi va manba bizda
+  yo'q. FEITIAN'ning rasmiy SDK 2.0.1.7 versiyasi 16 KB tekislangan
+  `.so` bilan keladi (4 ABI). API o'zgarishi: `readerXfr`,
+  `readerClose`, `readerPowerOn/Off` endi reader nomini (String)
+  qabul qiladi — `UsbTokenManager` / `FtCardChannel` shunga
+  moslashtirildi.
+
+Endi ikkala bundlangan native lib ham **16 KB** ELF.
+
+### ⚠️ Integratorlar uchun muhim
+
+SDK 16 KB tekislangan `.so` beradi (avtomatik), lekin **yakuniy
+APK ZIP alignment** sizning ilovangiz AGP versiyasiga bog'liq:
+
+| AGP | Native lib zipalign |
+|---|---|
+| < 8.5.1 | 4 KB ❌ |
+| **≥ 8.5.1** | 16 KB ✅ avtomatik |
+
+To'liq 16 KB muvofiqlik uchun **AGP 8.5.1+** ishlating.
+
+### Migratsiya
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.7'
+```
+
+> USB token imzolash FEITIAN 2.0.1.7 API'ga o'tdi — jismoniy token
+> bilan test qilish tavsiya etiladi.
+
+---
+
 ## 1.2.6 — 2026-06-11
 
 🔒 **Muddati tugagan sertifikat bilan imzolash bloklandi.**
@@ -313,6 +361,7 @@ Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
 
 ---
 
+[1.2.7]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.7
 [1.2.6]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.6
 [1.2.5]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.5
 [1.2.4]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4
