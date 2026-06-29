@@ -1,3 +1,18 @@
+## 1.2.10 — 2026-06-29
+
+🐛 **Kalit qo'shishda krash tuzatildi** (`Parameter specified as non-null
+is null: …RoomSQLiteQuery`).
+
+- Server `pki.cert_info` javobida `serial_number` (yoki boshqa
+  maydonlar) bo'lmasa, Gson `Unsafe` orqali obyekt yaratgani uchun
+  non-null Kotlin maydonlari `null` bo'lib qolar va bu `null` Room'ga
+  yetib borib ilovani yiqitardi. Ko'pincha yaroqsiz yoki ro'yxatdan
+  o'tmagan (masalan, test) kalitda yuz berardi.
+- Endi `EImzoApiClient.certInfo()` javobni bir joyda tekshiradi:
+  `serial_number` bo'lmasa krash o'rniga tushunarli xato ko'rsatiladi,
+  qolgan maydonlar esa coalesce qilinib Room'ga hech qachon `null`
+  tushmaydi.
+
 ## 1.2.9 — 2026-06-29
 
 🔧 **Test muhiti URL manzili yangilandi.**
