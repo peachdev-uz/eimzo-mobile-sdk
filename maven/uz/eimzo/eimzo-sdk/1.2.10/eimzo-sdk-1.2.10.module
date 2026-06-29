@@ -3,7 +3,7 @@
   "component": {
     "group": "uz.eimzo",
     "module": "eimzo-sdk",
-    "version": "1.2.9",
+    "version": "1.2.10",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -32,13 +32,13 @@
       ],
       "files": [
         {
-          "name": "eimzo-sdk-1.2.9.aar",
-          "url": "eimzo-sdk-1.2.9.aar",
-          "size": 11591167,
-          "sha512": "a6d43fa7068476f6f91222a29105057f0a50b40d532cc8b072ea3700a87fab637076945f8c05843ec21b1fe6aa5e86b2154a9c80f579f4c9ef9da6779eb121e1",
-          "sha256": "3f0d37968ae622601d05881349f073b1c9e7a2112e8d0003f64621c8de9589c1",
-          "sha1": "dd0c3a7eb78f6e59a79be8319c7e44b297372355",
-          "md5": "bedac9c19217644c81dd995a5d2cef31"
+          "name": "eimzo-sdk-1.2.10.aar",
+          "url": "eimzo-sdk-1.2.10.aar",
+          "size": 11593124,
+          "sha512": "e97bd6324e9c418fe17090c92ab3998557bf8afd08677bff2e2f9a270a6a4ce2ca3b2bbcadea19e3c2bd6823a1823965aa7b29ef6dbffddf40c6229e756502d7",
+          "sha256": "d6bec954e324aae2470bdbf1ef4b1cdbea00b11f872762ad7f8728ca8cc9f27f",
+          "sha1": "683f2d3606ff7bad47f72435dffe1ab4f0bb1f12",
+          "md5": "78103f0af2e6537f1d6fb85169374dc3"
         }
       ]
     },
@@ -214,13 +214,13 @@
       ],
       "files": [
         {
-          "name": "eimzo-sdk-1.2.9.aar",
-          "url": "eimzo-sdk-1.2.9.aar",
-          "size": 11591167,
-          "sha512": "a6d43fa7068476f6f91222a29105057f0a50b40d532cc8b072ea3700a87fab637076945f8c05843ec21b1fe6aa5e86b2154a9c80f579f4c9ef9da6779eb121e1",
-          "sha256": "3f0d37968ae622601d05881349f073b1c9e7a2112e8d0003f64621c8de9589c1",
-          "sha1": "dd0c3a7eb78f6e59a79be8319c7e44b297372355",
-          "md5": "bedac9c19217644c81dd995a5d2cef31"
+          "name": "eimzo-sdk-1.2.10.aar",
+          "url": "eimzo-sdk-1.2.10.aar",
+          "size": 11593124,
+          "sha512": "e97bd6324e9c418fe17090c92ab3998557bf8afd08677bff2e2f9a270a6a4ce2ca3b2bbcadea19e3c2bd6823a1823965aa7b29ef6dbffddf40c6229e756502d7",
+          "sha256": "d6bec954e324aae2470bdbf1ef4b1cdbea00b11f872762ad7f8728ca8cc9f27f",
+          "sha1": "683f2d3606ff7bad47f72435dffe1ab4f0bb1f12",
+          "md5": "78103f0af2e6537f1d6fb85169374dc3"
         }
       ]
     },
@@ -236,13 +236,13 @@
       },
       "files": [
         {
-          "name": "eimzo-sdk-1.2.9-sources.jar",
-          "url": "eimzo-sdk-1.2.9-sources.jar",
-          "size": 145336,
-          "sha512": "a5ee925f4cbe7c00c715644b83f4b1ea37c1e3c56c96a7007b012414f1d5c426cec552a2d04bb2e7be953ab94131642bb132e04234326e4d6b2f75e484a0b500",
-          "sha256": "69a5894508f30a0e0a0ea9da73aa7c4fcfcdd23b7c9bdd1910d7561264e5dd3a",
-          "sha1": "d02e5409db2e55dcb71614dc6537ce48e1b49b61",
-          "md5": "a11cf14ecaed6b61902566482c99b444"
+          "name": "eimzo-sdk-1.2.10-sources.jar",
+          "url": "eimzo-sdk-1.2.10-sources.jar",
+          "size": 146846,
+          "sha512": "3b315e6474ac2ef43c7ea94e7f516379de59bd5098d0cd10e78c87877c9c55f2379750e504ac8f32f48e3d80ed65d3ba58e04825a30918723fa2da1ce587f64a",
+          "sha256": "cd113cb197c1f64e1a5817b76e452d5f13163f78dc1828e7677018ef8724c090",
+          "sha1": "502b4ab9f0e58229dd19b161feeb983ed81d50f0",
+          "md5": "2c1bbca2f76870cca6d0fb45b5cda1d8"
         }
       ]
     }
