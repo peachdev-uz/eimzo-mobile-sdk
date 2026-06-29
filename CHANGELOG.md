@@ -1,3 +1,11 @@
+## 1.2.9 — 2026-06-29
+
+🔧 **Test muhiti URL manzili yangilandi.**
+
+- `EImzoConfig.testApiUrl` endi `https://test.e-imzo.uz/api/rpc`
+  (avval `https://m.test.e-imzo.uz/api/rpc` edi). Production URL
+  (`https://m.e-imzo.uz/api/rpc`) o'zgarmagan.
+
 ## 1.2.8 — 2026-06-12
 
 🔌 **USB token orqali imzolash tuzatildi** (FEITIAN 2.0.1.7 oqimi,

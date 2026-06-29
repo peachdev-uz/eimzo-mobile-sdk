@@ -1,0 +1,250 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "uz.eimzo",
+    "module": "eimzo-sdk",
+    "version": "1.2.9",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.9"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.databinding",
+          "module": "viewbinding",
+          "version": {
+            "requires": "8.7.3"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "eimzo-sdk-1.2.9.aar",
+          "url": "eimzo-sdk-1.2.9.aar",
+          "size": 11591167,
+          "sha512": "a6d43fa7068476f6f91222a29105057f0a50b40d532cc8b072ea3700a87fab637076945f8c05843ec21b1fe6aa5e86b2154a9c80f579f4c9ef9da6779eb121e1",
+          "sha256": "3f0d37968ae622601d05881349f073b1c9e7a2112e8d0003f64621c8de9589c1",
+          "sha1": "dd0c3a7eb78f6e59a79be8319c7e44b297372355",
+          "md5": "bedac9c19217644c81dd995a5d2cef31"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "1.9.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-android",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.12.0"
+          }
+        },
+        {
+          "group": "androidx.appcompat",
+          "module": "appcompat",
+          "version": {
+            "requires": "1.6.1"
+          }
+        },
+        {
+          "group": "androidx.fragment",
+          "module": "fragment-ktx",
+          "version": {
+            "requires": "1.6.2"
+          }
+        },
+        {
+          "group": "androidx.activity",
+          "module": "activity-ktx",
+          "version": {
+            "requires": "1.8.2"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-viewmodel-ktx",
+          "version": {
+            "requires": "2.6.2"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime-ktx",
+          "version": {
+            "requires": "2.6.2"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-livedata-ktx",
+          "version": {
+            "requires": "2.6.2"
+          }
+        },
+        {
+          "group": "androidx.constraintlayout",
+          "module": "constraintlayout",
+          "version": {
+            "requires": "2.1.4"
+          }
+        },
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-fragment-ktx",
+          "version": {
+            "requires": "2.7.6"
+          }
+        },
+        {
+          "group": "androidx.navigation",
+          "module": "navigation-ui-ktx",
+          "version": {
+            "requires": "2.7.6"
+          }
+        },
+        {
+          "group": "com.google.android.material",
+          "module": "material",
+          "version": {
+            "requires": "1.11.0"
+          }
+        },
+        {
+          "group": "com.airbnb.android",
+          "module": "lottie",
+          "version": {
+            "requires": "6.4.0"
+          }
+        },
+        {
+          "group": "com.journeyapps",
+          "module": "zxing-android-embedded",
+          "version": {
+            "requires": "4.3.0"
+          }
+        },
+        {
+          "group": "com.google.zxing",
+          "module": "core",
+          "version": {
+            "requires": "3.5.2"
+          }
+        },
+        {
+          "group": "androidx.room",
+          "module": "room-runtime",
+          "version": {
+            "requires": "2.6.1"
+          }
+        },
+        {
+          "group": "androidx.room",
+          "module": "room-ktx",
+          "version": {
+            "requires": "2.6.1"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "com.google.code.gson",
+          "module": "gson",
+          "version": {
+            "requires": "2.10.1"
+          }
+        },
+        {
+          "group": "org.bouncycastle",
+          "module": "bcprov-jdk15on",
+          "version": {
+            "requires": "1.70"
+          }
+        },
+        {
+          "group": "org.bouncycastle",
+          "module": "bcpkix-jdk15on",
+          "version": {
+            "requires": "1.70"
+          }
+        },
+        {
+          "group": "androidx.databinding",
+          "module": "viewbinding",
+          "version": {
+            "requires": "8.7.3"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "eimzo-sdk-1.2.9.aar",
+          "url": "eimzo-sdk-1.2.9.aar",
+          "size": 11591167,
+          "sha512": "a6d43fa7068476f6f91222a29105057f0a50b40d532cc8b072ea3700a87fab637076945f8c05843ec21b1fe6aa5e86b2154a9c80f579f4c9ef9da6779eb121e1",
+          "sha256": "3f0d37968ae622601d05881349f073b1c9e7a2112e8d0003f64621c8de9589c1",
+          "sha1": "dd0c3a7eb78f6e59a79be8319c7e44b297372355",
+          "md5": "bedac9c19217644c81dd995a5d2cef31"
+        }
+      ]
+    },
+    {
+      "name": "releaseSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "files": [
+        {
+          "name": "eimzo-sdk-1.2.9-sources.jar",
+          "url": "eimzo-sdk-1.2.9-sources.jar",
+          "size": 145336,
+          "sha512": "a5ee925f4cbe7c00c715644b83f4b1ea37c1e3c56c96a7007b012414f1d5c426cec552a2d04bb2e7be953ab94131642bb132e04234326e4d6b2f75e484a0b500",
+          "sha256": "69a5894508f30a0e0a0ea9da73aa7c4fcfcdd23b7c9bdd1910d7561264e5dd3a",
+          "sha1": "d02e5409db2e55dcb71614dc6537ce48e1b49b61",
+          "md5": "a11cf14ecaed6b61902566482c99b444"
+        }
+      ]
+    }
+  ]
+}
