@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>uz.eimzo</groupId>
   <artifactId>eimzo-sdk</artifactId>
-  <version>1.2.9</version>
+  <version>1.2.10</version>
   <packaging>aar</packaging>
   <name>E-IMZO Android SDK</name>
   <description>Official Android SDK for the O'zbekiston Respublikasi E-IMZO electronic signature system. Provides PFX/QR/NFC key import, OzDST 1092 signing, NFC ID-card reading, USB token support and licensed Firebase integrator verification.</description>
