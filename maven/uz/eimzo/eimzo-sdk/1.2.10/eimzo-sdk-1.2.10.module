@@ -223,28 +223,6 @@
           "md5": "78103f0af2e6537f1d6fb85169374dc3"
         }
       ]
-    },
-    {
-      "name": "releaseSourcesElements-published",
-      "attributes": {
-        "org.gradle.category": "documentation",
-        "org.gradle.dependency.bundling": "external",
-        "org.gradle.docstype": "sources",
-        "org.gradle.libraryelements": "jar",
-        "org.gradle.usage": "java-runtime",
-        "org.jetbrains.kotlin.platform.type": "androidJvm"
-      },
-      "files": [
-        {
-          "name": "eimzo-sdk-1.2.10-sources.jar",
-          "url": "eimzo-sdk-1.2.10-sources.jar",
-          "size": 146846,
-          "sha512": "3b315e6474ac2ef43c7ea94e7f516379de59bd5098d0cd10e78c87877c9c55f2379750e504ac8f32f48e3d80ed65d3ba58e04825a30918723fa2da1ce587f64a",
-          "sha256": "cd113cb197c1f64e1a5817b76e452d5f13163f78dc1828e7677018ef8724c090",
-          "sha1": "502b4ab9f0e58229dd19b161feeb983ed81d50f0",
-          "md5": "2c1bbca2f76870cca6d0fb45b5cda1d8"
-        }
-      ]
     }
   ]
 }
