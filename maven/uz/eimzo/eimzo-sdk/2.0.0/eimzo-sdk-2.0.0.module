@@ -3,7 +3,7 @@
   "component": {
     "group": "uz.eimzo",
     "module": "eimzo-sdk",
-    "version": "1.2.10",
+    "version": "2.0.0",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -15,11 +15,12 @@
   },
   "variants": [
     {
-      "name": "releaseApiElements-published",
+      "name": "releaseVariantReleaseApiPublication",
       "attributes": {
         "org.gradle.category": "library",
-        "org.gradle.usage": "java-api",
-        "org.jetbrains.kotlin.platform.type": "androidJvm"
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
       },
       "dependencies": [
         {
@@ -32,22 +33,23 @@
       ],
       "files": [
         {
-          "name": "eimzo-sdk-1.2.10.aar",
-          "url": "eimzo-sdk-1.2.10.aar",
-          "size": 11593124,
-          "sha512": "e97bd6324e9c418fe17090c92ab3998557bf8afd08677bff2e2f9a270a6a4ce2ca3b2bbcadea19e3c2bd6823a1823965aa7b29ef6dbffddf40c6229e756502d7",
-          "sha256": "d6bec954e324aae2470bdbf1ef4b1cdbea00b11f872762ad7f8728ca8cc9f27f",
-          "sha1": "683f2d3606ff7bad47f72435dffe1ab4f0bb1f12",
-          "md5": "78103f0af2e6537f1d6fb85169374dc3"
+          "name": "eimzo-sdk-2.0.0.aar",
+          "url": "eimzo-sdk-2.0.0.aar",
+          "size": 12643104,
+          "sha512": "b2d4091c569c7f0a90f5193edf52328231abd9a2f23d473567d7a02e6f3b56ae9dfeed1af77aea54ee58c7b0566d51ae4361720222385c26f4a116689ede5ec5",
+          "sha256": "0d12ae2521df9b316dd7a933646ce0653a6f315b25b636a0b1a6961df6511f1a",
+          "sha1": "52d21b757c2fc5a99b2bcd75e2fcfe8b7d3513d0",
+          "md5": "ccf25cb42597a38d6a1a17e83252c085"
         }
       ]
     },
     {
-      "name": "releaseRuntimeElements-published",
+      "name": "releaseVariantReleaseRuntimePublication",
       "attributes": {
         "org.gradle.category": "library",
-        "org.gradle.usage": "java-runtime",
-        "org.jetbrains.kotlin.platform.type": "androidJvm"
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
       },
       "dependencies": [
         {
@@ -214,13 +216,13 @@
       ],
       "files": [
         {
-          "name": "eimzo-sdk-1.2.10.aar",
-          "url": "eimzo-sdk-1.2.10.aar",
-          "size": 11593124,
-          "sha512": "e97bd6324e9c418fe17090c92ab3998557bf8afd08677bff2e2f9a270a6a4ce2ca3b2bbcadea19e3c2bd6823a1823965aa7b29ef6dbffddf40c6229e756502d7",
-          "sha256": "d6bec954e324aae2470bdbf1ef4b1cdbea00b11f872762ad7f8728ca8cc9f27f",
-          "sha1": "683f2d3606ff7bad47f72435dffe1ab4f0bb1f12",
-          "md5": "78103f0af2e6537f1d6fb85169374dc3"
+          "name": "eimzo-sdk-2.0.0.aar",
+          "url": "eimzo-sdk-2.0.0.aar",
+          "size": 12643104,
+          "sha512": "b2d4091c569c7f0a90f5193edf52328231abd9a2f23d473567d7a02e6f3b56ae9dfeed1af77aea54ee58c7b0566d51ae4361720222385c26f4a116689ede5ec5",
+          "sha256": "0d12ae2521df9b316dd7a933646ce0653a6f315b25b636a0b1a6961df6511f1a",
+          "sha1": "52d21b757c2fc5a99b2bcd75e2fcfe8b7d3513d0",
+          "md5": "ccf25cb42597a38d6a1a17e83252c085"
         }
       ]
     }

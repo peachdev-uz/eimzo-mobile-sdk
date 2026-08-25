@@ -1,3 +1,42 @@
+## 2.0.0 — 2026-08-25
+
+**BUZUVCHI: litsenziya majburiy bo'ldi.**
+
+Firestore ro'yxatidan tekshirish olib tashlandi. SDK endi faqat YT chiqargan
+imzolangan oflayn litsenziya bilan ishlaydi; litsenziyasiz ilova bloklanadi
+va orqada tushadigan zaxira yo'l yo'q.
+
+Chiqarilgan ilovalarga tegmaydi — ular o'z SDK versiyasi bilan ishlashda
+davom etadi. O'zgarish 2.0.0 ga yangilanganda kuchga kiradi.
+
+### Migratsiya
+
+1. `info@yt.uz` ga release APK imzo sertifikatining SHA-256 ini yuboring:
+   `apksigner verify --print-certs app-release.apk | grep -i "SHA-256"`
+2. Kelgan faylni `app/src/main/assets/eimzo-license.txt` ga qo'ying
+   (yoki matnini `EImzoConfig(license = "EIMZO1.…")` orqali bering).
+3. `implementation 'uz.eimzo:eimzo-sdk:2.0.0'`
+
+Debug build'lar uchun alohida litsenziya kerak — debug keystore boshqa
+sertifikat bilan imzolaydi. Debug hash'ini ham yuboring.
+
+### R8 / ProGuard
+
+AAR ichidagi consumer qoidalariga BouncyCastle qo'shildi. Litsenziya Ed25519
+bilan imzolangan va uni tekshiruvchi shu kutubxonada — R8 uni olib tashlasa,
+har bir litsenziya tekshiruvdan o'tmaydi va ilova bloklanadi.
+
+### Boshqa
+
+- Yangi dizayn tizimi: qorong'i rejim, uz/ru/en, Montserrat, tanlanadigan
+  oboylar, qayta ishlangan 11 ta ekran.
+- USB-token endi kalit sifatida saqlanadi (ilgari faqat imzolash uchun edi).
+- `uses-feature android:required="false"` — usiz Google Play ilovani USB
+  host'i yo'q qurilmalardan filtrlardi.
+- Sozlamalardagi versiya endi SDK'niki (ilgari host ilovaning versiyasini
+  ko'rsatardi).
+- "Ruxsat so'rash" dialogi olib tashlandi — o'rniga `info@yt.uz`.
+
 ## 1.2.10 — 2026-06-29
 
 🐛 **Kalit qo'shishda krash tuzatildi** (`Parameter specified as non-null
