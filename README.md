@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-1.2.10-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-2.0.1-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -35,11 +35,32 @@ Tamom. Integrator faqat **kachachi/launcher** rolini bajaradi — qolganini SDK 
 
 ---
 
+## ⚠️ 2.0 dan boshlab litsenziya talab qilinadi
+
+SDK endi imzolangan oflayn litsenziya bilan ishlaydi. Litsenziyasiz ilova
+bloklanadi — orqada tushadigan zaxira yo'l yo'q.
+
+Litsenziya olish uchun `info@yt.uz` ga yozing va ikkinchi omilni yuboring:
+
+- **iOS** — Team ID: `codesign -dvvv MyApp.app 2>&1 | grep TeamIdentifier`
+- **Android** — release APK imzo sertifikati SHA-256:
+  `apksigner verify --print-certs app-release.apk | grep -i "SHA-256"`
+
+Kelgan `eimzo-license.txt` faylini `app/src/main/assets/` ga qo'ying (iOS'da —
+ilova bundle'iga resurs sifatida). Litsenziya paket nomingizga **va** imzo
+identifikatoringizga bog'lanadi, ya'ni boshqa ilovada ishlamaydi. Uni maxfiy
+saqlash shart emas.
+
+Allaqachon chiqarilgan ilovalaringizga bu ta'sir qilmaydi — ular 1.2.10 bilan
+ishlashda davom etadi.
+
+---
+
 ## 📦 Yuklab olish
 
 ### Android
 
-📥 **[eimzo-sdk-1.2.10.aar](android/eimzo-sdk-1.2.10.aar)** (11 MB) — to'liq UI bundlanган
+📥 **[eimzo-sdk-2.0.1.aar](android/eimzo-sdk-2.0.1.aar)** (12 MB) — to'liq UI bundlangan
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -47,7 +68,7 @@ Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-u
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^1.0.9
+  eimzo_flutter: ^2.0.1
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -103,7 +124,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:1.2.10'
+    implementation 'uz.eimzo:eimzo-sdk:2.0.1'
 }
 ```
 
@@ -172,15 +193,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-1.2.10.aar
+    └── eimzo-sdk-2.0.1.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-1.2.10.aar](android/eimzo-sdk-1.2.10.aar)** (11 MB)
+Yuklab olish: **[android/eimzo-sdk-2.0.1.aar](android/eimzo-sdk-2.0.1.aar)** (12 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-1.2.10.aar')
+    implementation files('libs/eimzo-sdk-2.0.1.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -248,7 +269,7 @@ E-IMZO SDK **license-gated** — har bir integrator ilovasi Firebase orqali ro'y
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[1.2.10](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.10)** (2026-06-29)
+So'nggi versiya: **[2.0.1](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.0.1)** (2026-08-26)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 
