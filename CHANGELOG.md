@@ -1,3 +1,21 @@
+## 2.1.1 — 2026-08-26
+
+**Tuzatish: kalitsiz imzolashda kalit qo'sha olmaslik.**
+
+Deeplink bilan kirgan, kaliti yo'q foydalanuvchi kalitlar ekranida tiqilib
+qolishi mumkin edi — bo'sh ro'yxat, hech qanday harakat yo'q. Bosh ekrandagi
+kartaning butun foni bosiladigan edi va u yerga o'tkazardi; kalitlar ekranida
+esa ro'yxat bo'sh bo'lsa qo'shish qatori chiqmasdi. Ikkalasi ham tuzatildi.
+
+**Tuzatish: litsenziya tekshiruvi paytida ortga qaytilsa ilova qulardi.**
+
+Tekshiruv asinxron, javob esa activity tirikmi-yo'qmi ko'rmasdan qaytarilardi.
+Endi yopilayotgan activity'ga javob yetkazilmaydi — bu himoya
+`checkLicenseAndInit` ichida, ya'ni o'z activity'ingizni uzatsangiz ham amal
+qiladi.
+
+iOS binariga tegilmadi — u 2.1.0 da qoladi.
+
 ## 2.1.0 — 2026-08-26
 
 **BUZUVCHI — raqam minor bo'lsa ham.** Ommaviy API faqat UI kirish
