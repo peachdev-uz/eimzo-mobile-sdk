@@ -1,3 +1,27 @@
+## 2.0.1 — 2026-08-26
+
+**Tuzatish: SDK ekranlari release build'da ochilmasdi.**
+
+2.0.0 da to'rtta ekran — sozlamalar, til, mavzu va imzo natijasi — AAR ichida
+umuman yo'q edi. Ularni ochmoqchi bo'lganda ilova `ClassNotFoundException`
+bilan yiqilardi.
+
+Sabab kutubxonaning o'zida edi: u release'da R8 bilan qisqartirilardi. Bu
+ekranlar faqat navigatsiya grafidan, `android:name` orqali chaqiriladi,
+kutubxona uchun AAPT yozadigan keep qoidalari esa navigatsiya grafini qamrab
+olmaydi — u faqat manifest komponentlarini va layout'dagi custom view'larni
+ko'radi. R8 shu sababli ularni "hech kim chaqirmaydi" deb hisoblab, AAR'dan
+olib tashlagan.
+
+Endi kutubxona o'zini qisqartirmaydi. Ilovangizning R8'i uchun qo'shimcha
+ProGuard qoidasi kerak emas — ilova darajasida AAPT nav-graf fragmentlari
+uchun keep qoidasini o'zi yozadi.
+
+**2.0.0 dan foydalanmang.** Agar unga o'tgan bo'lsangiz, 2.0.1 ga yangilang;
+API, litsenziya va sozlamalar o'zgarmagan, faqat versiya raqamini almashtirasiz.
+
+iOS binariga tegilmadi — u 2.0.0 da qoladi.
+
 ## 2.0.0 — 2026-08-25
 
 **BUZUVCHI: litsenziya majburiy bo'ldi.**
