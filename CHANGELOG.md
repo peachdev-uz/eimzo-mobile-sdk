@@ -1,3 +1,47 @@
+## 2.1.0 — 2026-08-26
+
+**BUZUVCHI — raqam minor bo'lsa ham.** Ommaviy API faqat UI kirish
+nuqtasidan iborat bo'ldi.
+
+Odatda bunday o'zgarish major raqamni talab qiladi. Minor tanlandi, chunki
+bu metodlarni to'g'ridan-to'g'ri chaqirayotgan integrator yo'q — ular hech
+qachon hujjatlashtirilmagan ham edi.
+
+Ilgari SDK'ning butun ichki mexanizmi tashqarida ochiq turardi — imzolash,
+kalit qo'shish, kalit ombori, model'lar, callback interfeyslari. README esa
+har doim faqat `EImzoActivity` ni ko'rsatgan, ya'ni ular hech qachon
+hujjatlashtirilmagan edi. Endi kod ham shuni aytadi.
+
+**Android** — tashqarida qolgani:
+
+- `EImzoActivity` — SDK'ning kirish nuqtasi
+- `EImzoConfig`
+- `EImzoSDK.checkLicenseAndInit(activity, config) { allowed -> … }`
+
+`importPfxKey`, `importQrKey`, `importNfcKey`, `importUsbTokenKey`,
+`signWithQrKey`, `signWithNfc`, `signWithUsbToken`, `getAllKeys`, `deleteKey`,
+`getCertInfo` va callback interfeyslari `internal` bo'ldi.
+
+**iOS** — tashqarida qolgani: `EImzoView`, `EImzoConfig`, `SignResult`.
+UI'dan tashqari 141 ta ommaviy e'lon o'rniga uchtasi. `KeyStore`,
+`EImzoSigner`, `EImzoApiClient`, `PkiUtils`, `HexUtils`, `TokenSession`,
+`EImzoApplet` endi ko'rinmaydi.
+
+### Nega
+
+Imzolash oqimi litsenziya tekshiruvi, PIN so'rash, sessiya muddati va backend
+bilan aloqani o'z ichiga oladi. Uni bo'lak-bo'lak tashqariga chiqarish har bir
+integratorga o'sha ketma-ketlikni qayta yig'ish — va noto'g'ri yig'ish —
+imkonini berardi.
+
+### Migratsiya
+
+`EImzoActivity` (Android) yoki `EImzoView` (iOS) ni ochsangiz, hech narsa
+o'zgarmaydi. Agar ichki metodlarni to'g'ridan-to'g'ri chaqirayotgan bo'lsangiz,
+`info@yt.uz` ga yozing — nima kerakligini birga ko'rib chiqamiz.
+
+2.0.x maven'da qoladi.
+
 ## 2.0.2 — 2026-08-26
 
 **Bosh ekrandan qayta dizayndan qolgan tugmalar olib tashlandi.**
