@@ -1,3 +1,25 @@
+## 2.1.2 — 2026-08-27
+
+**Tuzatish: konfiguratsiya SDK'gacha yetmasdi.**
+
+Flutter plagini iOS'da `EimzoConfig` ni butunlay tashlab yuborardi — test
+rejimi, API manzillari va litsenziya platform kanalida to'xtardi. Android'da
+esa litsenziya SDK ekrani ochilishi bilan o'chib ketardi, chunki ekran o'z
+standart konfiguratsiyasi bilan qayta init qilardi. Ikkalasi ham tuzatildi:
+endi berilgan litsenziyani keyingi standart konfiguratsiya o'chirmaydi.
+
+**Yaxshilandi: "Litsenziya topilmadi" endi nima qilish kerakligini aytadi.**
+
+Odatda sabab litsenziya yo'qligi emas, faylning ilova bundle'iga tushmagani
+bo'ladi — iOS'da uni Xcode'da maqsadning *Copy Bundle Resources* bosqichiga
+qo'shish kerak, buni o'tkazib yuborish oson va ilova ikkala holatda bir xil
+ko'rinadi. Endi xabar bundle ichida nima borligini tekshirib aytadi.
+
+Litsenziyani konfiguratsiya orqali ham berish mumkin: `EImzoConfig(license:)`
+(Android va iOS), Flutter'da `EimzoConfig(license: ...)`.
+
+Yo'l-yo'lakay: iOS sozlamalar ekrani `Versiya 2.0.0` ko'rsatib turgan edi.
+
 ## 2.1.1 — 2026-08-26
 
 **Tuzatish: kalitsiz imzolashda kalit qo'sha olmaslik.**
