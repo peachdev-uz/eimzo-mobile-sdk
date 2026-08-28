@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>uz</string>
+    <key>CFBundleDisplayName</key>
+    <string>E-IMZO Demo</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>$(MARKETING_VERSION)</string>
+    <key>CFBundleVersion</key>
+    <string>$(CURRENT_PROJECT_VERSION)</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>UILaunchScreen</key>
+    <dict/>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+
+    <!-- QR skaner uchun kamera. -->
+    <key>NSCameraUsageDescription</key>
+    <string>QR-kod skanerlash uchun kamera kerak</string>
+
+    <!-- ID-kartani o'qish uchun NFC. -->
+    <key>NFCReaderUsageDescription</key>
+    <string>ID-karta orqali kalit o'qish uchun NFC kerak</string>
+    <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+    <array>
+        <string>65696D7A6F617070</string><!-- "eimzoapp" ASCII -->
+    </array>
+
+    <!--
+        Android'dagi <intent-filter> ning iOS ekvivalenti: eimzo:// sxemasini
+        shu ilovaga bog'laydi. Busiz onOpenURL hech qachon ishga tushmaydi.
+    -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>uz.eimzo.example.signing</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>eimzo</string>
+            </array>
+        </dict>
+    </array>
+
+    <!--
+        UIApplication.open bilan o'zimizga havola yuborish uchun. iOS 9 dan
+        beri boshqa ilovaning sxemasini ochishdan oldin uni shu ro'yxatda
+        e'lon qilish kerak.
+    -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>eimzo</string>
+    </array>
+</dict>
+</plist>
