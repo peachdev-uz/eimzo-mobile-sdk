@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        ID-kartani NFC orqali o'qish uchun. Apple bu imkoniyatni ishlab
+        chiquvchi hisobingizga alohida tasdiqlaydi — Signing & Capabilities
+        da "Near Field Communication Tag Reading" ni qo'shing.
+    -->
+    <key>com.apple.developer.nfc.readersession.formats</key>
+    <array>
+        <string>TAG</string>
+    </array>
+</dict>
+</plist>

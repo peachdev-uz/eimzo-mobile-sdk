@@ -11,16 +11,16 @@ joylashgan. Har bir misol o'zicha to'liq, ishlovchi proyekt —
 | Misol | Tavsif | Platforma |
 |---|---|---|
 | [`android-kotlin/`](android-kotlin/) | Minimal Kotlin Android ilova — 2 tugma, deep link qo'llab-quvvatlash | Android (Kotlin) |
+| [`ios-swift/`](ios-swift/) | Minimal SwiftUI ilova — deeplink tuzish, ochish va qabul qilish | iOS (Swift) |
 
 ---
 
 ## 🚧 Rejada
 
-| Misol | Holati |
-|---|---|
+| Misol | Tavsif | Holati |
+|---|---|---|
 | `android-java/` | Java tilida bir xil misol | Rejada |
-| `flutter/` | Flutter `eimzo_flutter` plugin misoli (alohida repo) | ✅ [`peachdev-uz/eimzo_flutter`](https://github.com/peachdev-uz/eimzo_flutter/tree/main/example) |
-| `ios-swift/` | iOS Swift misoli | Rejada |
+| `flutter/` | Flutter `eimzo_flutter` plugin misoli | ✅ [alohida repo](https://github.com/peachdev-uz/eimzo_flutter/tree/main/example) |
 
 ---
 
