@@ -1,3 +1,7 @@
+## 2.2.1 — 2026-09-24
+
+**Tuzatish: Android 12 va undan pastida ERI fayl va QR kalit bilan ishlab bo'lmasdi** — «No static field TWO» xatosi chiqardi.
+
 ## 2.2.0 — 2026-09-24
 
 **Yangi: BAIK USB token.** Endi BAIK token orqali kalit qo'shish va imzolash mumkin.
