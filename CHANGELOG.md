@@ -1,3 +1,7 @@
+## 2.2.0 — 2026-09-24
+
+**Yangi: BAIK USB token.** Endi BAIK token orqali kalit qo'shish va imzolash mumkin.
+
 ## 2.1.2 — 2026-08-27
 
 **Tuzatish: konfiguratsiya SDK'gacha yetmasdi.**
