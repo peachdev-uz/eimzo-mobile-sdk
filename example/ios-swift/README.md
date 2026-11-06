@@ -1,8 +1,8 @@
 # E-IMZO Mobile SDK — iOS (Swift) misol
 
-Minimal SwiftUI ilovasi. `example/android-kotlin` bilan bir xil narsani
-ko'rsatadi, ustiga iOS'da alohida e'tibor talab qiladigan qismni —
-**deeplink tuzish va qabul qilish**.
+Minimal SwiftUI ilovasi, EimzoSDK 2.3.0. `example/android-kotlin` bilan bir
+xil narsani ko'rsatadi: SDK'ni ochish va ilova ichida yasalgan imzo so'rovi
+bilan hujjatni imzolash.
 
 ---
 
@@ -14,13 +14,16 @@ cd eimzo-mobile-sdk/example/ios-swift
 open EimzoExample.xcodeproj
 ```
 
-Xcode birinchi ochilishda `EimzoSDK.xcframework` ni GitHub Releases'dan
-o'zi yuklab oladi (~18 MB). Keyin **Signing & Capabilities** da o'z
-**Team**'ingizni tanlang va ▶ **Run**.
+Xcode birinchi ochilishda EimzoSDK'ni (`from: "2.3.0"`) GitHub Releases'dan
+o'zi yuklab oladi. Keyin **Signing & Capabilities** da o'z **Team**'ingizni
+tanlang, bundle ID'ni o'zingiznikiga almashtiring va ▶ **Run**.
 
-Simulyatorda ham ishlaydi. Bitta farq: simulyatorda ilovalar imzolanmaydi,
-shuning uchun litsenziyaning Team ID tekshiruvi o'tkazib yuboriladi —
-litsenziyaning o'zi baribir kerak.
+SDK E-IMZO bilan YT gateway orqali ishlaydi va ilovani App Attest bilan
+taniydi, shuning uchun:
+
+- ilova ro'yxatdan o'tgan bo'lishi kerak (pastda);
+- uni haqiqiy iPhone'da sinang: iOS Simulator attestatsiya qila olmaydi,
+  u yerda SDK bloklangan ekranni ko'rsatadi.
 
 ---
 
@@ -28,128 +31,82 @@ litsenziyaning o'zi baribir kerak.
 
 ```
 example/ios-swift/
-├── EimzoExample.xcodeproj        ← SPM orqali EimzoSDK ga bog'langan
+├── EimzoExample.xcodeproj        ← SPM orqali EimzoSDK 2.3.0 ga bog'langan
 ├── generate-xcodeproj.rb         ← loyihani qayta yaratish (odatda kerak emas)
 └── EimzoExample/
-    ├── EimzoExampleApp.swift     ← onOpenURL — kiruvchi deeplink
-    ├── ContentView.swift         ← uchta stsenariy, uchta tugma
-    ├── DeepLink.swift            ← havolani tuzish va o'qish
-    ├── Info.plist                ← CFBundleURLTypes — eimzo:// sxemasi
+    ├── EimzoExampleApp.swift     ← kirish nuqtasi, eimzo:// qabul qilinmaydi
+    ├── ContentView.swift         ← muhit, SDK'ni ochish, imzo so'rovi
+    ├── Info.plist                ← kamera va NFC
     └── EimzoExample.entitlements ← NFC
 ```
 
 ---
 
-## 🔗 Deeplink
+## ✍️ Imzo so'rovi
 
-E-IMZO imzolash so'rovi `eimzo://sign?qc=<kod>` ko'rinishida keladi. `qc`
-kodini imzolashni so'ragan portal beradi; havolani siz tuzasiz.
-
-### Tuzish
-
-`DeepLink.swift` dagi `EimzoDeepLink.make(qc:)` — `URLComponents` orqali:
+Hujjatning `siteId`, `documentId` va `hash` qiymatlari backend'ingizdan
+keladi, havolani SDK yasaydi:
 
 ```swift
-var components = URLComponents()
-components.scheme = "eimzo"
-components.host = "sign"
-components.queryItems = [URLQueryItem(name: "qc", value: code)]
-let url = components.url
+let link = try EImzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash)
+presentation = Presentation(deepLink: link)
 ```
 
-Satrni qo'lda yopishtirmang. `qc` bugun o'n oltilik sanoqda, lekin u
-portalning maydoni: bir kun ichida `+` yoki `/` chiqsa, qo'lda tuzilgan satr
-portal bergan koddan boshqa kodni yuboradi va xato imzolash bosqichida,
-sababidan uzoqda ko'rinadi.
+Qiymat formati noto'g'ri bo'lsa (`siteId` — 4, `documentId` — 8, 10, 12,
+14 yoki 16, `hash` — 64 hex belgi), `create` `EImzoSignLink.Error`
+tashlaydi. Misol uning matnini maydonlar ostida ko'rsatadi.
 
-### Ochish
-
-Havolani SDK'ga uzatasiz — Android'dagi `Intent.data` ning ekvivalenti:
+SDK `sheet(item:)` bilan ochiladi:
 
 ```swift
-EImzoView(deepLink: url.absoluteString, onSignComplete: { _ in ... })
+.sheet(item: $presentation) { shown in
+    EImzoView(
+        config: EImzoConfig(environment: environment),
+        deepLink: shown.deepLink,
+        onSignComplete: { _ in presentation = nil }
+    )
+}
 ```
 
-### Qabul qilish
+`sheet(isPresented:)` va alohida havola bilan sheet havola
+yangilanishidan oldin ochilib, SDK so'rovsiz ochilishi mumkin.
 
-Ikkita qism kerak, ikkalasi ham majburiy:
+Imzolangach SDK «Ilovaga qaytish» tugmasini ko'rsatadi. Tugma bosilganda
+yoki taxminan 3 soniyadan keyin `onSignComplete` keladi va sheet yopiladi.
 
-**1. `Info.plist`** — Android'dagi `<intent-filter>` ning ekvivalenti:
-
-```xml
-<key>CFBundleURLTypes</key>
-<array>
-  <dict>
-    <key>CFBundleURLName</key><string>uz.eimzo.example.signing</string>
-    <key>CFBundleURLSchemes</key><array><string>eimzo</string></array>
-  </dict>
-</array>
-```
-
-**2. `onOpenURL`** — tizim yo'naltirgan har bir URL shu yerga keladi:
-
-```swift
-ContentView(incomingDeepLink: $incomingDeepLink)
-    .onOpenURL { url in
-        guard EimzoDeepLink.parse(url) != nil else { return }
-        incomingDeepLink = url.absoluteString
-    }
-```
-
-E'lon qilinib, ushlanmagan sxema ilovani ochadi va hech nima qilmaydi;
-ushlangan, lekin e'lon qilinmagan sxema esa umuman kelmaydi.
-
-`parse` filtri ham bejiz emas: `onOpenURL` shu ilovaga yo'naltirilgan
-**barcha** URL'lar uchun ishga tushadi, va kelajakdagi
-`eimzo://boshqa-narsa` imzolash so'rovi deb o'qilmasligi kerak.
-
-### Sinash
-
-```bash
-xcrun simctl openurl booted 'eimzo://sign?qc=TEST123'
-```
-
-Yoki ilovadagi **"Havolani tizim orqali yuborish"** tugmasi — havolani
-o'zingizga yuboradi va xuddi tashqi ilova yuborganidagi yo'lni bosib o'tadi.
-Buning uchun `Info.plist` da `LSApplicationQueriesSchemes` ham kerak.
-
-> **Diqqat.** Qurilmada `eimzo://` ni e'lon qilgan bir nechta ilova bo'lsa
-> (masalan rasmiy E-IMZO ilovasi va sizniki), iOS qaysi biri ochilishini
-> o'zi tanlaydi va buni boshqarib bo'lmaydi. Android'da tanlash oynasi
-> chiqadi — iOS'da chiqmaydi. Sinovda kutilmagan ilova ochilsa, sabab
-> shu.
+`eimzo` sxemasini `Info.plist`dagi `CFBundleURLTypes`ga qo'shmang va
+`onOpenURL` bilan ushlamang: bu sxema E-IMZO ilovasiniki.
 
 ---
 
-## 🔑 Litsenziya
+## 🌐 Muhit
 
-SDK imzolangan oflayn litsenziyasiz ishlamaydi. `info@yt.uz` ga bundle id
-va Team ID yuboring:
+Ekrandagi «Test muhiti (dev)» `EImzoConfig(environment:)` ni tanlaydi:
+`.dev` — YT test muhiti (test.e-imzo.uz, faqat test kalitlari), `.prod` —
+haqiqiy E-IMZO. Misol `.dev` da ochiladi. Hujjat qaysi muhitda yaratilgan
+bo'lsa, faqat o'sha muhitda imzolanadi.
+
+---
+
+## 🔑 Ro'yxatdan o'tish
+
+Litsenziya fayli kerak emas. `info@yt.uz` ga bundle ID, Team ID va muhitni
+(`dev` va/yoki `prod`) yuboring:
 
 ```bash
 codesign -dvvv YourApp.app 2>&1 | grep TeamIdentifier
 ```
 
-Kelgan `EIMZO1.…` tokenini ikki yo'ldan biri bilan bering:
-
-- **Fayl** — `eimzo-license.txt` ni maqsadga qo'shing va **Build Phases →
-  Copy Bundle Resources** da turganini tekshiring. Xcode faylni
-  navigatorda ko'rsatib, bundle'ga ko'chirmasligi mumkin — eng ko'p
-  uchraydigan xato shu.
-- **Konfiguratsiya** — `EImzoView(config: EImzoConfig(license: token))`.
-
-Bu misolda litsenziya yo'q, shuning uchun ishga tushirsangiz SDK
-"Ilova tasdiqlanmagan" ekranini ko'rsatadi. Deeplink yo'li esa shundan
-oldin ishlaydi — ya'ni `onOpenURL` va varaq ochilishini litsenziyasiz ham
-sinab ko'rish mumkin.
+Ro'yxatdan o'tmagan ilovada SDK bloklangan ekranni ko'rsatadi, sababi
+uning «Ishlab chiquvchi uchun» bo'limida yoziladi (masalan
+`app_not_registered`).
 
 ---
 
 ## 🧪 Tekshirilgan
 
-Bu misol iPhone 17 Pro simulyatorida (iOS 26) yig'ilib, ishga tushirilgan:
-`simctl openurl` bilan yuborilgan havola `onOpenURL` ga yetib, SDK varag'i
-ochilgan.
+iOS Simulator uchun `xcodebuild` bilan yig'ilgan (EimzoSDK 2.3.0,
+Xcode 27.2).
 
 ---
 

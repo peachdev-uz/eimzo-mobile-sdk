@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Required permissions -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
-
-    <!-- Optional hardware features (graceful degradation) -->
-    <uses-feature android:name="android.hardware.nfc" android:required="false" />
-    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <!--
+      Nothing for the SDK here: its permissions (INTERNET, NFC, CAMERA, …),
+      the optional NFC and USB host features and its activities come from
+      the AAR's own manifest through the manifest merger.
+    -->
 
     <application
         android:allowBackup="true"
@@ -30,16 +26,11 @@
             </intent-filter>
 
             <!--
-              Deeplink: eimzo://sign?qc=...
-              External apps (browsers, government portals) can deep-link
-              straight into the signing flow.
+              No eimzo:// intent-filter: that scheme is the E-IMZO app's, and
+              an app that claims it opens its SDK for any page or app that
+              sends a link. The sign request is made in the app instead
+              (EImzoSignLink.create) — see MainActivity.
             -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="eimzo" android:host="sign" />
-            </intent-filter>
         </activity>
 
     </application>

@@ -148,9 +148,15 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 
 ## 🎯 Misollar
 
-`example/` dagi misollar hali 2.3 ga moslanmagan: ular `eimzo://` havolalarini
-tashqaridan qabul qiladi, [example/android-kotlin/](example/android-kotlin/) esa
-SDK 1.2.8 ga bog'langan. 2.3 uchun quyidagi 4 qadamni bajaring.
+[`example/`](example/) dagi ikkala misol ham 2.3.0 uchun:
+
+- [example/android-kotlin/](example/android-kotlin/) — pastdagi 4 qadam asosida
+  yozilgan ilova: SDK'ni ochish va `EImzoSignLink.create` bilan yasalgan so'rov
+  bilan imzolash. SDK'ni shu repodagi `maven/` dan oladi.
+- [example/ios-swift/](example/ios-swift/) — xuddi shu SwiftUI'da, SDK
+  [eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) dan SPM orqali.
+
+Ikkalasi ham `eimzo://` havolalarini tashqaridan qabul qilmaydi.
 
 ---
 

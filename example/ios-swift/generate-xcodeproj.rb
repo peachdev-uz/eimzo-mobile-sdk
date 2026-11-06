@@ -20,12 +20,13 @@ EXAMPLE_DIR = File.join(ROOT, 'EimzoExample')
 PROJ_PATH   = File.join(ROOT, 'EimzoExample.xcodeproj')
 
 SDK_PACKAGE_URL = 'https://github.com/peachdev-uz/eimzo-ios-sdk'
-# 2.x: the licence became mandatory in 2.0 and the public API narrowed to
-# EImzoView in 2.1. Anything below that does not match this example's code.
-SDK_MIN_VERSION = '2.1.2'
-EXAMPLE_VERSION = '2.1.2'
+# 2.3: the sign request is made with EImzoSignLink, `environment` replaced
+# `isTestMode`, and every app signs through the YT gateway. Anything below
+# that does not match this example's code.
+SDK_MIN_VERSION = '2.3.0'
+EXAMPLE_VERSION = '2.3.0'
 
-SOURCES = %w[EimzoExampleApp.swift ContentView.swift DeepLink.swift].freeze
+SOURCES = %w[EimzoExampleApp.swift ContentView.swift].freeze
 
 SOURCES.each do |f|
   path = File.join(EXAMPLE_DIR, f)

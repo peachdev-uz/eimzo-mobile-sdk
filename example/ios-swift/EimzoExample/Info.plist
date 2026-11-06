@@ -42,29 +42,10 @@
     </array>
 
     <!--
-        Android'dagi <intent-filter> ning iOS ekvivalenti: eimzo:// sxemasini
-        shu ilovaga bog'laydi. Busiz onOpenURL hech qachon ishga tushmaydi.
+        CFBundleURLTypes'da eimzo sxemasi yo'q: u E-IMZO ilovasiniki. Uni
+        e'lon qilgan ilova istalgan sayt yoki ilova yuborgan havola bilan
+        SDK'ni ochib beradi. Imzo so'rovi ilova ichida EImzoSignLink.create
+        bilan yasaladi.
     -->
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLName</key>
-            <string>uz.eimzo.example.signing</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>eimzo</string>
-            </array>
-        </dict>
-    </array>
-
-    <!--
-        UIApplication.open bilan o'zimizga havola yuborish uchun. iOS 9 dan
-        beri boshqa ilovaning sxemasini ochishdan oldin uni shu ro'yxatda
-        e'lon qilish kerak.
-    -->
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>eimzo</string>
-    </array>
 </dict>
 </plist>
