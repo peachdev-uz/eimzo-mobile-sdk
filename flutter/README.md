@@ -1,15 +1,20 @@
 # E-IMZO Flutter Plugin
 
 Flutter integratorlari uchun **rasmiy plugin** allaqachon pub.dev'da.
+U Android SDK 2.3.0 ni o'z ichiga oladi, iOS'da esa
+[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) 2.3.0 ni ishlatadi.
 
 ## 📦 O'rnatish
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^1.0.1
+  eimzo_flutter: ^2.3.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
+
+Android va iOS sozlamalari (iOS 16+, `Info.plist`, NFC entitlement) —
+plaginning pub.dev sahifasida.
 
 ## 🚀 Ishlatish
 
@@ -18,15 +23,38 @@ import 'package:eimzo_flutter/eimzo_flutter.dart';
 
 final eimzo = EimzoFlutter.instance;
 
+// Sozlama — openSignUi dan oldin. Android'da gateway tekshiruvi shu yerda,
+// iOS'da esa SDK UI'si ichida o'tadi.
+final allowed = await eimzo.init(
+  config: const EimzoConfig(environment: EimzoEnvironment.prod), // sinovda: EimzoEnvironment.dev
+);
+if (!allowed) return; // SDK bloklangan ekranni ko'rsatmoqda
+
 // To'liq E-IMZO UI'ni ochish
 await eimzo.openSignUi();
 
-// Yoki imzolash uchun deeplink bilan
-await eimzo.openSignUi(deepLink: 'eimzo://sign?qc=1a4759...');
+// Yoki hujjatni imzolash: siteId, documentId va hash backend'ingizdan keladi
+final link = EimzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash);
+await eimzo.openSignUi(deepLink: link);
 ```
 
-Plugin Android tomonda `EImzoActivity` ni ochadi — barcha license tekshiruvi,
-kalit boshqaruvi va imzolash oqimini SDK o'zi bajaradi. Hech qanday Dart UI yozish shart emas.
+Plugin Android tomonda `EImzoActivity` ni, iOS'da `EImzoView` ni ochadi — gateway
+tekshiruvi, kalit boshqaruvi va imzolash oqimini SDK o'zi bajaradi. Hech qanday
+Dart UI yozish shart emas.
+
+## 2.3 da nima o'zgardi
+
+- Ilova YT gateway'da ro'yxatdan o'tishi kerak, litsenziya fayli kerak emas:
+  [Ro'yxatdan o'tish](../README.md#-royxatdan-otish).
+- `eimzo://` havolalari tashqaridan qabul qilinmaydi: `AndroidManifest.xml` va
+  `Info.plist` ga `eimzo` sxemasini qo'shmang. `getInitialDeeplink()`,
+  `onNewDeeplink()` va `launchDeeplink()` olib tashlandi — imzo so'rovi
+  `EimzoSignLink.create` bilan ilova ichida yasaladi.
+- `isTestMode` o'rniga `environment`: `EimzoEnvironment.prod` (sukut bo'yicha)
+  yoki `EimzoEnvironment.dev`. `isTestMode` hali ishlaydi, lekin eskirgan.
+- Xato va crash hisobotlari YT gateway'iga yuboriladi. iOS'da App Store Connect →
+  App Privacy'da **Crash Data** va **Other Diagnostic Data** ni e'lon qiling:
+  [Xato va crash hisobotlari](../README.md#-xato-va-crash-hisobotlari).
 
 ## 📞 Aloqa
 
