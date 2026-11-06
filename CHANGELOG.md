@@ -1,3 +1,156 @@
+## 2.3.0 — 2026-11-06
+
+**BUZUVCHI: har bir ilova E-IMZO bilan YT gateway orqali ishlaydi.**
+
+SDK E-IMZO'ga endi faqat YT gateway orqali ulanadi. Gateway ilovani Android
+key attestation bilan taniydi: u ilovaning paket nomini va uni imzolagan
+sertifikatni tasdiqlaydi. Litsenziya fayli kerak emas, lekin ilova
+gateway'da ro'yxatdan o'tgan bo'lishi kerak — ro'yxatda yo'q ilovada SDK
+bloklangan ekranni ko'rsatadi. Production gateway ishga tushgan.
+
+### Ro'yxatdan o'tish
+
+info@yt.uz ga paket nomi va imzo sertifikatining SHA-256 ini yuboring
+(iOS'da — bundle id va Team ID) va qaysi muhit uchun ekanini yozing:
+sinovda `dev`, relizda `prod`. Ikki muhitda ro'yxat alohida. Boshqa
+sertifikat bilan imzolangan debug build o'z SHA-256 i bilan alohida
+yoziladi.
+
+Key attestation uchun telefonda apparat darajasidagi attestatsiya va
+qulflangan bootloader bilan o'zgartirilmagan tizim kerak — ya'ni Google
+sertifikatlagan telefon. Root qilingan yoki bootloader'i ochilgan telefonlar
+va Google xizmatlarisiz Huawei telefonlari bloklangan ekranni ko'radi.
+Emulyator faqat `dev` muhitida ishlaydi. iOS'da App Attest ishlatiladi:
+haqiqiy iPhone yoki iPad kerak, Simulator attestatsiya qila olmaydi.
+
+### Litsenziyali ilovalar
+
+2.0–2.2 dagi `EIMZO1.…` litsenziyali ilova gateway sessiyasini attestatsiya
+o'rniga litsenziya bilan ochadi. Litsenziya gateway'da ro'yxatda bo'lishi
+kerak, aks holda bloklangan ekran chiqadi: bunday ilovani yangilashdan oldin
+info@yt.uz ga yozing va YT tasdiqlamaguncha 2.2 da qoling.
+
+SDK bekor qilingan litsenziyalar ro'yxatini (`revoked.txt`) endi yuklab
+olmaydi: bekor qilingan, ro'yxatda yo'q yoki muddati o'tgan litsenziyani
+gateway rad etadi. Litsenziyaning telefondagi tekshiruvi avvalgidek.
+
+### `eimzo://` havolalari tashqaridan qabul qilinmaydi
+
+Bu sxema E-IMZO ilovasiniki. 2.2 gacha SDK `EImzoActivity` ga `eimzo://sign`
+filtrini o'zi qo'shardi va u har bir ilovaning manifest'iga birlashardi.
+Endi `EImzoActivity` tashqaridan ochilmaydi (`exported="false"`).
+
+Imzo so'rovini ilova o'zi yasaydi: backend bergan `siteId`, `documentId` va
+`hash` dan `EImzoSignLink.create(siteId, documentId, hash)` havola
+qaytaradi, u `EImzoActivity` ga `data` sifatida beriladi. O'zingiz qo'shgan
+`eimzo` intent-filter'ini olib tashlang — SDK uni topsa, logcat'ga
+ogohlantirish yozadi.
+
+### `isTestMode` o'rniga `environment`
+
+`EImzoEnvironment.PROD` (sukut bo'yicha) — haqiqiy kalitlar bilan E-IMZO.
+`EImzoEnvironment.DEV` — YT test muhiti (test.e-imzo.uz), u yerda faqat test
+kalitlari imzolaydi. Boshqa hech narsa sozlanmaydi: SDK ikkala muhitning
+manzilini biladi. `isTestMode` ishlayveradi (`true` — `DEV`), lekin
+eskirgan; `productionApiUrl` va `testApiUrl` endi ishlatilmaydi.
+
+### Xato va crash hisobotlari
+
+SDK foydalanuvchi duch kelgan xatolarni va o'z crash'larini YT gateway'iga
+yuboradi, doim.
+
+- Yuboriladi: amal (kalit qo'shish, imzolash, QR skanerlash, kalitni
+  o'chirish), xato kodi, foydalanuvchiga ko'rsatilgan matn, kalit turi, SDK va
+  OS versiyasi, qurilma modeli, crash'da — stack.
+- Hech qachon yuborilmaydi: ism, JSHSHIR va STIR, sertifikat seriya raqami,
+  parol, PIN, QR kod, hujjat va uning xeshi — ular telefondan chiqishidan
+  oldin tozalanadi.
+- Crash keyingi ishga tushishda yuboriladi; ilovaning o'z crash reporter'i
+  uni avvalgidek oladi.
+- iOS (Flutter): App Store Connect → App Privacy'da **Crash Data** va
+  **Other Diagnostic Data** ni e'lon qiling — foydalanuvchiga bog'lanmagan,
+  kuzatish uchun emas, maqsad App Functionality. iOS SDK privacy manifest
+  bilan keladi.
+
+Gateway imzolarni ilova va kalit turi (ERI fayl, QR kod, ID-karta, USB
+token, BAIK token) bo'yicha sanaydi. Nima va kim imzolagani saqlanmaydi.
+
+### Yangi va yaxshilangan
+
+- SDK ekranlari E-IMZO ilovasidagidek. Har bir imzo so'rovi avval tasdiq
+  ekranida ochiladi (sayt, xesh, kalit) va faqat uning IMZOLASH tugmasi
+  imzolaydi; sayt tekshirilmaguncha imzolab bo'lmaydi. TEZ IMZO olib
+  tashlandi.
+- Xatolar yuqoridagi bannerda oddiy jumla bilan chiqadi, exception yoki HTTP
+  matnisiz. Internet yo'qligi doimiy banner bilan aytiladi.
+- Yangi parol oynasi va PIN klaviaturasi. Kalit ERI fayl, QR kod, ID-karta,
+  USB token yoki BAIK token orqali bitta ro'yxatdan qo'shiladi. Noto'g'ri
+  PIN'da qolgan urinishlar soni ko'rsatiladi, bloklangan ID-kartaning o'z
+  oynasi bor.
+- Katta shrift, kontrast va TalkBack yorliqlari.
+- Matnlar o'zbek, rus va ingliz tillarida, tilni SDK'ning o'z sozlamasi
+  belgilaydi. Ilovaning tili va mavzusi endi o'zgarmaydi.
+- **Imzodan keyin** ilova yuborgan so'rovda bitta «Ilovaga qaytish» tugmasi
+  turadi va 3 soniyadan keyin ilovaga o'zi qaytadi (foydalanuvchining maxsus
+  imkoniyatlar sozlamalari ko'proq vaqt so'rasa — kechroq). E-IMZO
+  ilovasidagi «Saytga qaytish» va «Ilovada qolish» yo'q. QR koddan
+  skanerlangan so'rov avvalgidek «Tayyor» bilan tugaydi.
+- Kalit hali yo'q bo'lsa, ilova so'rovi bosh ekranda kutadi va birinchi
+  kalit qo'shilishi bilan ochiladi. Telefondagi 103 soniyalik sessiya
+  taymeri olib tashlandi: so'rov muddati o'tganini server aytadi.
+- Kalit qaysi muhitda qo'shilganini eslab qoladi. Boshqa muhitda u ro'yxatda
+  qoladi, «Boshqa server» deb belgilanadi va imzolamaydi. 2.3 dan oldin
+  qo'shilgan kalitlarda belgi yo'q, ular ikkala muhitda ishlaydi.
+- ID-karta: boshqa karta PIN tekshirilishidan oldin aniqlanadi; karta bir
+  daqiqa ichida tegizilmasa, kutish `card_timeout` xatosi bilan tugaydi.
+- Ekranlar Android 15/16 edge-to-edge'da (targetSdk 35+) status bar,
+  navigatsiya paneli va kamera teshigi ostiga tushmaydi — landscape'da va
+  klaviatura chiqqanda ham.
+- `debugLogging` SDK qadamlarini logcat'ga yozadi — kalit, PIN va imzo hech
+  qachon yozilmaydi. Endi u SDK ekrani ochilganda o'chib qolmaydi.
+- AAR manifest'iga `ACCESS_NETWORK_STATE` qo'shildi (internet yo'qligi
+  banneri uchun). U avtomatik birlashadi.
+
+### Tuzatishlar
+
+- **R8 bilan qisqartirilgan release build'da imzo ishlamasdi.** R8 full
+  mode'da (AGP 8 da sukut bo'yicha) E-IMZO'ning har bir javobi «requires 0
+  type arguments, but got 1» bilan o'qilmasdi. AAR'dagi consumer
+  qoidalariga SDK'ning JSON modellari uchun qoida qo'shildi. Debug build'ga
+  bu ta'sir qilmagan.
+- ID-karta bilan qo'yilgan imzoni E-IMZO `signature.invalid` deb rad etardi:
+  imzo atributlari xeshi teskari qilinmasdi.
+- ID-karta va token egasining ismidagi o'/g' belgisi buzilib chiqardi — endi
+  to'g'ri o'qiladi.
+- `send.success` holati bilan kelgan rad javobi (masalan, «hujjat
+  topilmadi») endi xato sifatida ko'rsatiladi. Avval foydalanuvchi bunday
+  holatda ham «Imzolandi» ko'rardi.
+- Kalitni o'chirib yoki asosiy qilib bo'lmaganda ilova yiqilmaydi: ekranda
+  xabar chiqadi.
+- Gateway ilova yoki telefonni rad etsa, `checkLicenseAndInit` bloklangan
+  ekranni o'zini chaqirgan activity ustida ochadi va uni yopmaydi. Ekrandagi
+  «Yopish» ham endi faqat o'zini yopadi, foydalanuvchi ilovaga qaytadi. Avval
+  ikkalasi ilovaning oynalarini yopardi. SDK'ning o'z `EImzoActivity`si esa
+  avvalgidek yopiladi.
+
+### Migratsiya
+
+1. Ilovani `dev` va `prod` uchun ro'yxatdan o'tkazing. Litsenziyali ilova
+   bo'lsa, avval info@yt.uz ga yozing va YT tasdiqlamaguncha 2.2 da qoling.
+2. `implementation 'uz.eimzo:eimzo-sdk:2.3.0'`
+3. Manifest'dan `eimzo` sxemali intent-filter'ni olib tashlang. Imzo
+   so'rovini `EImzoSignLink.create(siteId, documentId, hash)` bilan yasang
+   va `EImzoActivity` ga `data` sifatida bering.
+4. `isTestMode` o'rniga `environment = EImzoEnvironment.DEV` yoki `PROD`
+   yozing. Sozlamani `EImzoSDK.checkLicenseAndInit(activity, config)` bilan
+   `EImzoActivity` ochilishidan oldin bering.
+5. Flutter ilovasi iOS'da ham chiqsa: `Info.plist` dagi `CFBundleURLTypes`
+   dan `eimzo` ni olib tashlang va App Store Connect → App Privacy'ni
+   yangilang.
+6. Haqiqiy telefonda avval `dev` da, keyin `prod` da imzolab ko'ring.
+
+Batafsil: README, «Ro'yxatdan o'tish» va «2.2 dan o'tish» bo'limlari.
+
 ## 2.2.1 — 2026-09-24
 
 **Tuzatish: Android 12 va undan pastida ERI fayl va QR kalit bilan ishlab bo'lmasdi** — «No static field TWO» xatosi chiqardi.
