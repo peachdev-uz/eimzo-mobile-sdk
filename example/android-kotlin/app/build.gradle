@@ -33,12 +33,14 @@ android {
 
     buildFeatures {
         viewBinding true
+        // BuildConfig.DEBUG picks the SDK's environment in MainActivity.
+        buildConfig true
     }
 }
 
 dependencies {
     // E-IMZO Mobile SDK — single line, all transitive deps come for free
-    implementation 'uz.eimzo:eimzo-sdk:1.2.8'
+    implementation 'uz.eimzo:eimzo-sdk:2.3.0'
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

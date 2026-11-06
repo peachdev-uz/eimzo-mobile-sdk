@@ -11,8 +11,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // E-IMZO Mobile SDK — official public Maven repository
-        maven { url 'https://raw.githubusercontent.com/peachdev-uz/eimzo-mobile-sdk/main/maven/' }
+        // E-IMZO Mobile SDK from this repo's own maven/ directory, so the
+        // example builds with the SDK version of the checkout. In your app use
+        // the official public Maven repository instead:
+        // maven { url 'https://raw.githubusercontent.com/peachdev-uz/eimzo-mobile-sdk/main/maven/' }
+        maven { url uri('../../maven') }
     }
 }
 

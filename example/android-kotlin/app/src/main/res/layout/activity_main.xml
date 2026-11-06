@@ -33,11 +33,11 @@
         android:layout_marginBottom="12dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSignWithDeepLink"
+        android:id="@+id/btnSignDocument"
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_sign_with_deep_link"
+        android:text="@string/btn_sign_document"
         app:icon="@android:drawable/ic_menu_send" />
 
 </LinearLayout>

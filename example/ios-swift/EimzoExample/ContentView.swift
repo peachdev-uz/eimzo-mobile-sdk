@@ -4,47 +4,68 @@ import EimzoSDK
 /// Minimal demo of the E-IMZO Mobile SDK on iOS, mirroring
 /// `example/android-kotlin`.
 ///
-/// Four things an integrating app does, in the order it usually needs them:
+/// Two things an integrating app does:
 ///
-/// 1. **Open the full UI** — present `EImzoView` with no deeplink. The user
-///    lands on Home, adds keys (PFX / QR / NFC / USB token), and signs.
-/// 2. **Open the sign flow directly** — pass an `eimzo://sign?qc=…` URL. The
-///    SDK opens the confirmation screen for that document.
-/// 3. **Build a link from a `qc` code** — what the portal actually hands you
-///    is the code, not the URL. See `EimzoDeepLink.make`.
-/// 4. **Send a link to yourself** — the same round trip an external app makes,
-///    useful for testing the `onOpenURL` path without a second app.
+/// 1. **Open the full UI** — present `EImzoView` with no sign request. The
+///    user lands on Home, adds keys (PFX / QR / ID card / USB token / BAIK
+///    token), and signs by scanning a QR code.
+/// 2. **Sign a document** — the app's backend hands it the document's
+///    `siteId`, `documentId` and `hash`; `EImzoSignLink.create` makes the
+///    sign request from them and `EImzoView` opens with it.
 ///
-/// The SDK owns everything else: licence check, blocked screen, key
+/// The app takes no `eimzo://` links from outside: that scheme is the E-IMZO
+/// app's, so there is no `CFBundleURLTypes` entry and no `onOpenURL`.
+///
+/// The SDK owns everything else: the gateway check, blocked screen, key
 /// management, NFC animations, QR scanner, the network round-trip.
 struct ContentView: View {
 
-    /// Set by the app entry point when an external `eimzo://` URL arrives.
-    @Binding var incomingDeepLink: String?
+    /// What the sheet shows: the SDK, with or without a sign request.
+    ///
+    /// One item rather than a flag plus a separate link: with
+    /// `sheet(isPresented:)` the content closure could read the link before
+    /// its update landed, and the SDK opened with none.
+    private struct Presentation: Identifiable {
+        let id = UUID()
+        let deepLink: String?
+    }
 
-    @State private var showEimzo = false
-    @State private var presentedLink: String?
-    @State private var qcCode = Self.sampleQc
-    @State private var note: String?
+    @State private var presentation: Presentation?
 
-    /// Flips the endpoint between `m.e-imzo.uz` and `test.e-imzo.uz`.
-    /// A QR issued by one stand does not verify against the other, so this has
-    /// to match whatever produced the code.
-    @State private var isTestMode = false
+    /// `.dev` is YT's test environment on `test.e-imzo.uz`, where only test
+    /// keys sign; `.prod` is E-IMZO itself on `m.e-imzo.uz`. A document signs
+    /// only in the environment that issued it, and the app must be
+    /// registered in the one it uses.
+    @State private var environment = EImzoEnvironment.dev
 
-    /// Sample code from a QA signing session. Replace with whatever the
-    /// issuing portal hands your user.
-    private static let sampleQc =
-        "1a4759282737518b091cc3878831103872e422ec71d2e6ee501e255dce3290af02042edfcd6989e4017b"
+    /// A document from a QA signing session. In your app the three values
+    /// come from your backend.
+    @State private var siteId = "1a47"
+    @State private var documentId = "59282737"
+    @State private var hash = "518b091cc3878831103872e422ec71d2e6ee501e255dce3290af02042edfcd69"
+
+    /// The SDK's step-by-step log, in debug builds only — never ship it on.
+    #if DEBUG
+    private static let debugLogging = true
+    #else
+    private static let debugLogging = false
+    #endif
+
+    /// The sign request the three values make, or why they make none:
+    /// `EImzoSignLink.Error` says which value is not in E-IMZO's form.
+    private var signLink: Result<String, Error> {
+        Result { try EImzoSignLink.create(siteId: siteId, documentId: documentId, hash: hash) }
+    }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle(isOn: $isTestMode) {
+                    Toggle(isOn: Binding(get: { environment == .dev },
+                                         set: { environment = $0 ? .dev : .prod })) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Test rejimi")
-                            Text(isTestMode ? "test.e-imzo.uz" : "m.e-imzo.uz")
+                            Text("Test muhiti (dev)")
+                            Text(environment == .dev ? "test.e-imzo.uz" : "m.e-imzo.uz")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -55,99 +76,76 @@ struct ContentView: View {
 
                 Section {
                     Button("E-IMZO oynasini ochish") {
-                        presentedLink = nil
-                        showEimzo = true
+                        presentation = Presentation(deepLink: nil)
                     }
                 } header: {
                     Text("1 — To'liq interfeys")
                 } footer: {
-                    Text("Deeplinksiz. Foydalanuvchi kalit qo'shadi va imzolaydi.")
+                    Text("So'rovsiz. Foydalanuvchi kalit qo'shadi va QR kodni skanerlab imzolaydi.")
                 }
 
                 Section {
-                    TextField("qc kodi", text: $qcCode, axis: .vertical)
-                        .font(.system(.footnote, design: .monospaced))
-                        .lineLimit(2 ... 4)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
+                    field("siteId", text: $siteId)
+                    field("documentId", text: $documentId)
+                    field("hash", text: $hash)
 
-                    if let url = EimzoDeepLink.make(qc: qcCode) {
+                    switch signLink {
+                    case .success(let link):
+                        // One line, cut in the middle: wrapped, the hex got
+                        // hyphens it does not have.
                         LabeledContent("Havola") {
-                            Text(url.absoluteString)
+                            Text(link)
                                 .font(.system(.caption2, design: .monospaced))
                                 .foregroundStyle(.secondary)
-                                .lineLimit(3)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
                         }
-                    } else {
-                        Text("qc kodi bo'sh")
+                    case .failure(let error):
+                        Text(String(describing: error))
                             .font(.caption)
                             .foregroundStyle(.red)
                     }
 
-                    Button("Shu havola bilan imzolash") {
-                        guard let url = EimzoDeepLink.make(qc: qcCode) else { return }
-                        presentedLink = url.absoluteString
-                        showEimzo = true
+                    Button("Shu so'rov bilan imzolash") {
+                        guard case .success(let link) = signLink else { return }
+                        presentation = Presentation(deepLink: link)
                     }
-                    .disabled(EimzoDeepLink.make(qc: qcCode) == nil)
+                    .disabled((try? signLink.get()) == nil)
                 } header: {
-                    Text("2 — Deeplink tuzish va ochish")
+                    Text("2 — Hujjatni imzolash")
                 } footer: {
-                    Text("Portal sizga qc kodini beradi, havolani siz tuzasiz — "
-                         + "EimzoDeepLink.make ga qarang.")
-                }
-
-                Section {
-                    Button("Havolani tizim orqali yuborish") { sendToSelf() }
-                        .disabled(EimzoDeepLink.make(qc: qcCode) == nil)
-                    if let note {
-                        Text(note).font(.caption).foregroundStyle(.secondary)
-                    }
-                } header: {
-                    Text("3 — Tashqi havolani sinash")
-                } footer: {
-                    Text("Havolani o'zingizga yuboradi. Tizim uni qaytarib "
-                         + "beradi va onOpenURL ishga tushadi — tashqi ilova "
-                         + "yuborganidagi bilan bir xil yo'l.")
+                    Text("siteId, documentId va hash backend'ingizdan keladi, havolani "
+                         + "EImzoSignLink.create yasaydi. eimzo:// havolasi tashqaridan olinmaydi.")
                 }
             }
             .navigationTitle("E-IMZO iOS")
             .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showEimzo) {
+            .sheet(item: $presentation) { shown in
                 EImzoView(
-                    config: EImzoConfig(isTestMode: isTestMode),
-                    deepLink: presentedLink,
-                    // The SDK shows IMZOLANDI for ~1.5 s, then calls back.
-                    onSignComplete: { _ in showEimzo = false }
+                    config: EImzoConfig(environment: environment, debugLogging: Self.debugLogging),
+                    deepLink: shown.deepLink,
+                    // E-IMZO has the signature: the SDK calls back from
+                    // «Ilovaga qaytish» — tapped, or by itself after about
+                    // 3 s — or, for a QR it scanned, from «Tayyor». It does
+                    // not close itself, so the sheet is closed here.
+                    onSignComplete: { _ in presentation = nil }
                 )
-            }
-            // Bir argumentli shakl — iOS 17 dagi ikki argumentlisi
-            // deployment target 16.0 da mavjud emas.
-            .onChange(of: incomingDeepLink) { newValue in
-                guard let link = newValue else { return }
-                presentedLink = link
-                showEimzo = true
-                incomingDeepLink = nil
-                note = "Tashqaridan keldi: \(link.prefix(40))…"
             }
         }
     }
 
-    /// Opens our own `eimzo://` URL through the system.
-    ///
-    /// The system routes it back to this app because `Info.plist` registers
-    /// the scheme — which is the point: it exercises the same `onOpenURL` path
-    /// an external app would use, with nothing else installed.
-    private func sendToSelf() {
-        guard let url = EimzoDeepLink.make(qc: qcCode) else { return }
-        UIApplication.shared.open(url) { opened in
-            note = opened
-                ? "Yuborildi — onOpenURL kutilyapti"
-                : "Tizim ochmadi. Info.plist da CFBundleURLTypes bormi?"
+    /// One of the document's values: hex, so no autocorrection or capitals,
+    /// and one line that scrolls rather than wraps.
+    private func field(_ title: String, text: Binding<String>) -> some View {
+        LabeledContent(title) {
+            TextField(title, text: text)
+                .font(.system(.footnote, design: .monospaced))
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
         }
     }
 }
 
 #Preview {
-    ContentView(incomingDeepLink: .constant(nil))
+    ContentView()
 }

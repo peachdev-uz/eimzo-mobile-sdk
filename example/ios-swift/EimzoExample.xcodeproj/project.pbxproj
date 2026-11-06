@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2BBEB7744F1121238B1B6A2D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A1D1EC909D977AC4474DC35 /* Foundation.framework */; };
 		3105162B227BAF6DEED32B39 /* EimzoExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFC0DDB5A2DDE15EF16FDBA /* EimzoExampleApp.swift */; };
-		3AB25F8BEFB32C5831870960 /* DeepLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16014BC75AC535D05C8BC7F8 /* DeepLink.swift */; };
 		864616113B13352ED7EDB311 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5DCE2C5417F74AEEEE7D5E /* ContentView.swift */; };
 		8D1C605C18F6A22468FC613C /* EimzoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 06510C9CC70440E2A8219B4C /* EimzoSDK */; };
 /* End PBXBuildFile section */
@@ -17,7 +16,6 @@
 /* Begin PBXFileReference section */
 		051E6B0A83BD1EC868CBB6A2 /* EimzoExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EimzoExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BE0D7E944A4BCB6A08D3B33 /* EimzoExample.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EimzoExample.entitlements; sourceTree = "<group>"; };
-		16014BC75AC535D05C8BC7F8 /* DeepLink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DeepLink.swift; sourceTree = "<group>"; };
 		2A1D1EC909D977AC4474DC35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		3E5DCE2C5417F74AEEEE7D5E /* ContentView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AFFC0DDB5A2DDE15EF16FDBA /* EimzoExampleApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EimzoExampleApp.swift; sourceTree = "<group>"; };
@@ -42,7 +40,6 @@
 			children = (
 				AFFC0DDB5A2DDE15EF16FDBA /* EimzoExampleApp.swift */,
 				3E5DCE2C5417F74AEEEE7D5E /* ContentView.swift */,
-				16014BC75AC535D05C8BC7F8 /* DeepLink.swift */,
 				DF845101965E94500E0FEF3D /* Info.plist */,
 				0BE0D7E944A4BCB6A08D3B33 /* EimzoExample.entitlements */,
 			);
@@ -153,7 +150,6 @@
 			files = (
 				3105162B227BAF6DEED32B39 /* EimzoExampleApp.swift in Sources */,
 				864616113B13352ED7EDB311 /* ContentView.swift in Sources */,
-				3AB25F8BEFB32C5831870960 /* DeepLink.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +225,7 @@
 				INFOPLIST_FILE = EimzoExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uz.eimzo.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -315,7 +311,7 @@
 				INFOPLIST_FILE = EimzoExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = uz.eimzo.example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -353,7 +349,7 @@
 			repositoryURL = "https://github.com/peachdev-uz/eimzo-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.2;
+				minimumVersion = 2.3.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
