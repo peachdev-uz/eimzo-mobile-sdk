@@ -1,3 +1,68 @@
+## 2.4.0 — 2026-11-09
+
+**Yangi: «Kalitlar API» — YT ruxsat bergan integratorlar uchun.**
+
+Ilova foydalanuvchi SDK'ga qo'shgan kalitlar ro'yxatini oladi va imzo
+so'rovini tanlangan kalit bilan SDK'ning o'z oynasida imzolaydi. Ruxsati yo'q
+ilovalar uchun hech narsa o'zgarmaydi: `EImzoActivity` avvalgidek ishlaydi.
+
+### Ruxsat
+
+Ruxsat integratorga beriladi va uning barcha ilovalariga tegishli. U sukut
+bo'yicha o'chiq: YT bilan shartnoma tuzilgach, so'rov bo'yicha yoqiladi —
+info@yt.uz ga yozing. Ruxsat bo'lmasa, ikkala metod ham hech narsa ko'rsatmay
+`api_not_allowed` qaytaradi. Yoqilgan ruxsat ilova qayta ishga tushganda (yoki
+bir soat ichida) kuchga kiradi.
+
+### `EImzoSDK.getKeys` va `EImzoSDK.sign`
+
+- `EImzoSDK.getKeys { json -> }` — kalitlar ro'yxati:
+  `{"status":"ok","keys":[{"id","pinfl","name","validFrom","validTo"}]}`.
+  Joriy `environment` da imzolay oladigan har turdagi kalit, muddati
+  o'tganlari ham, asosiy kalit birinchi; boshqa muhitda qo'shilgani kirmaydi.
+  STIR, tashkilot, kalit turi, kalitning o'zi va saqlangan parol SDK'da
+  qoladi.
+- `EImzoSDK.sign(activity, keyId, deepLink) { json -> }` —
+  `EImzoSignLink.create` bilan yasalgan so'rovni `getKeys` bergan kalit bilan
+  imzolaydi. Avval ruxsat, so'rov, kalit (shu muhitda bormi, muddati) va
+  boshqa `sign` ochiq emasligi tekshiriladi, keyin SDK oynasi ilova ustida
+  ochiladi: sayt, xesh va kalit ko'rinadi (kalitni almashtirib bo'lmaydi),
+  parol yoki PIN faqat shu oynada teriladi, foydalanuvchi IMZOLASH ni
+  bosmaguncha hech narsa imzolanmaydi, «Imzolandi» ekrani 3 soniyada ilovaga
+  o'zi qaytadi. Natija: `{"status":"signed"}`, `{"status":"cancelled"}` yoki
+  `{"status":"error","code":…,"message":…}`. Bir vaqtda bitta `sign`.
+- Tuzatsa bo'ladigan xato (noto'g'ri parol yoki PIN, internet, karta yoki
+  token) oynada ko'rsatiladi; shundan keyin oyna yopilsa — `cancelled`. Kalit
+  muddati tugasa, E-IMZO imzoni rad etsa yoki PIN bloklansa, SDK sababini
+  ko'rsatadi va `error` qaytadi.
+- Xato kodlari: `api_not_allowed`, `not_initialized`, `blocked`, `network`,
+  `invalid_request`, `key_not_found`, `key_expired`, `busy`, `sign_failed`.
+- Javob bir marta, main thread'da keladi — activity oyna ochiqligida qayta
+  yaratilsa ham. JSON va xato kodlari iOS SDK va Flutter plaginidagi bilan bir
+  xil.
+
+Kalitlar avvalgidek `EImzoActivity` da qo'shiladi. Metodlar bloklangan
+ekranni ochmaydi: rad etilgan ilova `blocked` oladi. Imzolangan hujjatni
+(PKCS#7) E-IMZO avvalgidek integratorning backend'iga beradi, ilova uni
+olmaydi. Manifest'ga hech narsa qo'shish shart emas.
+
+### Boshqa
+
+- POM'dagi `scm` manzili endi shu ochiq repo'ni ko'rsatadi.
+- iOS SDK'ning ochiq zip'larida endi dSYM yo'q.
+
+### Migratsiya
+
+1. `implementation 'uz.eimzo:eimzo-sdk:2.4.0'` — 2.3 dan boshqa o'zgartirish
+   kerak emas.
+2. Kalitlar API kerak bo'lsa, info@yt.uz ga yozing. Ruxsat yoqilgach, ilovani
+   qayta ishga tushiring.
+
+2.2 yoki undan oldingisidan o'tsangiz, avval 2.3.0 ning «Migratsiya»
+bo'limini bajaring.
+
+Batafsil: README, «Kalitlar API» bo'limi.
+
 ## 2.3.0 — 2026-11-06
 
 **BUZUVCHI: har bir ilova E-IMZO bilan YT gateway orqali ishlaydi.**

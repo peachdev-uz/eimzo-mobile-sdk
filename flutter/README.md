@@ -1,14 +1,14 @@
 # E-IMZO Flutter Plugin
 
 Flutter integratorlari uchun **rasmiy plugin** allaqachon pub.dev'da.
-U Android SDK 2.3.0 ni o'z ichiga oladi, iOS'da esa
-[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) 2.3.0 ni ishlatadi.
+U Android SDK 2.4.0 ni o'z ichiga oladi, iOS'da esa
+[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) 2.4.0 ni ishlatadi.
 
 ## 📦 O'rnatish
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.3.0
+  eimzo_flutter: ^2.4.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -41,6 +41,21 @@ await eimzo.openSignUi(deepLink: link);
 Plugin Android tomonda `EImzoActivity` ni, iOS'da `EImzoView` ni ochadi — gateway
 tekshiruvi, kalit boshqaruvi va imzolash oqimini SDK o'zi bajaradi. Hech qanday
 Dart UI yozish shart emas.
+
+## 2.4 da nima o'zgardi
+
+- «Kalitlar API» — YT ruxsat bergan integrator uchun plaginda ikkita yangi
+  metod: `EimzoFlutter.instance.getKeys()` foydalanuvchi SDK'ga qo'shgan
+  kalitlar ro'yxatini beradi, `EimzoFlutter.instance.sign(keyId:, deepLink:)`
+  esa so'rovni tanlangan kalit bilan SDK oynasida imzolaydi. Ikkalasi ham
+  native SDK'ning JSON'ini `String` sifatida qaytaradi; JSON va xato kodlari
+  Android va iOS bilan bir xil. Ruxsat shartnomadan keyin beriladi —
+  info@yt.uz ga yozing.
+- Kalitlar avvalgidek `openSignUi()` ochgan SDK ekranlarida qo'shiladi,
+  parol yoki PIN faqat SDK oynasida teriladi.
+- Batafsil — plaginning [pub.dev sahifasidagi](https://pub.dev/packages/eimzo_flutter)
+  «Keys API («Kalitlar API»)» bo'limida; JSON va xato kodlari —
+  [Kalitlar API](../README.md#-kalitlar-api).
 
 ## 2.3 da nima o'zgardi
 

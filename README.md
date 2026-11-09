@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -97,8 +97,8 @@ Yangi ilova uchun litsenziya kerak emas — yuqoridagi ro'yxatdan o'tish yetarli
 1. Ilovani `dev` va `prod` uchun ro'yxatdan o'tkazing (yuqoriga qarang).
    Ilovangizda litsenziya bo'lsa, avval info@yt.uz ga yozing va YT
    tasdiqlamaguncha 2.2 da qoling.
-2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.3.0'`
-   (Flutter: `eimzo_flutter: ^2.3.0`).
+2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.4.0'`
+   (Flutter: `eimzo_flutter: ^2.4.0`).
 3. `AndroidManifest.xml` dan `eimzo` sxemali `intent-filter` ni olib tashlang;
    Flutter ilovasida iOS `Info.plist` dagi `CFBundleURLTypes` dan `eimzo` ni ham.
    2.2 da bu filtr SDK'ning o'z manifest'idan ham qo'shilardi. 2.3 da u yo'q,
@@ -122,7 +122,7 @@ Manifest'ga boshqa hech narsa qo'shilmaydi: 2.3 da kerak bo'lgan
 
 ### Android
 
-📥 **[eimzo-sdk-2.3.0.aar](android/eimzo-sdk-2.3.0.aar)** (13 MB) — to'liq UI bundlangan
+📥 **[eimzo-sdk-2.4.0.aar](android/eimzo-sdk-2.4.0.aar)** (13 MB) — to'liq UI bundlangan
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -130,7 +130,7 @@ Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-u
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.3.0
+  eimzo_flutter: ^2.4.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -141,14 +141,14 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 (Swift Package Manager, iOS 16+):
 
 ```swift
-.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.3.0")
+.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.4.0")
 ```
 
 ---
 
 ## 🎯 Misollar
 
-[`example/`](example/) dagi ikkala misol ham 2.3.0 uchun:
+[`example/`](example/) dagi ikkala misol ham 2.4.0 uchun:
 
 - [example/android-kotlin/](example/android-kotlin/) — pastdagi 4 qadam asosida
   yozilgan ilova: SDK'ni ochish va `EImzoSignLink.create` bilan yasalgan so'rov
@@ -191,7 +191,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:2.3.0'
+    implementation 'uz.eimzo:eimzo-sdk:2.4.0'
 }
 ```
 
@@ -273,8 +273,8 @@ ko'proq vaqt so'rasa, kutish uzunroq bo'ladi. E-IMZO ilovasidagi
 «Saytga qaytish» va «Ilovada qolish» SDK'da yo'q. SDK ichida QR kodni
 skanerlab boshlangan imzo esa «Tayyor» bilan tugaydi.
 
-SDK ilovangizga natija qaytarmaydi: imzo E-IMZO'ga yuboriladi, natijani o'z
-backend'ingizdan bilasiz.
+`EImzoActivity` ilovangizga natija qaytarmaydi: imzo E-IMZO'ga yuboriladi,
+natijani o'z backend'ingizdan bilasiz.
 
 ### Muhit: `prod` va `dev`
 
@@ -295,6 +295,137 @@ belgi yo'q, ular ikkala muhitda ishlaydi.
 `EImzoConfig(debugLogging = true)` SDK qadamlarini logcat'ga yozadi (teg
 `EImzoSDK`) — kalit, PIN va imzo hech qachon yozilmaydi. Release build'da
 o'chiq qoldiring.
+
+---
+
+## 🔑 Kalitlar API
+
+2.4.0 dan SDK ilovaga ikkita metod beradi:
+
+- `EImzoSDK.getKeys` — foydalanuvchi SDK'ga qo'shgan kalitlar ro'yxati, JSON'da;
+- `EImzoSDK.sign` — imzo so'rovini ilova tanlagan kalit bilan SDK'ning o'z
+  oynasida imzolaydi.
+
+Ikkalasi ham javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
+main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
+bilan bir xil.
+
+### Ruxsat
+
+«Kalitlar API» faqat YT ruxsat bergan integratorlar uchun. Ruxsat YT bilan
+shartnoma tuzilgach, so'rov bo'yicha yoqiladi — **info@yt.uz** ga yozing. U
+integratorga beriladi va uning barcha ilovalariga tegishli, sukut bo'yicha
+o'chiq. Ruxsat bo'lmasa, ikkala metod ham hech narsa ko'rsatmay
+`api_not_allowed` qaytaradi. Yoqilgan ruxsat ilova qayta ishga tushganda (yoki
+bir soat ichida) kuchga kiradi. `EImzoActivity` ruxsatsiz ham avvalgidek
+ishlaydi.
+
+Kalitlar ilovada qo'shilmaydi: foydalanuvchi ularni avvalgidek
+`EImzoActivity` da qo'shadi — ERI fayl, QR kod, ID-karta, USB token yoki BAIK
+token orqali. Parol yoki PIN faqat SDK oynasida teriladi: hech bir metod parol
+olmaydi va kalitning o'zini qaytarmaydi.
+
+Metodlar `EImzoSDK.checkLicenseAndInit` `true` qaytargandan keyin ishlaydi
+([4-qadam](#4-sdk-uini-oching)), undan oldin — `not_initialized`. Ular
+bloklangan ekranni ochmaydi: ilova yoki telefon rad etilsa, `blocked` qaytadi.
+
+### `getKeys`
+
+```kotlin
+EImzoSDK.getKeys { json ->
+    val reply = JSONObject(json)
+    if (reply.getString("status") != "ok") {
+        showError(reply.getString("code")) // pastdagi jadval
+        return@getKeys
+    }
+    val keys = reply.getJSONArray("keys")
+    for (i in 0 until keys.length()) {
+        val key = keys.getJSONObject(i)
+        // key.getString("id") — sign() ga shu beriladi
+    }
+}
+```
+
+```json
+{"status":"ok","keys":[
+  {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+   "validFrom":"2025-03-01","validTo":"2027-03-01"}
+]}
+```
+
+- `id` — sertifikat seriya raqami: uni o'zgartirmay `sign()` ga bering;
+- `pinfl` — JSHSHIR, sertifikatda bo'lmasa `null`;
+- `name` — sertifikat egasining ismi;
+- `validFrom`, `validTo` — sertifikat muddati, `yyyy-MM-dd`; o'qib bo'lmasa `null`.
+
+Boshqa hech narsa berilmaydi: STIR, tashkilot, kalit turi, kalitning o'zi va
+saqlangan parol SDK'da qoladi. Ro'yxatda joriy `environment` da imzolay
+oladigan har turdagi kalit bor, asosiy kalit birinchi; boshqa muhitda
+qo'shilgan kalit ko'rsatilmaydi. Muddati o'tgan kalit ham ko'rsatiladi — buni
+`validTo` dan biling. Kalit bo'lmasa — `{"status":"ok","keys":[]}`.
+
+### `sign`
+
+```kotlin
+// siteId, documentId va hash — backend'ingizdan, keyId — getKeys() dan
+fun signDocument(siteId: String, documentId: String, hash: String, keyId: String) {
+    val link = EImzoSignLink.create(siteId, documentId, hash)
+    EImzoSDK.sign(this, keyId, link) { json ->
+        val reply = JSONObject(json)
+        when (reply.getString("status")) {
+            "signed" -> refreshDocument()                 // natija — backend'ingizda
+            "cancelled" -> Unit                           // foydalanuvchi oynani yopdi
+            "error" -> showError(reply.getString("code")) // pastdagi jadval
+        }
+    }
+}
+```
+
+Oyna ochilishidan oldin tekshiriladi: ruxsat, imzo so'rovi, kalit shu muhitda
+borligi va muddati, boshqa `sign()` ochiq emasligi. Birortasi o'tmasa, hech
+narsa ochilmaydi va `error` qaytadi. Keyin SDK imzo oynasini uzatilgan
+activity ustida ochadi — manifest'ga hech narsa qo'shilmaydi:
+
+- Oynada sayt, xesh va tanlangan kalit ko'rinadi, kalitni almashtirib
+  bo'lmaydi. Parol yoki PIN (ID-karta va tokenda — karta yoki token ham)
+  faqat shu oynada so'raladi, saqlangan parol avvalgidek ishlaydi.
+- Foydalanuvchi IMZOLASH ni bosmaguncha hech narsa imzolanmaydi. Imzodan
+  keyin «Imzolandi» ekrani 3 soniyadan keyin ilovaga o'zi qaytadi va callback
+  `{"status":"signed"}` oladi.
+- Tuzatsa bo'ladigan xato (noto'g'ri parol yoki PIN, internet yo'q, karta yoki
+  token yo'q) oynada ko'rsatiladi: foydalanuvchi qayta urinadi yoki oynani
+  yopadi — `{"status":"cancelled"}`. Oqimni tugatadigan xatoda `error`
+  qaytadi: ilova yoki ruxsat rad etilsa yoki E-IMZO saytni tanimasa, oyna
+  darhol yopiladi; kalit muddati tugasa, E-IMZO imzoni rad etsa yoki PIN
+  bloklansa, SDK avval sababini ko'rsatadi.
+
+Bir vaqtda bitta `sign()`: oyna ochiqligida chaqirilgan ikkinchisi `busy`
+oladi. Callback bir marta keladi — activity oyna ochiqligida qayta yaratilsa
+(masalan, ekran burilsa) ham, shuning uchun unda eski activity'ga emas, joriy
+ekranga murojaat qiling. Imzolangan hujjatni (PKCS#7) E-IMZO avvalgidek
+backend'ingizga beradi, ilova uni olmaydi: `signed` dan keyin hujjat holatini
+backend'ingizdan biling.
+
+### Xato kodlari
+
+`{"status":"error","code":"…","message":"…"}`:
+
+| `code` | Qachon |
+|---|---|
+| `api_not_allowed` | Integratorda «Kalitlar API» ruxsati yo'q |
+| `not_initialized` | `EImzoSDK.checkLicenseAndInit` bu jarayonda hali `true` qaytarmagan |
+| `blocked` | Litsenziya tekshiruvi yoki gateway ilovani yoki telefonni rad etdi; `message` — gateway kodi, masalan `app_blocked` |
+| `network` | Gateway'ga ulanib bo'lmadi yoki u javob bermadi |
+| `invalid_request` | `deepLink` imzo so'rovi emas yoki E-IMZO undagi saytni tanimaydi |
+| `key_not_found` | Shu muhitda bu `id` li kalit yo'q |
+| `key_expired` | Kalit sertifikatining muddati tugagan |
+| `busy` | Boshqa `sign()` hali ochiq |
+| `sign_failed` | E-IMZO imzoni rad etdi (`message` — uning o'z javobi), ID-karta yoki token PIN'i bloklandi (`message`: `pin_blocked`) yoki oqim boshqa xato bilan tugadi |
+
+`message` — ishlab chiquvchi uchun matn: inglizcha, E-IMZO rad etganda esa
+uning o'z javobi (rus yoki o'zbek tilida bo'lishi mumkin). Foydalanuvchiga uni
+emas, `code` bo'yicha o'z matningizni ko'rsating. Unda kalit, parol yoki xesh
+hech qachon bo'lmaydi.
 
 ---
 
@@ -352,15 +483,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-2.3.0.aar
+    └── eimzo-sdk-2.4.0.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-2.3.0.aar](android/eimzo-sdk-2.3.0.aar)** (13 MB)
+Yuklab olish: **[android/eimzo-sdk-2.4.0.aar](android/eimzo-sdk-2.4.0.aar)** (13 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-2.3.0.aar')
+    implementation files('libs/eimzo-sdk-2.4.0.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -405,6 +536,7 @@ dependencies {
 | OzDST 1092 elektron imzo (milliy standart) | ✅ |
 | OzDST 1106 hash funksiyasi | ✅ |
 | Ilova ichida yasalgan imzo so'rovi (`EImzoSignLink`) | ✅ |
+| [Kalitlar API](#-kalitlar-api): kalitlar ro'yxati va tanlangan kalit bilan SDK oynasida imzolash (YT ruxsati bilan) | ✅ |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |
@@ -417,7 +549,7 @@ dependencies {
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[2.3.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.3.0)** (2026-11-06)
+So'nggi versiya: **[2.4.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.4.0)** (2026-11-09)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 

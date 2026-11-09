@@ -1,6 +1,6 @@
 # E-IMZO Mobile SDK — Android (Kotlin) misol
 
-Minimal Android Kotlin ilovasi, `uz.eimzo:eimzo-sdk:2.3.0`. Ikkita tugma:
+Minimal Android Kotlin ilovasi, `uz.eimzo:eimzo-sdk:2.4.0`. Ikkita tugma:
 SDK'ni ochish va ilova ichida yasalgan imzo so'rovi bilan hujjatni
 imzolash.
 
@@ -35,7 +35,7 @@ example/android-kotlin/
 ├── gradle.properties
 ├── gradlew, gradlew.bat         ← Gradle wrapper
 └── app/
-    ├── build.gradle             ← uz.eimzo:eimzo-sdk:2.3.0 (BIR qator)
+    ├── build.gradle             ← uz.eimzo:eimzo-sdk:2.4.0 (BIR qator)
     ├── proguard-rules.pro
     └── src/main/
         ├── AndroidManifest.xml  ← faqat MainActivity, eimzo:// filtri yo'q
@@ -70,7 +70,7 @@ dependencyResolutionManagement {
 
 ```gradle
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:2.3.0'
+    implementation 'uz.eimzo:eimzo-sdk:2.4.0'
 }
 ```
 
