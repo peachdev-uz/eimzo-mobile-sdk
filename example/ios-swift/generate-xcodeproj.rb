@@ -20,11 +20,12 @@ EXAMPLE_DIR = File.join(ROOT, 'EimzoExample')
 PROJ_PATH   = File.join(ROOT, 'EimzoExample.xcodeproj')
 
 SDK_PACKAGE_URL = 'https://github.com/peachdev-uz/eimzo-ios-sdk'
-# 2.3: the sign request is made with EImzoSignLink, `environment` replaced
-# `isTestMode`, and every app signs through the YT gateway. Anything below
-# that does not match this example's code.
-SDK_MIN_VERSION = '2.3.0'
-EXAMPLE_VERSION = '2.3.0'
+# 2.4: EImzoAPI, the Keys API. 2.3: the sign request is made with
+# EImzoSignLink, `environment` replaced `isTestMode`, and every app signs
+# through the YT gateway. Anything below that does not match this example's
+# code.
+SDK_MIN_VERSION = '2.4.0'
+EXAMPLE_VERSION = '2.4.0'
 
 SOURCES = %w[EimzoExampleApp.swift ContentView.swift].freeze
 

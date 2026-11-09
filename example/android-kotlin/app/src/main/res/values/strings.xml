@@ -4,4 +4,8 @@
     <string name="subtitle">Official E-IMZO Mobile SDK integration example</string>
     <string name="btn_open_sdk">Open E-IMZO</string>
     <string name="btn_sign_document">Sign a demo document</string>
+    <string name="keys_api">Kalitlar API</string>
+    <string name="keys_api_note">Faqat YT ruxsat bergan integratorlar uchun (info@yt.uz). Ruxsatsiz javob: api_not_allowed</string>
+    <string name="btn_list_keys">Kalitlar ro\'yxati</string>
+    <string name="btn_sign_with_key">Tanlangan kalit bilan imzolash</string>
 </resources>

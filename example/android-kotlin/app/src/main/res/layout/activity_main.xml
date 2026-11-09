@@ -1,43 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
+    android:fillViewport="true"
     android:background="?android:colorBackground">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textAppearance="?attr/textAppearanceHeadlineMedium"
-        android:gravity="center"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/subtitle"
-        android:textAppearance="?attr/textAppearanceBodyMedium"
-        android:gravity="center"
-        android:paddingBottom="32dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnOpenSdk"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_open_sdk"
-        app:icon="@android:drawable/ic_menu_view"
-        android:layout_marginBottom="12dp" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSignDocument"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_sign_document"
-        app:icon="@android:drawable/ic_menu_send" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+            android:gravity="center"
+            android:paddingBottom="8dp" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/subtitle"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:gravity="center"
+            android:paddingBottom="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpenSdk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_open_sdk"
+            app:icon="@android:drawable/ic_menu_view"
+            android:layout_marginBottom="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignDocument"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_sign_document"
+            app:icon="@android:drawable/ic_menu_send" />
+
+        <!-- Keys API: for an integrator YT has given the permission. -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/keys_api"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:paddingTop="32dp"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/keys_api_note"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnListKeys"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_list_keys"
+            app:icon="@android:drawable/ic_menu_agenda" />
+
+        <Spinner
+            android:id="@+id/spinnerKeys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignWithKey"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:enabled="false"
+            android:text="@string/btn_sign_with_key"
+            app:icon="@android:drawable/ic_menu_edit" />
+
+        <!--
+          The Keys API's last JSON, as the SDK gave it. No hyphenation (on by
+          default before Android 10): it adds hyphens the JSON does not have.
+        -->
+        <TextView
+            android:id="@+id/txtKeysJson"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="monospace"
+            android:hyphenationFrequency="none"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textIsSelectable="true" />
+
+    </LinearLayout>
+
+</ScrollView>

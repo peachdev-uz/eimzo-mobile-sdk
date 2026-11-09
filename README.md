@@ -156,6 +156,9 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 - [example/ios-swift/](example/ios-swift/) — xuddi shu SwiftUI'da, SDK
   [eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) dan SPM orqali.
 
+Ikkalasida [Kalitlar API](#-kalitlar-api) tugmalari ham bor: «Kalitlar ro'yxati»
+va «Tanlangan kalit bilan imzolash» (YT ruxsatisiz — `api_not_allowed`).
+
 Ikkalasi ham `eimzo://` havolalarini tashqaridan qabul qilmaydi.
 
 ---
@@ -508,7 +511,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation 'androidx.room:room-runtime:2.6.1'
     implementation 'androidx.room:room-ktx:2.6.1'
-    implementation 'androidx.databinding:viewbinding:8.1.0'
+    implementation 'androidx.databinding:viewbinding:8.7.3'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
@@ -518,6 +521,9 @@ dependencies {
     implementation 'com.google.zxing:core:3.5.2'
 }
 ```
+
+Ro'yxat [eimzo-sdk-2.4.0.pom](maven/uz/eimzo/eimzo-sdk/2.4.0/eimzo-sdk-2.4.0.pom)
+dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi.
 
 ### 3. Ishga tushirish — yuqoridagi 4-qadam bilan bir xil
 

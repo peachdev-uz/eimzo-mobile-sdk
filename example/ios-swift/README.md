@@ -1,8 +1,9 @@
 # E-IMZO Mobile SDK — iOS (Swift) misol
 
 Minimal SwiftUI ilovasi, EimzoSDK 2.4.0. `example/android-kotlin` bilan bir
-xil narsani ko'rsatadi: SDK'ni ochish va ilova ichida yasalgan imzo so'rovi
-bilan hujjatni imzolash.
+xil narsani ko'rsatadi: SDK'ni ochish, ilova ichida yasalgan imzo so'rovi
+bilan hujjatni imzolash va [Kalitlar API](#-kalitlar-api) — kalitlar
+ro'yxati va tanlangan kalit bilan imzolash (YT ruxsati bilan).
 
 ---
 
@@ -15,7 +16,7 @@ open EimzoExample.xcodeproj
 ```
 
 Xcode birinchi ochilishda EimzoSDK 2.4.0 ni GitHub Releases'dan o'zi yuklab
-oladi (loyihadagi `from: "2.3.0"` qoidasi 2.4.0 ni ham oladi). Keyin
+oladi (loyihadagi qoida — `from: "2.4.0"`). Keyin
 **Signing & Capabilities** da o'z **Team**'ingizni tanlang, bundle ID'ni
 o'zingiznikiga almashtiring va ▶ **Run**.
 
@@ -36,7 +37,7 @@ example/ios-swift/
 ├── generate-xcodeproj.rb         ← loyihani qayta yaratish (odatda kerak emas)
 └── EimzoExample/
     ├── EimzoExampleApp.swift     ← kirish nuqtasi, eimzo:// qabul qilinmaydi
-    ├── ContentView.swift         ← muhit, SDK'ni ochish, imzo so'rovi
+    ├── ContentView.swift         ← muhit, SDK'ni ochish, imzo so'rovi, Kalitlar API
     ├── Info.plist                ← kamera va NFC
     └── EimzoExample.entitlements ← NFC
 ```
@@ -89,7 +90,45 @@ bo'lsa, faqat o'sha muhitda imzolanadi.
 
 ---
 
-## 🔑 Ro'yxatdan o'tish
+## 🔑 Kalitlar API
+
+«3 — Kalitlar API» bo'limi 2.4.0 dagi `EImzoAPI` ni ko'rsatadi:
+
+- **Kalitlar ro'yxati** — `EImzoAPI.getKeys(config:)`. Foydalanuvchi
+  `EImzoView` da qo'shgan kalitlar JSON'da ko'rsatiladi va «Kalit»
+  ro'yxatidan biri tanlanadi: ism va `validTo`, muddati o'tgani belgilanadi.
+- **Tanlangan kalit bilan imzolash** —
+  `EImzoAPI.sign(keyId:deepLink:config:)`. 2-bo'limdagi so'rov shu kalit
+  bilan SDK'ning o'z oynasida imzolanadi, javob JSON'i ko'rsatiladi:
+  `signed`, `cancelled` yoki xato.
+
+```swift
+let keys = await EImzoAPI.getKeys(config: config)
+// {"status":"ok","keys":[{"id":"7a3f…","pinfl":…,"name":…,"validFrom":…,"validTo":…}]}
+
+let result = await EImzoAPI.sign(keyId: keyId, deepLink: link, config: config)
+// {"status":"signed"}, {"status":"cancelled"} yoki {"status":"error","code":"…","message":"…"}
+```
+
+**Ruxsat.** Kalitlar API faqat YT ruxsat bergan integratorlar uchun: ruxsat
+YT bilan shartnoma tuzilgach, **info@yt.uz** ga yozilgan so'rov bo'yicha
+yoqiladi. Ruxsatsiz «Kalitlar ro'yxati»
+`{"status":"error","code":"api_not_allowed",…}` ni ko'rsatadi va imzolash
+tugmasi o'chiq qoladi; 1- va 2-bo'lim ruxsatsiz ham ishlaydi. Ruxsat
+yoqilgach, ilovani qayta ishga tushiring.
+
+- iOS'da init qadami yo'q: har bir chaqiruv gateway tekshiruvini o'zi
+  bajaradi. Bu ham App Attest bilan, shuning uchun API'ni haqiqiy iPhone'da
+  sinang.
+- Kalit qaysi muhitda qo'shilgan bo'lsa, faqat o'sha muhitda ro'yxatda
+  bo'ladi: muhit almashtirilsa, misol ro'yxatni tozalaydi.
+- Kalitlar avvalgidek `EImzoView` da (1-bo'lim) qo'shiladi.
+
+Batafsil: [eimzo-ios-sdk README, «Kalitlar API»](https://github.com/peachdev-uz/eimzo-ios-sdk#kalitlar-api).
+
+---
+
+## 🔐 Ro'yxatdan o'tish
 
 Litsenziya fayli kerak emas. `info@yt.uz` ga bundle ID, Team ID va muhitni
 (`dev` va/yoki `prod`) yuboring:

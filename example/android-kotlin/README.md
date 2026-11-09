@@ -2,7 +2,8 @@
 
 Minimal Android Kotlin ilovasi, `uz.eimzo:eimzo-sdk:2.4.0`. Ikkita tugma:
 SDK'ni ochish va ilova ichida yasalgan imzo so'rovi bilan hujjatni
-imzolash.
+imzolash. Yana ikkitasi — [Kalitlar API](#-kalitlar-api): kalitlar ro'yxati
+va tanlangan kalit bilan imzolash (YT ruxsati bilan).
 
 ---
 
@@ -40,7 +41,7 @@ example/android-kotlin/
     └── src/main/
         ├── AndroidManifest.xml  ← faqat MainActivity, eimzo:// filtri yo'q
         ├── java/uz/eimzo/example/
-        │   └── MainActivity.kt  ← sozlama va 2 tugma
+        │   └── MainActivity.kt  ← sozlama, 2 tugma va Kalitlar API
         └── res/
             ├── layout/activity_main.xml
             ├── values/{strings,themes,colors}.xml
@@ -117,6 +118,47 @@ kalitlari), release build haqiqiy E-IMZO'da (`PROD`) imzolaydi.
 
 **Tamom.** Kalitlar, PFX/QR/NFC import, NFC kutish, QR scanner, USB
 token, imzolash — hammasini SDK o'zi bajaradi.
+
+---
+
+## 🔑 Kalitlar API
+
+Ekranning pastki qismida 2.4.0 dagi «Kalitlar API» ning ikki tugmasi bor:
+
+- **Kalitlar ro'yxati** — `EImzoSDK.getKeys`. Foydalanuvchi SDK'ga qo'shgan
+  kalitlar JSON'da ko'rsatiladi va ro'yxatdan biri tanlanadi: ism va
+  `validTo`, muddati o'tgani belgilanadi.
+- **Tanlangan kalit bilan imzolash** — `EImzoSDK.sign`. 2-tugmadagi so'rov
+  shu kalit bilan SDK'ning o'z oynasida imzolanadi, javob JSON'i
+  ko'rsatiladi: `signed`, `cancelled` yoki xato.
+
+```kotlin
+EImzoSDK.checkLicenseAndInit(this, eimzoConfig) { allowed ->
+    if (!allowed) return@checkLicenseAndInit
+    EImzoSDK.getKeys { json -> /* {"status":"ok","keys":[{"id":…,"name":…,…}]} */ }
+}
+
+// keyId — getKeys bergan "id"
+EImzoSDK.sign(this, keyId, EImzoSignLink.create(siteId, documentId, hash)) { json ->
+    // {"status":"signed"}, {"status":"cancelled"} yoki {"status":"error","code":…}
+}
+```
+
+**Ruxsat.** Kalitlar API faqat YT ruxsat bergan integratorlar uchun: ruxsat
+YT bilan shartnoma tuzilgach, **info@yt.uz** ga yozilgan so'rov bo'yicha
+yoqiladi. Ruxsatsiz «Kalitlar ro'yxati»
+`{"status":"error","code":"api_not_allowed",…}` ni ko'rsatadi va imzolash
+tugmasi o'chiq qoladi; birinchi ikki tugma ruxsatsiz ham ishlaydi. Ruxsat
+yoqilgach, ilovani qayta ishga tushiring.
+
+- Metodlar `checkLicenseAndInit` `true` qaytargandan keyin ishlaydi, undan
+  oldin — `not_initialized`.
+- Callback bir marta keladi — ekran burilib, activity qayta yaratilgan
+  bo'lsa ham. Shuning uchun misolda u JSON'ni `ViewModel` ga yozadi, ekran
+  uni o'sha yerdan oladi.
+- Kalitlar avvalgidek `EImzoActivity` da (1-tugma) qo'shiladi.
+
+Batafsil: asosiy README, [«Kalitlar API»](../../README.md#-kalitlar-api).
 
 ---
 
