@@ -1,6 +1,6 @@
 # E-IMZO Mobile SDK — iOS (Swift) misol
 
-Minimal SwiftUI ilovasi, EimzoSDK 2.4.0. `example/android-kotlin` bilan bir
+Minimal SwiftUI ilovasi, EimzoSDK 2.5.0. `example/android-kotlin` bilan bir
 xil narsani ko'rsatadi: SDK'ni ochish, ilova ichida yasalgan imzo so'rovi
 bilan hujjatni imzolash va [Kalitlar API](#-kalitlar-api) — kalitlar
 ro'yxati va tanlangan kalit bilan imzolash (YT ruxsati bilan).
@@ -15,8 +15,8 @@ cd eimzo-mobile-sdk/example/ios-swift
 open EimzoExample.xcodeproj
 ```
 
-Xcode birinchi ochilishda EimzoSDK 2.4.0 ni GitHub Releases'dan o'zi yuklab
-oladi (loyihadagi qoida — `from: "2.4.0"`). Keyin
+Xcode birinchi ochilishda EimzoSDK 2.5.0 ni GitHub Releases'dan o'zi yuklab
+oladi (loyihadagi qoida — `from: "2.5.0"`). Keyin
 **Signing & Capabilities** da o'z **Team**'ingizni tanlang, bundle ID'ni
 o'zingiznikiga almashtiring va ▶ **Run**.
 
@@ -33,7 +33,7 @@ taniydi, shuning uchun:
 
 ```
 example/ios-swift/
-├── EimzoExample.xcodeproj        ← SPM orqali EimzoSDK 2.4.0 ga bog'langan
+├── EimzoExample.xcodeproj        ← SPM orqali EimzoSDK 2.5.0 ga bog'langan
 ├── generate-xcodeproj.rb         ← loyihani qayta yaratish (odatda kerak emas)
 └── EimzoExample/
     ├── EimzoExampleApp.swift     ← kirish nuqtasi, eimzo:// qabul qilinmaydi

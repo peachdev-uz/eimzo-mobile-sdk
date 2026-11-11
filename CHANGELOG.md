@@ -1,5 +1,22 @@
 ## 2.5.0 — 2026-11-11
 
+**Yangi: SDK ekranlari ilova dizaynida.** `EImzoConfig`ga yangi sozlamalar,
+hammasi standart qiymatli — berilmasa SDK avvalgidek ko'rinadi:
+
+- `appearance = EImzoAppearance(…)` — har rejim uchun 6 ta rang (`primary`,
+  `background`, `surface`, `text`, `textSecondary`, `divider`), `themeMode`
+  (`SYSTEM`, `LIGHT`, `DARK`), shrift (`EImzoFont`) va `cornerRadius`.
+  Qolgan tuslarni SDK shulardan hisoblaydi; matn 4.5:1 dan past o'qilsa,
+  o'sha rejimda SDK o'z ranglarida qoladi.
+- `language` va `showLanguagePicker` — SDK qaysi tilda ochiladi va
+  sozlamalarida til qatori bo'ladimi.
+- `hashDisplay = EImzoHashDisplay.HIDDEN` — ilova o'zi bergan so'rovda hash
+  kartasi chiqmaydi. SDK skaneri o'qigan QR so'rovda hash doim ko'rinadi.
+
+O'zgarmaydi: imzo so'ragan sayt, kalit egasi, «Imzolash» (faqat rangi
+`primary`dan), PIN va parol kiritish, xato va ogohlantirish ranglari, kalit
+kartasi va QR skaner. Batafsil — README «🖌 Dizayn».
+
 **Yangi: `getKeys` har bir kalitning turini aytadi.** Kalitda yangi `type`
 maydoni bor: `pfx` (kalit fayli — fayldan yoki QR koddan qo'shilgan),
 `id_card` (ID karta) yoki `token` (USB yoki BAIK token). Bitta JSHSHIR'da ID
@@ -7,6 +24,13 @@ karta, token va kalit fayli bo'lsa, ilova ularni shu bilan ajratadi. Maydon
 `name` dan keyin keladi; qolgan maydonlar, `sign()` va xato kodlari
 o'zgarmagan. iOS va Flutter'da ham xuddi shunday. Keyingi versiyalarda yangi
 tur qo'shilishi mumkin: tanimagan qiymatni oddiy kalit deb ko'rsating.
+
+**Tuzatish: SDK oynasi jarayon o'ldirilgandan keyin.** Android ilova
+fonda turganida jarayonini yopib, keyin SDK oynasini tiklasa, oyna yiqilardi
+(`EImzoSDK.init(context) ni chaqiring`) yoki tekshiruv ilova bergan muhit va
+litsenziya o'rniga PROD'ga ketardi. Endi SDK ilova bergan config'ni
+(`environment`, `license`, `debugLogging`) eslab qoladi va tiklangan oyna
+avval tekshiruvni o'tkazib, bosh sahifani shu so'rov bilan ochadi.
 
 ## 2.4.0 — 2026-11-09
 

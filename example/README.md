@@ -4,7 +4,7 @@ Bu papkada SDK'ni turli platformalarga integratsiya qilish misollari
 joylashgan. Har bir misol o'zicha to'liq, ishlovchi proyekt —
 `git clone` qilib darhol ishga tushirsa bo'ladi.
 
-Ikkala misol ham SDK 2.4.0 uchun. Ular `eimzo://` havolalarini tashqaridan
+Ikkala misol ham SDK 2.5.0 uchun. Ular `eimzo://` havolalarini tashqaridan
 qabul qilmaydi: imzo so'rovini ilova o'zi `EImzoSignLink.create` bilan
 yasaydi. SDK ishlashi uchun ilova YT'da ro'yxatdan o'tgan bo'lishi kerak —
 har bir misolning README'siga qarang.

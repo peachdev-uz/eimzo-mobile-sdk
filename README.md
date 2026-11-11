@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-2.4.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-2.5.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -97,8 +97,8 @@ Yangi ilova uchun litsenziya kerak emas — yuqoridagi ro'yxatdan o'tish yetarli
 1. Ilovani `dev` va `prod` uchun ro'yxatdan o'tkazing (yuqoriga qarang).
    Ilovangizda litsenziya bo'lsa, avval info@yt.uz ga yozing va YT
    tasdiqlamaguncha 2.2 da qoling.
-2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.4.0'`
-   (Flutter: `eimzo_flutter: ^2.4.0`).
+2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.5.0'`
+   (Flutter: `eimzo_flutter: ^2.5.0`).
 3. `AndroidManifest.xml` dan `eimzo` sxemali `intent-filter` ni olib tashlang;
    Flutter ilovasida iOS `Info.plist` dagi `CFBundleURLTypes` dan `eimzo` ni ham.
    2.2 da bu filtr SDK'ning o'z manifest'idan ham qo'shilardi. 2.3 da u yo'q,
@@ -122,7 +122,7 @@ Manifest'ga boshqa hech narsa qo'shilmaydi: 2.3 da kerak bo'lgan
 
 ### Android
 
-📥 **[eimzo-sdk-2.4.0.aar](android/eimzo-sdk-2.4.0.aar)** (13 MB) — to'liq UI bundlangan
+📥 **[eimzo-sdk-2.5.0.aar](android/eimzo-sdk-2.5.0.aar)** (13 MB) — to'liq UI bundlangan
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -130,7 +130,7 @@ Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-u
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.4.0
+  eimzo_flutter: ^2.5.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -141,14 +141,14 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 (Swift Package Manager, iOS 16+):
 
 ```swift
-.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.4.0")
+.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.5.0")
 ```
 
 ---
 
 ## 🎯 Misollar
 
-[`example/`](example/) dagi ikkala misol ham 2.4.0 uchun:
+[`example/`](example/) dagi ikkala misol ham 2.5.0 uchun:
 
 - [example/android-kotlin/](example/android-kotlin/) — pastdagi 4 qadam asosida
   yozilgan ilova: SDK'ni ochish va `EImzoSignLink.create` bilan yasalgan so'rov
@@ -194,7 +194,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:2.4.0'
+    implementation 'uz.eimzo:eimzo-sdk:2.5.0'
 }
 ```
 
@@ -298,6 +298,69 @@ belgi yo'q, ular ikkala muhitda ishlaydi.
 `EImzoConfig(debugLogging = true)` SDK qadamlarini logcat'ga yozadi (teg
 `EImzoSDK`) — kalit, PIN va imzo hech qachon yozilmaydi. Release build'da
 o'chiq qoldiring.
+
+---
+
+## 🖌 Dizayn (2.5 dan)
+
+SDK ekranlarini ilovangiz dizayniga moslash mumkin: ranglar, shrift, burchaklar,
+kunduzgi/tungi rejim va til. Hammasi `EImzoConfig`da beriladi. Berilmasa, SDK
+avvalgidek o'z dizaynida ko'rinadi.
+
+```kotlin
+val config = EImzoConfig(
+    environment = EImzoEnvironment.PROD,
+    appearance = EImzoAppearance(
+        light = EImzoPalette(
+            primary = 0xFF0A6CFF.toInt(),        // tugmalar, belgilar, havolalar
+            background = 0xFFFFFFFF.toInt(),     // sahifa foni
+            surface = 0xFFF2F4F7.toInt(),        // kartalar, pastdan chiqadigan oynalar
+            text = 0xFF101828.toInt(),           // asosiy matn
+            textSecondary = 0xFF667085.toInt(),  // izohlar, yorliqlar
+            divider = 0xFFEAECF0.toInt(),        // chiziqlar
+        ),
+        dark = EImzoPalette(primary = 0xFF4D94FF.toInt()),
+        themeMode = EImzoThemeMode.SYSTEM,       // LIGHT, DARK
+        font = EImzoFont.resource(R.font.inter), // null → Montserrat
+        cornerRadius = 12f,                      // dp; null → 16
+    ),
+    language = EImzoLanguage.RU,                 // null → SDK sozlamasi, bo'lmasa telefon tili
+    showLanguagePicker = false,                  // standart: true
+    hashDisplay = EImzoHashDisplay.HIDDEN,       // standart: VISIBLE
+)
+EImzoSDK.checkLicenseAndInit(this, config) { allowed ->
+    if (allowed) startActivity(Intent(this, EImzoActivity::class.java))
+}
+```
+
+| Sozlama | Standart | Nima qiladi |
+|---|---|---|
+| `appearance` | `null` | Ranglar, shrift, burchak, rejim. `null` — SDK'ning o'z dizayni |
+| `appearance.light`, `.dark` | `null` | 6 ta asosiy rang; har biri ixtiyoriy, berilmagani SDK'niki |
+| `appearance.themeMode` | `SYSTEM` | `SYSTEM` — telefonga qarab, `LIGHT` yoki `DARK` — doim |
+| `appearance.font` | Montserrat | `EImzoFont.resource(R.font.…)` yoki `EImzoFont.assets(…)` |
+| `appearance.cornerRadius` | 16 | Tugma radiusi, dp (0–28) |
+| `language` | `null` | `UZ`, `RU`, `EN` |
+| `showLanguagePicker` | `true` | `false` — SDK sozlamalarida til qatori yo'q |
+| `hashDisplay` | `VISIBLE` | `HIDDEN` — ilova o'zi bergan so'rovda hash yo'q |
+
+- Qolgan tuslarni SDK shu 6 ta rangdan hisoblaydi. `text` fonda yoki kartada
+  4.5:1 dan past o'qilsa, o'sha rejimda SDK o'z ranglarida qoladi va
+  logcat'ga (`EImzoSDK`) sababini yozadi.
+- `appearance` berilganda bosh sahifada fon rasmi bo'lmaydi, SDK
+  sozlamalarida «Mavzu» va «Tungi rejim» qatorlari bo'lmaydi.
+- `HIDDEN` faqat ilova o'zi bergan so'rovga ta'sir qiladi. SDK skaneri o'qigan
+  QR so'rovda hash doim ko'rinadi. Alohida ruxsat kerak emas.
+- Ko'rinish oxirgi `checkLicenseAndInit` config'idan olinadi: ilova mavzusi
+  yoki tili o'zgarsa, SDK'ni ochishdan oldin uni yangi config bilan qayta
+  chaqiring.
+
+O'zgarmaydigan qismlar imzolovchini himoya qiladi: imzo so'ragan sayt nomi,
+kalit egasi, «Imzolash» tugmasi (faqat rangi `primary`dan), PIN va parol
+kiritish, xato va ogohlantirish ranglari, kalit kartasi va QR skaner.
+
+Flutter'da xuddi shu sozlamalar `EimzoConfig`da bor, `EimzoAppearance.fromTheme`
+ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 
 ---
 
@@ -493,15 +556,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-2.4.0.aar
+    └── eimzo-sdk-2.5.0.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-2.4.0.aar](android/eimzo-sdk-2.4.0.aar)** (13 MB)
+Yuklab olish: **[android/eimzo-sdk-2.5.0.aar](android/eimzo-sdk-2.5.0.aar)** (13 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-2.4.0.aar')
+    implementation files('libs/eimzo-sdk-2.5.0.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -529,7 +592,7 @@ dependencies {
 }
 ```
 
-Ro'yxat [eimzo-sdk-2.4.0.pom](maven/uz/eimzo/eimzo-sdk/2.4.0/eimzo-sdk-2.4.0.pom)
+Ro'yxat [eimzo-sdk-2.5.0.pom](maven/uz/eimzo/eimzo-sdk/2.5.0/eimzo-sdk-2.5.0.pom)
 dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi.
 
 ### 3. Ishga tushirish — yuqoridagi 4-qadam bilan bir xil
@@ -554,6 +617,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |
 | `prod` va `dev` muhitlari | ✅ |
+| SDK ekranlari ilova dizaynida: ranglar, shrift, burchak, rejim, til ([Dizayn](#-dizayn-25-dan)) | ✅ |
 | O'zbek, rus va ingliz tillari | ✅ |
 | Tamper detection (Frida, Xposed, root manager) | ✅ |
 | iOS | ✅ alohida SDK: [eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) |
@@ -562,7 +626,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[2.4.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.4.0)** (2026-11-09)
+So'nggi versiya: **[2.5.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.5.0)** (2026-11-11)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 

@@ -24,8 +24,8 @@ SDK_PACKAGE_URL = 'https://github.com/peachdev-uz/eimzo-ios-sdk'
 # EImzoSignLink, `environment` replaced `isTestMode`, and every app signs
 # through the YT gateway. Anything below that does not match this example's
 # code.
-SDK_MIN_VERSION = '2.4.0'
-EXAMPLE_VERSION = '2.4.0'
+SDK_MIN_VERSION = '2.5.0'
+EXAMPLE_VERSION = '2.5.0'
 
 SOURCES = %w[EimzoExampleApp.swift ContentView.swift].freeze
 

@@ -1,14 +1,14 @@
 # E-IMZO Flutter Plugin
 
 Flutter integratorlari uchun **rasmiy plugin** allaqachon pub.dev'da.
-U Android SDK 2.4.0 ni o'z ichiga oladi, iOS'da esa
-[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) 2.4.0 ni ishlatadi.
+U Android SDK 2.5.0 ni o'z ichiga oladi, iOS'da esa
+[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) 2.5.0 ni ishlatadi.
 
 ## 📦 O'rnatish
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.4.0
+  eimzo_flutter: ^2.5.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
