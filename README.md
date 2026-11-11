@@ -372,7 +372,10 @@ ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 - `EImzoSDK.sign` — imzo so'rovini ilova tanlagan kalit bilan SDK'ning o'z
   oynasida imzolaydi.
 
-Ikkalasi ham javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
+2.6.0 dan ilova kalitni SDK oynasisiz o'zi ham qo'shadi — `addPfxKey`,
+`addQrKey`, `addIdCardKey`, `addTokenKey` ([Kalit qo'shish](#kalit-qoshish-26-dan)).
+
+Hammasi javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
 main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
 bilan bir xil.
 
@@ -381,15 +384,17 @@ bilan bir xil.
 «Kalitlar API» faqat YT ruxsat bergan integratorlar uchun. Ruxsat YT bilan
 shartnoma tuzilgach, so'rov bo'yicha yoqiladi — **info@yt.uz** ga yozing. U
 integratorga beriladi va uning barcha ilovalariga tegishli, sukut bo'yicha
-o'chiq. Ruxsat bo'lmasa, ikkala metod ham hech narsa ko'rsatmay
+o'chiq. Ruxsat bo'lmasa, barcha metodlar hech narsa ko'rsatmay
 `api_not_allowed` qaytaradi. Yoqilgan ruxsat ilova qayta ishga tushganda (yoki
 bir soat ichida) kuchga kiradi. `EImzoActivity` ruxsatsiz ham avvalgidek
 ishlaydi.
 
-Kalitlar ilovada qo'shilmaydi: foydalanuvchi ularni avvalgidek
-`EImzoActivity` da qo'shadi — ERI fayl, QR kod, ID-karta, USB token yoki BAIK
-token orqali. Parol yoki PIN faqat SDK oynasida teriladi: hech bir metod parol
-olmaydi va kalitning o'zini qaytarmaydi.
+Foydalanuvchi kalitlarni avvalgidek `EImzoActivity` da qo'shadi — ERI fayl,
+QR kod, ID-karta, USB token yoki BAIK token orqali. 2.6 dan ilova ham qo'sha
+oladi ([Kalit qo'shish](#kalit-qoshish-26-dan)); alohida ruxsat kerak emas.
+`getKeys` va `sign` parol olmaydi: `sign` da parol yoki PIN faqat SDK
+oynasida teriladi. Hech bir metod kalitning o'zini yoki saqlangan parolni
+qaytarmaydi.
 
 Metodlar `EImzoSDK.checkLicenseAndInit` `true` qaytargandan keyin ishlaydi
 ([4-qadam](#4-sdk-uini-oching)), undan oldin — `not_initialized`. Ular
@@ -479,6 +484,73 @@ ekranga murojaat qiling. Imzolangan hujjatni (PKCS#7) E-IMZO avvalgidek
 backend'ingizga beradi, ilova uni olmaydi: `signed` dan keyin hujjat holatini
 backend'ingizdan biling.
 
+### Kalit qo'shish (2.6 dan)
+
+Ilova kalitni SDK oynasini ochmasdan, o'z kodidan qo'shadi:
+
+| Metod | Nima qo'shadi |
+|---|---|
+| `addPfxKey(pfx, password, savePassword = false, callback)` | `.pfx` kalit fayli — faylning baytlari |
+| `addQrKey(qrCode, password, savePassword = false, callback)` | E-IMZO kalit QR kodi — QR matni |
+| `addIdCardKey(tag, pin, savePin = false, callback)` | ID karta — ilova o'qigan NFC `Tag` |
+| `addIdCardKey(activity, pin, savePin = false, callback)` | ID karta — kartani SDK o'zi kutadi, 60 soniya, o'z oynasisiz |
+| `addTokenKey(pin, savePin = false, callback)` | Ulangan token — USB yoki BAIK, SDK o'zi aniqlaydi |
+| `cancelAddKey()` | ID kartani kutishni to'xtatadi |
+
+> ⚠️ **Mas'uliyat.** Bu metodlarda parol, PIN va kalit fayli ilovangiz
+> kodidan o'tadi. Ular uchun shartnoma bo'yicha integrator javob beradi:
+> parol va PIN'ni saqlamang, log'ga yozmang va serverga yubormang, kalit
+> faylini kerakligidan ortiq ushlamang. SDK ularni faqat kalitni qo'shish
+> uchun ishlatadi.
+
+```kotlin
+EImzoSDK.addPfxKey(pfxBytes, password) { json ->
+    val reply = JSONObject(json)
+    when (reply.getString("status")) {
+        "added", "exists" -> onKeyReady(reply.getJSONObject("key").getString("id")) // sign() ga
+        "error" -> if (reply.getString("code") == "wrong_password") askPasswordAgain()
+                   else showError(reply.getString("code"))                          // pastdagi jadval
+    }
+}
+
+// ID karta: «Kartani telefonga tuting» yozuvini ilova ko'rsatadi
+EImzoSDK.addIdCardKey(this, pin) { json ->
+    val reply = JSONObject(json)
+    if (reply.optString("code") == "wrong_pin") askPinAgain(reply.optInt("triesLeft", -1)) // -1 — karta aytmadi
+}
+// «Bekor qilish» tugmasida — EImzoSDK.cancelAddKey()
+```
+
+Javob (`key` — `getKeys` dagi oltita maydon):
+
+- `{"status":"added","key":{…}}` — kalit qo'shildi;
+- `{"status":"exists","key":{…}}` — bu sertifikatli kalit allaqachon bor: xato
+  emas, kalit va uning saqlangan paroli o'zgarmaydi, `id` si bilan imzolasa
+  bo'ladi;
+- `{"status":"cancelled"}` — faqat ID karta: `cancelAddKey()` yoki activity
+  yopildi;
+- `{"status":"error","code":"…","message":"…"}` — `wrong_pin` da yana
+  `"triesLeft"`: karta yoki token aytgan qolgan urinishlar.
+
+Muhim:
+
+- **PIN.** Har noto'g'ri PIN ID karta yoki tokenning urinishlaridan birini
+  oladi, oxirgisi uni bloklaydi (`pin_blocked`). SDK PIN'ni o'zi qayta
+  yubormaydi — ilova ham yubormasin, har safar foydalanuvchidan so'rang. Bo'sh
+  PIN kartaga yuborilmaydi.
+- **Saqlash.** `savePassword` / `savePin` sukut bo'yicha `false`: SDK hech
+  narsa saqlamaydi, `sign()` parolni oynada so'raydi. `true` — SDK uni
+  shifrlab saqlaydi va `sign()` parolsiz imzolaydi («Parolni saqlash» kabi);
+  buni foydalanuvchidan so'rab yoqing.
+- **Tekshiruv.** Kalit joriy `environment` ga qo'shiladi. Kalit fayli va QR
+  kalit sertifikatini E-IMZO tekshiradi (internet kerak); ID karta va token
+  sertifikati kartaning o'zidan o'qiladi.
+- **ID karta va token.** `addIdCardKey(tag, …)` — ilova NFC'ni o'zi o'qisa,
+  `Tag` kelishi bilan bering. `addIdCardKey(activity, …)` — SDK `activity` da
+  NFC reader mode'ni yoqadi. Token uchun Android birinchi marta USB ruxsatini
+  so'rashi mumkin.
+- Bir vaqtda bitta qo'shish: ikkinchisi `busy` oladi.
+
 ### Xato kodlari
 
 `{"status":"error","code":"…","message":"…"}`:
@@ -495,10 +567,24 @@ backend'ingizdan biling.
 | `busy` | Boshqa `sign()` hali ochiq |
 | `sign_failed` | E-IMZO imzoni rad etdi (`message` — uning o'z javobi), ID-karta yoki token PIN'i bloklandi (`message`: `pin_blocked`) yoki oqim boshqa xato bilan tugadi |
 
+Kalit qo'shishda yana:
+
+| `code` | Qachon |
+|---|---|
+| `wrong_password` | Kalit fayli yoki QR kalit paroli noto'g'ri |
+| `wrong_pin` | ID karta yoki token PIN'i noto'g'ri yoki bo'sh; `triesLeft` — qolgan urinishlar, karta yoki token aytsa |
+| `pin_blocked` | PIN bloklangan: urinish qolmadi |
+| `invalid_key` | Fayl kalit fayli emas, QR kalit QR kodi emas, karta E-IMZO kartasi emas, tokenda kalit yo'q yoki E-IMZO sertifikatni qabul qilmadi |
+| `nfc_unavailable` | Telefonda NFC yo'q yoki o'chiq |
+| `card_read_failed` | Karta o'qib bo'lingunicha uzoqlashdi yoki 60 soniyada tutilmadi |
+| `token_not_found` | Token ulanmagan yoki uzildi, USB ruxsati berilmadi yoki token band |
+| `busy` | Boshqa kalit qo'shilyapti |
+| `add_failed` | Boshqa sabab (`message` da) — masalan, kalit boshqa muhitda qo'shilgan |
+
 `message` — ishlab chiquvchi uchun matn: inglizcha, E-IMZO rad etganda esa
 uning o'z javobi (rus yoki o'zbek tilida bo'lishi mumkin). Foydalanuvchiga uni
-emas, `code` bo'yicha o'z matningizni ko'rsating. Unda kalit, parol yoki xesh
-hech qachon bo'lmaydi.
+emas, `code` bo'yicha o'z matningizni ko'rsating. Unda kalit, parol, PIN yoki
+xesh hech qachon bo'lmaydi.
 
 ---
 
@@ -613,6 +699,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | OzDST 1106 hash funksiyasi | ✅ |
 | Ilova ichida yasalgan imzo so'rovi (`EImzoSignLink`) | ✅ |
 | [Kalitlar API](#-kalitlar-api): kalitlar ro'yxati va tanlangan kalit bilan SDK oynasida imzolash (YT ruxsati bilan) | ✅ |
+| [Kalit qo'shish](#kalit-qoshish-26-dan): ilova kalitni SDK oynasisiz qo'shadi (2.6, o'sha ruxsat bilan) | ✅ 2.6 |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |

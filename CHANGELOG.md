@@ -1,3 +1,24 @@
+## 2.6.0 — chiqarilmagan
+
+**Yangi: Kalitlar API'da kalit qo'shish.** Ilova kalitni SDK oynasini
+ochmasdan, o'z kodidan qo'shadi — o'sha «Kalitlar API» ruxsati bilan:
+
+- `EImzoSDK.addPfxKey(pfx, password)` — kalit fayli;
+- `EImzoSDK.addQrKey(qrCode, password)` — kalit QR kodi;
+- `EImzoSDK.addIdCardKey(tag, pin)` — ilova o'qigan ID karta, yoki
+  `addIdCardKey(activity, pin)` — kartani SDK 60 soniya o'zi kutadi
+  (`cancelAddKey()` to'xtatadi);
+- `EImzoSDK.addTokenKey(pin)` — USB yoki BAIK token, SDK o'zi aniqlaydi.
+
+Javob: `added` yoki `exists` (kalit `getKeys` dagi shaklda), ID kartada
+`cancelled`, yoki `error`. Yangi kodlar: `wrong_password`, `wrong_pin`
+(`triesLeft` bilan), `pin_blocked`, `invalid_key`, `nfc_unavailable`,
+`card_read_failed`, `token_not_found`, `add_failed`. `savePassword` /
+`savePin` sukut bo'yicha `false`. Parol, PIN va kalit fayli ilova kodidan
+o'tadi — ular uchun shartnoma bo'yicha integrator javob beradi. iOS va
+Flutter'da ham xuddi shunday. Batafsil — README «Kalit qo'shish».
+
+
 ## 2.5.0 — 2026-11-11
 
 **Yangi: SDK ekranlari ilova dizaynida.** `EImzoConfig`ga yangi sozlamalar,
