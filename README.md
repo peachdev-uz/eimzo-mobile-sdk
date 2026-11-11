@@ -352,17 +352,24 @@ EImzoSDK.getKeys { json ->
 ```json
 {"status":"ok","keys":[
   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
-   "validFrom":"2025-03-01","validTo":"2027-03-01"}
+   "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}
 ]}
 ```
 
 - `id` — sertifikat seriya raqami: uni o'zgartirmay `sign()` ga bering;
 - `pinfl` — JSHSHIR, sertifikatda bo'lmasa `null`;
 - `name` — sertifikat egasining ismi;
+- `type` (2.5 dan) — kalit turi: `pfx` (kalit fayli, fayldan yoki QR koddan
+  qo'shilgan), `id_card` (ID karta) yoki `token` (USB yoki BAIK token);
 - `validFrom`, `validTo` — sertifikat muddati, `yyyy-MM-dd`; o'qib bo'lmasa `null`.
 
-Boshqa hech narsa berilmaydi: STIR, tashkilot, kalit turi, kalitning o'zi va
-saqlangan parol SDK'da qoladi. Ro'yxatda joriy `environment` da imzolay
+Bitta odamning bir nechta kaliti bo'lsa (masalan, ID karta, token va kalit
+fayli), har biri alohida yozuv: `id` lari har xil, `pinfl` va `name` bir xil,
+`type` qaysi biri qaysi ekanini aytadi. Boshqa qiymat kelsa (keyingi
+versiyalarda yangi tur qo'shilishi mumkin), uni oddiy kalit deb ko'rsating.
+
+Boshqa hech narsa berilmaydi: STIR, tashkilot, kalitning o'zi va saqlangan
+parol SDK'da qoladi. Ro'yxatda joriy `environment` da imzolay
 oladigan har turdagi kalit bor, asosiy kalit birinchi; boshqa muhitda
 qo'shilgan kalit ko'rsatilmaydi. Muddati o'tgan kalit ham ko'rsatiladi — buni
 `validTo` dan biling. Kalit bo'lmasa — `{"status":"ok","keys":[]}`.

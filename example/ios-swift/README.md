@@ -104,7 +104,7 @@ bo'lsa, faqat o'sha muhitda imzolanadi.
 
 ```swift
 let keys = await EImzoAPI.getKeys(config: config)
-// {"status":"ok","keys":[{"id":"7a3f…","pinfl":…,"name":…,"validFrom":…,"validTo":…}]}
+// {"status":"ok","keys":[{"id":"7a3f…","pinfl":…,"name":…,"type":"pfx","validFrom":…,"validTo":…}]}
 
 let result = await EImzoAPI.sign(keyId: keyId, deepLink: link, config: config)
 // {"status":"signed"}, {"status":"cancelled"} yoki {"status":"error","code":"…","message":"…"}

@@ -1,3 +1,13 @@
+## 2.5.0 — 2026-11-11
+
+**Yangi: `getKeys` har bir kalitning turini aytadi.** Kalitda yangi `type`
+maydoni bor: `pfx` (kalit fayli — fayldan yoki QR koddan qo'shilgan),
+`id_card` (ID karta) yoki `token` (USB yoki BAIK token). Bitta JSHSHIR'da ID
+karta, token va kalit fayli bo'lsa, ilova ularni shu bilan ajratadi. Maydon
+`name` dan keyin keladi; qolgan maydonlar, `sign()` va xato kodlari
+o'zgarmagan. iOS va Flutter'da ham xuddi shunday. Keyingi versiyalarda yangi
+tur qo'shilishi mumkin: tanimagan qiymatni oddiy kalit deb ko'rsating.
+
 ## 2.4.0 — 2026-11-09
 
 **Yangi: «Kalitlar API» — YT ruxsat bergan integratorlar uchun.**
