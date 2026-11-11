@@ -15,8 +15,22 @@ Javob: `added` yoki `exists` (kalit `getKeys` dagi shaklda), ID kartada
 (`triesLeft` bilan), `pin_blocked`, `invalid_key`, `nfc_unavailable`,
 `card_read_failed`, `token_not_found`, `add_failed`. `savePassword` /
 `savePin` sukut bo'yicha `false`. Parol, PIN va kalit fayli ilova kodidan
-o'tadi — ular uchun shartnoma bo'yicha integrator javob beradi. iOS va
-Flutter'da ham xuddi shunday. Batafsil — README «Kalit qo'shish».
+o'tadi — ular uchun shartnoma bo'yicha integrator javob beradi. ID karta va
+USB token PIN'i aynan 8 ta raqam bo'lmasa — `wrong_pin`, kartaga hech narsa
+yuborilmaydi. `Tag`ni faqat o'z reader mode'ingizdan bering, Intent'dan
+emas. iOS va Flutter'da ham xuddi shunday. Batafsil — README «Kalit
+qo'shish».
+
+**Yangi: kalitlar ro'yxatida STIR va korxona nomi.** `getKeys` kaliti (va
+`add…Key` ning `key` i) endi sakkiz maydonli: `name` dan keyin `tin` va
+`organization` — yuridik shaxs kalitida korxonaning STIRi va nomi, jismoniy
+shaxs kalitida ikkalasi `null`. ID karta va USB token kalitida korxona va
+STIR endi sertifikatdan o'qiladi (avval o'qilmas edi, yuridik shaxs tokeni
+SDK ekranlarida jismoniy shaxsniki bo'lib ko'rinardi); 2.6.0 dan oldin
+qo'shilgan bunday kalitda ular kalit qayta qo'shilguncha yo'q.
+
+**Tuzatish:** qo'shish ruxsat tekshiruvida turganda chaqirilgan
+`cancelAddKey()` yo'qolmaydi — karta kutilmaydi.
 
 
 ## 2.5.0 — 2026-11-11

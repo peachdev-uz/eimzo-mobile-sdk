@@ -420,13 +420,18 @@ EImzoSDK.getKeys { json ->
 ```json
 {"status":"ok","keys":[
   {"id":"7a3f…","pinfl":"31234567890123","name":"ALIYEV VALI ALIYEVICH",
+   "tin":"301234567","organization":"\"QUYOSH\" MCHJ",
    "type":"pfx","validFrom":"2025-03-01","validTo":"2027-03-01"}
 ]}
 ```
 
 - `id` — sertifikat seriya raqami: uni o'zgartirmay `sign()` ga bering;
 - `pinfl` — JSHSHIR, sertifikatda bo'lmasa `null`;
-- `name` — sertifikat egasining ismi;
+- `name` — sertifikat egasining ismi (yuridik shaxs kalitida ham — xodim);
+- `tin`, `organization` (2.6 dan) — yuridik shaxs kaliti: korxonaning STIRi
+  va nomi. Jismoniy shaxsning o'z kalitida ikkalasi `null`, shuning uchun
+  `tin` bor kalit — yuridik shaxs kaliti. 2.6 dan oldin qo'shilgan ID karta
+  va USB token kalitlarida STIR saqlanmagan: kalit qayta qo'shilguncha `null`;
 - `type` (2.5 dan) — kalit turi: `pfx` (kalit fayli, fayldan yoki QR koddan
   qo'shilgan), `id_card` (ID karta) yoki `token` (USB yoki BAIK token);
 - `validFrom`, `validTo` — sertifikat muddati, `yyyy-MM-dd`; o'qib bo'lmasa `null`.
@@ -436,8 +441,8 @@ fayli), har biri alohida yozuv: `id` lari har xil, `pinfl` va `name` bir xil,
 `type` qaysi biri qaysi ekanini aytadi. Boshqa qiymat kelsa (keyingi
 versiyalarda yangi tur qo'shilishi mumkin), uni oddiy kalit deb ko'rsating.
 
-Boshqa hech narsa berilmaydi: STIR, tashkilot, kalitning o'zi va saqlangan
-parol SDK'da qoladi. Ro'yxatda joriy `environment` da imzolay
+Boshqa hech narsa berilmaydi: kalitning o'zi va saqlangan parol SDK'da
+qoladi. Ro'yxatda joriy `environment` da imzolay
 oladigan har turdagi kalit bor, asosiy kalit birinchi; boshqa muhitda
 qo'shilgan kalit ko'rsatilmaydi. Muddati o'tgan kalit ham ko'rsatiladi — buni
 `validTo` dan biling. Kalit bo'lmasa — `{"status":"ok","keys":[]}`.
@@ -536,8 +541,13 @@ Muhim:
 
 - **PIN.** Har noto'g'ri PIN ID karta yoki tokenning urinishlaridan birini
   oladi, oxirgisi uni bloklaydi (`pin_blocked`). SDK PIN'ni o'zi qayta
-  yubormaydi — ilova ham yubormasin, har safar foydalanuvchidan so'rang. Bo'sh
-  PIN kartaga yuborilmaydi.
+  yubormaydi — ilova ham yubormasin, har safar foydalanuvchidan so'rang.
+- **PIN formati.** ID karta va USB (FEITIAN) token PIN'i — aynan 8 ta raqam
+  (0–9). Bo'sh PIN ham, boshqa narsa ham — oxiriga tushib qolgan bo'sh joy,
+  guruhlab yozilgan (`1234 5678`), bitta raqam kam yoki ortiq — kartaga
+  yuborilmaydi: darhol `wrong_pin`, `triesLeft` siz, urinish sarflanmaydi. SDK
+  hech narsani kesmaydi: PIN'ni foydalanuvchi kiritgandek bering. BAIK token
+  PIN'i — u qanday o'rnatilgan bo'lsa shunday.
 - **Saqlash.** `savePassword` / `savePin` sukut bo'yicha `false`: SDK hech
   narsa saqlamaydi, `sign()` parolni oynada so'raydi. `true` — SDK uni
   shifrlab saqlaydi va `sign()` parolsiz imzolaydi («Parolni saqlash» kabi);
@@ -545,10 +555,15 @@ Muhim:
 - **Tekshiruv.** Kalit joriy `environment` ga qo'shiladi. Kalit fayli va QR
   kalit sertifikatini E-IMZO tekshiradi (internet kerak); ID karta va token
   sertifikati kartaning o'zidan o'qiladi.
-- **ID karta va token.** `addIdCardKey(tag, …)` — ilova NFC'ni o'zi o'qisa,
-  `Tag` kelishi bilan bering. `addIdCardKey(activity, …)` — SDK `activity` da
-  NFC reader mode'ni yoqadi. Token uchun Android birinchi marta USB ruxsatini
-  so'rashi mumkin.
+- **ID karta.** Eng soddasi — `addIdCardKey(activity, …)`: SDK `activity` da
+  NFC reader mode'ni yoqadi va kartani 60 soniya kutadi; `cancelAddKey()`
+  to'xtatadi. O'zingiz o'qisangiz — `addIdCardKey(tag, …)`: `Tag`ni faqat o'z
+  activity'ingizdagi NFC reader mode'dan (`NfcAdapter.enableReaderMode`)
+  oling va kelishi bilan bering. **`Tag`ni Intent'dan (`EXTRA_TAG`,
+  foreground dispatch) olmang:** boshqa ilova ishga tushira oladigan
+  activity'ga karta bo'lmagan soxta `Tag` yuborish mumkin, va PIN kartaga
+  emas, o'sha ilovaga ketadi.
+- **Token.** Android birinchi marta USB ruxsatini so'rashi mumkin.
 - Bir vaqtda bitta qo'shish: ikkinchisi `busy` oladi.
 
 ### Xato kodlari
@@ -572,7 +587,7 @@ Kalit qo'shishda yana:
 | `code` | Qachon |
 |---|---|
 | `wrong_password` | Kalit fayli yoki QR kalit paroli noto'g'ri |
-| `wrong_pin` | ID karta yoki token PIN'i noto'g'ri yoki bo'sh; `triesLeft` — qolgan urinishlar, karta yoki token aytsa |
+| `wrong_pin` | ID karta yoki token PIN'i noto'g'ri; `triesLeft` — qolgan urinishlar, karta yoki token aytsa. PIN bo'sh yoki ID karta / USB token uchun 8 ta raqam bo'lmasa ham — `triesLeft` siz, kartaga hech narsa yuborilmagan |
 | `pin_blocked` | PIN bloklangan: urinish qolmadi |
 | `invalid_key` | Fayl kalit fayli emas, QR kalit QR kodi emas, karta E-IMZO kartasi emas, tokenda kalit yo'q yoki E-IMZO sertifikatni qabul qilmadi |
 | `nfc_unavailable` | Telefonda NFC yo'q yoki o'chiq |
