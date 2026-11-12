@@ -40,7 +40,7 @@ android {
 
 dependencies {
     // E-IMZO Mobile SDK — single line, all transitive deps come for free
-    implementation 'uz.eimzo:eimzo-sdk:2.5.0'
+    implementation 'uz.eimzo:eimzo-sdk:2.6.0'
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

@@ -1,4 +1,4 @@
-## 2.6.0 — chiqarilmagan
+## 2.6.0 — 2026-11-12
 
 **Yangi: Kalitlar API'da kalit qo'shish.** Ilova kalitni SDK oynasini
 ochmasdan, o'z kodidan qo'shadi — o'sha «Kalitlar API» ruxsati bilan:
