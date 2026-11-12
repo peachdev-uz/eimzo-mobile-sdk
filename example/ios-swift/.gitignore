@@ -1,0 +1,9 @@
+# Xcode
+xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+.DS_Store
+
+# SPM
+.swiftpm/
+Package.resolved

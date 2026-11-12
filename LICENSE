@@ -1,0 +1,72 @@
+E-IMZO Mobile SDK License
+
+Copyright (c) 2026 Yangi Texnologiyalar (YT). All rights reserved.
+
+PROPRIETARY SOFTWARE LICENSE
+
+This software (E-IMZO Mobile SDK, including the eimzo-sdk-*.aar binary,
+documentation and accompanying files) is the proprietary property of
+Yangi Texnologiyalar (YT), a company incorporated in Uzbekistan.
+
+PERMITTED USE
+-------------
+
+You may use this SDK in your application only if:
+
+  1. Your application's package name and signing certificate are
+     pre-registered in our Firebase license database; AND
+  2. You have obtained written authorisation from YT via info@yt.uz; AND
+  3. You comply with the integration guidelines documented at
+     https://github.com/peachdev-uz/eimzo-mobile-sdk
+
+PROHIBITED ACTIONS
+------------------
+
+You may NOT, without prior written consent from YT:
+
+  • Reverse-engineer, decompile, disassemble, or otherwise attempt to
+    derive the source code of the SDK or any part thereof.
+  • Modify, adapt, translate, or create derivative works of the SDK.
+  • Redistribute, sublicense, sell, rent, lease, or transfer the SDK
+    to any third party.
+  • Remove, alter, or obscure any proprietary notices, labels, or
+    marks contained within the SDK or its documentation.
+  • Use the SDK to develop, build, or maintain a competing product.
+  • Circumvent, disable, or interfere with any license check, tamper
+    detection, or security mechanism within the SDK.
+
+WARRANTY DISCLAIMER
+-------------------
+
+THE SDK IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+OTHER LIABILITY ARISING FROM USE OF THE SDK.
+
+THIRD-PARTY COMPONENTS
+----------------------
+
+The SDK bundles or depends on the following third-party libraries,
+each of which is governed by its own license:
+
+  • Kotlin Standard Library  — Apache License 2.0
+  • AndroidX (core, lifecycle, room, fragment, appcompat) — Apache 2.0
+  • Material Components for Android — Apache 2.0
+  • OkHttp                   — Apache 2.0
+  • Gson                     — Apache 2.0
+  • BouncyCastle             — Bouncy Castle License (MIT-style)
+  • Lottie                   — Apache 2.0
+  • ZXing-android-embedded   — Apache 2.0
+  • pfx2qr (Yangi Texnologiyalar internal) — Proprietary
+  • FTReader native library  — FTSafe proprietary
+
+CONTACT
+-------
+
+For licensing inquiries, integration support, or to report a license
+violation, please contact:
+
+  Yangi Texnologiyalar
+  Email:    info@yt.uz
+  Website:  https://yt.uz

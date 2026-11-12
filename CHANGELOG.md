@@ -1,0 +1,878 @@
+## 2.6.0 — 2026-11-12
+
+**Yangi: Kalitlar API'da kalit qo'shish.** Ilova kalitni SDK oynasini
+ochmasdan, o'z kodidan qo'shadi — o'sha «Kalitlar API» ruxsati bilan:
+
+- `EImzoSDK.addPfxKey(pfx, password)` — kalit fayli;
+- `EImzoSDK.addQrKey(qrCode, password)` — kalit QR kodi;
+- `EImzoSDK.addIdCardKey(tag, pin)` — ilova o'qigan ID karta, yoki
+  `addIdCardKey(activity, pin)` — kartani SDK 60 soniya o'zi kutadi
+  (`cancelAddKey()` to'xtatadi);
+- `EImzoSDK.addTokenKey(pin)` — USB yoki BAIK token, SDK o'zi aniqlaydi.
+
+Javob: `added` yoki `exists` (kalit `getKeys` dagi shaklda), ID kartada
+`cancelled`, yoki `error`. Yangi kodlar: `wrong_password`, `wrong_pin`
+(`triesLeft` bilan), `pin_blocked`, `invalid_key`, `nfc_unavailable`,
+`card_read_failed`, `token_not_found`, `add_failed`. `savePassword` /
+`savePin` sukut bo'yicha `false`. Parol, PIN va kalit fayli ilova kodidan
+o'tadi — ular uchun shartnoma bo'yicha integrator javob beradi. ID karta va
+USB token PIN'i aynan 8 ta raqam bo'lmasa — `wrong_pin`, kartaga hech narsa
+yuborilmaydi. `Tag`ni faqat o'z reader mode'ingizdan bering, Intent'dan
+emas. iOS va Flutter'da ham xuddi shunday. Batafsil — README «Kalit
+qo'shish».
+
+**Yangi: kalitlar ro'yxatida STIR va korxona nomi.** `getKeys` kaliti (va
+`add…Key` ning `key` i) endi sakkiz maydonli: `name` dan keyin `tin` va
+`organization` — yuridik shaxs kalitida korxonaning STIRi va nomi, jismoniy
+shaxs kalitida ikkalasi `null`. ID karta va USB token kalitida korxona va
+STIR endi sertifikatdan o'qiladi (avval o'qilmas edi, yuridik shaxs tokeni
+SDK ekranlarida jismoniy shaxsniki bo'lib ko'rinardi); 2.6.0 dan oldin
+qo'shilgan bunday kalitda ular kalit qayta qo'shilguncha yo'q.
+
+**Tuzatish:** qo'shish ruxsat tekshiruvida turganda chaqirilgan
+`cancelAddKey()` yo'qolmaydi — karta kutilmaydi.
+
+
+## 2.5.0 — 2026-11-11
+
+**Yangi: SDK ekranlari ilova dizaynida.** `EImzoConfig`ga yangi sozlamalar,
+hammasi standart qiymatli — berilmasa SDK avvalgidek ko'rinadi:
+
+- `appearance = EImzoAppearance(…)` — har rejim uchun 6 ta rang (`primary`,
+  `background`, `surface`, `text`, `textSecondary`, `divider`), `themeMode`
+  (`SYSTEM`, `LIGHT`, `DARK`), shrift (`EImzoFont`) va `cornerRadius`.
+  Qolgan tuslarni SDK shulardan hisoblaydi; matn 4.5:1 dan past o'qilsa,
+  o'sha rejimda SDK o'z ranglarida qoladi.
+- `language` va `showLanguagePicker` — SDK qaysi tilda ochiladi va
+  sozlamalarida til qatori bo'ladimi.
+- `hashDisplay = EImzoHashDisplay.HIDDEN` — ilova o'zi bergan so'rovda hash
+  kartasi chiqmaydi. SDK skaneri o'qigan QR so'rovda hash doim ko'rinadi.
+
+O'zgarmaydi: imzo so'ragan sayt, kalit egasi, «Imzolash» (faqat rangi
+`primary`dan), PIN va parol kiritish, xato va ogohlantirish ranglari, kalit
+kartasi va QR skaner. Batafsil — README «🖌 Dizayn».
+
+**Yangi: `getKeys` har bir kalitning turini aytadi.** Kalitda yangi `type`
+maydoni bor: `pfx` (kalit fayli — fayldan yoki QR koddan qo'shilgan),
+`id_card` (ID karta) yoki `token` (USB yoki BAIK token). Bitta JSHSHIR'da ID
+karta, token va kalit fayli bo'lsa, ilova ularni shu bilan ajratadi. Maydon
+`name` dan keyin keladi; qolgan maydonlar, `sign()` va xato kodlari
+o'zgarmagan. iOS va Flutter'da ham xuddi shunday. Keyingi versiyalarda yangi
+tur qo'shilishi mumkin: tanimagan qiymatni oddiy kalit deb ko'rsating.
+
+**Tuzatish: SDK oynasi jarayon o'ldirilgandan keyin.** Android ilova
+fonda turganida jarayonini yopib, keyin SDK oynasini tiklasa, oyna yiqilardi
+(`EImzoSDK.init(context) ni chaqiring`) yoki tekshiruv ilova bergan muhit va
+litsenziya o'rniga PROD'ga ketardi. Endi SDK ilova bergan config'ni
+(`environment`, `license`, `debugLogging`) eslab qoladi va tiklangan oyna
+avval tekshiruvni o'tkazib, bosh sahifani shu so'rov bilan ochadi.
+
+## 2.4.0 — 2026-11-09
+
+**Yangi: «Kalitlar API» — YT ruxsat bergan integratorlar uchun.**
+
+Ilova foydalanuvchi SDK'ga qo'shgan kalitlar ro'yxatini oladi va imzo
+so'rovini tanlangan kalit bilan SDK'ning o'z oynasida imzolaydi. Ruxsati yo'q
+ilovalar uchun hech narsa o'zgarmaydi: `EImzoActivity` avvalgidek ishlaydi.
+
+### Ruxsat
+
+Ruxsat integratorga beriladi va uning barcha ilovalariga tegishli. U sukut
+bo'yicha o'chiq: YT bilan shartnoma tuzilgach, so'rov bo'yicha yoqiladi —
+info@yt.uz ga yozing. Ruxsat bo'lmasa, ikkala metod ham hech narsa ko'rsatmay
+`api_not_allowed` qaytaradi. Yoqilgan ruxsat ilova qayta ishga tushganda (yoki
+bir soat ichida) kuchga kiradi.
+
+### `EImzoSDK.getKeys` va `EImzoSDK.sign`
+
+- `EImzoSDK.getKeys { json -> }` — kalitlar ro'yxati:
+  `{"status":"ok","keys":[{"id","pinfl","name","validFrom","validTo"}]}`.
+  Joriy `environment` da imzolay oladigan har turdagi kalit, muddati
+  o'tganlari ham, asosiy kalit birinchi; boshqa muhitda qo'shilgani kirmaydi.
+  STIR, tashkilot, kalit turi, kalitning o'zi va saqlangan parol SDK'da
+  qoladi.
+- `EImzoSDK.sign(activity, keyId, deepLink) { json -> }` —
+  `EImzoSignLink.create` bilan yasalgan so'rovni `getKeys` bergan kalit bilan
+  imzolaydi. Avval ruxsat, so'rov, kalit (shu muhitda bormi, muddati) va
+  boshqa `sign` ochiq emasligi tekshiriladi, keyin SDK oynasi ilova ustida
+  ochiladi: sayt, xesh va kalit ko'rinadi (kalitni almashtirib bo'lmaydi),
+  parol yoki PIN faqat shu oynada teriladi, foydalanuvchi IMZOLASH ni
+  bosmaguncha hech narsa imzolanmaydi, «Imzolandi» ekrani 3 soniyada ilovaga
+  o'zi qaytadi. Natija: `{"status":"signed"}`, `{"status":"cancelled"}` yoki
+  `{"status":"error","code":…,"message":…}`. Bir vaqtda bitta `sign`.
+- Tuzatsa bo'ladigan xato (noto'g'ri parol yoki PIN, internet, karta yoki
+  token) oynada ko'rsatiladi; shundan keyin oyna yopilsa — `cancelled`. Kalit
+  muddati tugasa, E-IMZO imzoni rad etsa yoki PIN bloklansa, SDK sababini
+  ko'rsatadi va `error` qaytadi.
+- Xato kodlari: `api_not_allowed`, `not_initialized`, `blocked`, `network`,
+  `invalid_request`, `key_not_found`, `key_expired`, `busy`, `sign_failed`.
+- Javob bir marta, main thread'da keladi — activity oyna ochiqligida qayta
+  yaratilsa ham. JSON va xato kodlari iOS SDK va Flutter plaginidagi bilan bir
+  xil.
+
+Kalitlar avvalgidek `EImzoActivity` da qo'shiladi. Metodlar bloklangan
+ekranni ochmaydi: rad etilgan ilova `blocked` oladi. Imzolangan hujjatni
+(PKCS#7) E-IMZO avvalgidek integratorning backend'iga beradi, ilova uni
+olmaydi. Manifest'ga hech narsa qo'shish shart emas.
+
+### Boshqa
+
+- POM'dagi `scm` manzili endi shu ochiq repo'ni ko'rsatadi.
+- iOS SDK'ning ochiq zip'larida endi dSYM yo'q.
+
+### Migratsiya
+
+1. `implementation 'uz.eimzo:eimzo-sdk:2.4.0'` — 2.3 dan boshqa o'zgartirish
+   kerak emas.
+2. Kalitlar API kerak bo'lsa, info@yt.uz ga yozing. Ruxsat yoqilgach, ilovani
+   qayta ishga tushiring.
+
+2.2 yoki undan oldingisidan o'tsangiz, avval 2.3.0 ning «Migratsiya»
+bo'limini bajaring.
+
+Batafsil: README, «Kalitlar API» bo'limi.
+
+## 2.3.0 — 2026-11-06
+
+**BUZUVCHI: har bir ilova E-IMZO bilan YT gateway orqali ishlaydi.**
+
+SDK E-IMZO'ga endi faqat YT gateway orqali ulanadi. Gateway ilovani Android
+key attestation bilan taniydi: u ilovaning paket nomini va uni imzolagan
+sertifikatni tasdiqlaydi. Litsenziya fayli kerak emas, lekin ilova
+gateway'da ro'yxatdan o'tgan bo'lishi kerak — ro'yxatda yo'q ilovada SDK
+bloklangan ekranni ko'rsatadi. Production gateway ishga tushgan.
+
+### Ro'yxatdan o'tish
+
+info@yt.uz ga paket nomi va imzo sertifikatining SHA-256 ini yuboring
+(iOS'da — bundle id va Team ID) va qaysi muhit uchun ekanini yozing:
+sinovda `dev`, relizda `prod`. Ikki muhitda ro'yxat alohida. Boshqa
+sertifikat bilan imzolangan debug build o'z SHA-256 i bilan alohida
+yoziladi.
+
+Key attestation uchun telefonda apparat darajasidagi attestatsiya va
+qulflangan bootloader bilan o'zgartirilmagan tizim kerak — ya'ni Google
+sertifikatlagan telefon. Root qilingan yoki bootloader'i ochilgan telefonlar
+va Google xizmatlarisiz Huawei telefonlari bloklangan ekranni ko'radi.
+Emulyator faqat `dev` muhitida ishlaydi. iOS'da App Attest ishlatiladi:
+haqiqiy iPhone yoki iPad kerak, Simulator attestatsiya qila olmaydi.
+
+### Litsenziyali ilovalar
+
+2.0–2.2 dagi `EIMZO1.…` litsenziyali ilova gateway sessiyasini attestatsiya
+o'rniga litsenziya bilan ochadi. Litsenziya gateway'da ro'yxatda bo'lishi
+kerak, aks holda bloklangan ekran chiqadi: bunday ilovani yangilashdan oldin
+info@yt.uz ga yozing va YT tasdiqlamaguncha 2.2 da qoling.
+
+SDK bekor qilingan litsenziyalar ro'yxatini (`revoked.txt`) endi yuklab
+olmaydi: bekor qilingan, ro'yxatda yo'q yoki muddati o'tgan litsenziyani
+gateway rad etadi. Litsenziyaning telefondagi tekshiruvi avvalgidek.
+
+### `eimzo://` havolalari tashqaridan qabul qilinmaydi
+
+Bu sxema E-IMZO ilovasiniki. 2.2 gacha SDK `EImzoActivity` ga `eimzo://sign`
+filtrini o'zi qo'shardi va u har bir ilovaning manifest'iga birlashardi.
+Endi `EImzoActivity` tashqaridan ochilmaydi (`exported="false"`).
+
+Imzo so'rovini ilova o'zi yasaydi: backend bergan `siteId`, `documentId` va
+`hash` dan `EImzoSignLink.create(siteId, documentId, hash)` havola
+qaytaradi, u `EImzoActivity` ga `data` sifatida beriladi. O'zingiz qo'shgan
+`eimzo` intent-filter'ini olib tashlang — SDK uni topsa, logcat'ga
+ogohlantirish yozadi.
+
+### `isTestMode` o'rniga `environment`
+
+`EImzoEnvironment.PROD` (sukut bo'yicha) — haqiqiy kalitlar bilan E-IMZO.
+`EImzoEnvironment.DEV` — YT test muhiti (test.e-imzo.uz), u yerda faqat test
+kalitlari imzolaydi. Boshqa hech narsa sozlanmaydi: SDK ikkala muhitning
+manzilini biladi. `isTestMode` ishlayveradi (`true` — `DEV`), lekin
+eskirgan; `productionApiUrl` va `testApiUrl` endi ishlatilmaydi.
+
+### Xato va crash hisobotlari
+
+SDK foydalanuvchi duch kelgan xatolarni va o'z crash'larini YT gateway'iga
+yuboradi, doim.
+
+- Yuboriladi: amal (kalit qo'shish, imzolash, QR skanerlash, kalitni
+  o'chirish), xato kodi, foydalanuvchiga ko'rsatilgan matn, kalit turi, SDK va
+  OS versiyasi, qurilma modeli, crash'da — stack.
+- Hech qachon yuborilmaydi: ism, JSHSHIR va STIR, sertifikat seriya raqami,
+  parol, PIN, QR kod, hujjat va uning xeshi — ular telefondan chiqishidan
+  oldin tozalanadi.
+- Crash keyingi ishga tushishda yuboriladi; ilovaning o'z crash reporter'i
+  uni avvalgidek oladi.
+- iOS (Flutter): App Store Connect → App Privacy'da **Crash Data** va
+  **Other Diagnostic Data** ni e'lon qiling — foydalanuvchiga bog'lanmagan,
+  kuzatish uchun emas, maqsad App Functionality. iOS SDK privacy manifest
+  bilan keladi.
+
+Gateway imzolarni ilova va kalit turi (ERI fayl, QR kod, ID-karta, USB
+token, BAIK token) bo'yicha sanaydi. Nima va kim imzolagani saqlanmaydi.
+
+### Yangi va yaxshilangan
+
+- SDK ekranlari E-IMZO ilovasidagidek. Har bir imzo so'rovi avval tasdiq
+  ekranida ochiladi (sayt, xesh, kalit) va faqat uning IMZOLASH tugmasi
+  imzolaydi; sayt tekshirilmaguncha imzolab bo'lmaydi. TEZ IMZO olib
+  tashlandi.
+- Xatolar yuqoridagi bannerda oddiy jumla bilan chiqadi, exception yoki HTTP
+  matnisiz. Internet yo'qligi doimiy banner bilan aytiladi.
+- Yangi parol oynasi va PIN klaviaturasi. Kalit ERI fayl, QR kod, ID-karta,
+  USB token yoki BAIK token orqali bitta ro'yxatdan qo'shiladi. Noto'g'ri
+  PIN'da qolgan urinishlar soni ko'rsatiladi, bloklangan ID-kartaning o'z
+  oynasi bor.
+- Katta shrift, kontrast va TalkBack yorliqlari.
+- Matnlar o'zbek, rus va ingliz tillarida, tilni SDK'ning o'z sozlamasi
+  belgilaydi. Ilovaning tili va mavzusi endi o'zgarmaydi.
+- **Imzodan keyin** ilova yuborgan so'rovda bitta «Ilovaga qaytish» tugmasi
+  turadi va 3 soniyadan keyin ilovaga o'zi qaytadi (foydalanuvchining maxsus
+  imkoniyatlar sozlamalari ko'proq vaqt so'rasa — kechroq). E-IMZO
+  ilovasidagi «Saytga qaytish» va «Ilovada qolish» yo'q. QR koddan
+  skanerlangan so'rov avvalgidek «Tayyor» bilan tugaydi.
+- Kalit hali yo'q bo'lsa, ilova so'rovi bosh ekranda kutadi va birinchi
+  kalit qo'shilishi bilan ochiladi. Telefondagi 103 soniyalik sessiya
+  taymeri olib tashlandi: so'rov muddati o'tganini server aytadi.
+- Kalit qaysi muhitda qo'shilganini eslab qoladi. Boshqa muhitda u ro'yxatda
+  qoladi, «Boshqa server» deb belgilanadi va imzolamaydi. 2.3 dan oldin
+  qo'shilgan kalitlarda belgi yo'q, ular ikkala muhitda ishlaydi.
+- ID-karta: boshqa karta PIN tekshirilishidan oldin aniqlanadi; karta bir
+  daqiqa ichida tegizilmasa, kutish `card_timeout` xatosi bilan tugaydi.
+- Ekranlar Android 15/16 edge-to-edge'da (targetSdk 35+) status bar,
+  navigatsiya paneli va kamera teshigi ostiga tushmaydi — landscape'da va
+  klaviatura chiqqanda ham.
+- `debugLogging` SDK qadamlarini logcat'ga yozadi — kalit, PIN va imzo hech
+  qachon yozilmaydi. Endi u SDK ekrani ochilganda o'chib qolmaydi.
+- AAR manifest'iga `ACCESS_NETWORK_STATE` qo'shildi (internet yo'qligi
+  banneri uchun). U avtomatik birlashadi.
+
+### Tuzatishlar
+
+- **R8 bilan qisqartirilgan release build'da imzo ishlamasdi.** R8 full
+  mode'da (AGP 8 da sukut bo'yicha) E-IMZO'ning har bir javobi «requires 0
+  type arguments, but got 1» bilan o'qilmasdi. AAR'dagi consumer
+  qoidalariga SDK'ning JSON modellari uchun qoida qo'shildi. Debug build'ga
+  bu ta'sir qilmagan.
+- ID-karta bilan qo'yilgan imzoni E-IMZO `signature.invalid` deb rad etardi:
+  imzo atributlari xeshi teskari qilinmasdi.
+- ID-karta va token egasining ismidagi o'/g' belgisi buzilib chiqardi — endi
+  to'g'ri o'qiladi.
+- `send.success` holati bilan kelgan rad javobi (masalan, «hujjat
+  topilmadi») endi xato sifatida ko'rsatiladi. Avval foydalanuvchi bunday
+  holatda ham «Imzolandi» ko'rardi.
+- Kalitni o'chirib yoki asosiy qilib bo'lmaganda ilova yiqilmaydi: ekranda
+  xabar chiqadi.
+- Gateway ilova yoki telefonni rad etsa, `checkLicenseAndInit` bloklangan
+  ekranni o'zini chaqirgan activity ustida ochadi va uni yopmaydi. Ekrandagi
+  «Yopish» ham endi faqat o'zini yopadi, foydalanuvchi ilovaga qaytadi. Avval
+  ikkalasi ilovaning oynalarini yopardi. SDK'ning o'z `EImzoActivity`si esa
+  avvalgidek yopiladi.
+
+### Migratsiya
+
+1. Ilovani `dev` va `prod` uchun ro'yxatdan o'tkazing. Litsenziyali ilova
+   bo'lsa, avval info@yt.uz ga yozing va YT tasdiqlamaguncha 2.2 da qoling.
+2. `implementation 'uz.eimzo:eimzo-sdk:2.3.0'`
+3. Manifest'dan `eimzo` sxemali intent-filter'ni olib tashlang. Imzo
+   so'rovini `EImzoSignLink.create(siteId, documentId, hash)` bilan yasang
+   va `EImzoActivity` ga `data` sifatida bering.
+4. `isTestMode` o'rniga `environment = EImzoEnvironment.DEV` yoki `PROD`
+   yozing. Sozlamani `EImzoSDK.checkLicenseAndInit(activity, config)` bilan
+   `EImzoActivity` ochilishidan oldin bering.
+5. Flutter ilovasi iOS'da ham chiqsa: `Info.plist` dagi `CFBundleURLTypes`
+   dan `eimzo` ni olib tashlang va App Store Connect → App Privacy'ni
+   yangilang.
+6. Haqiqiy telefonda avval `dev` da, keyin `prod` da imzolab ko'ring.
+
+Batafsil: README, «Ro'yxatdan o'tish» va «2.2 dan o'tish» bo'limlari.
+
+## 2.2.1 — 2026-09-24
+
+**Tuzatish: Android 12 va undan pastida ERI fayl va QR kalit bilan ishlab bo'lmasdi** — «No static field TWO» xatosi chiqardi.
+
+## 2.2.0 — 2026-09-24
+
+**Yangi: BAIK USB token.** Endi BAIK token orqali kalit qo'shish va imzolash mumkin.
+
+## 2.1.2 — 2026-08-27
+
+**Tuzatish: konfiguratsiya SDK'gacha yetmasdi.**
+
+Flutter plagini iOS'da `EimzoConfig` ni butunlay tashlab yuborardi — test
+rejimi, API manzillari va litsenziya platform kanalida to'xtardi. Android'da
+esa litsenziya SDK ekrani ochilishi bilan o'chib ketardi, chunki ekran o'z
+standart konfiguratsiyasi bilan qayta init qilardi. Ikkalasi ham tuzatildi:
+endi berilgan litsenziyani keyingi standart konfiguratsiya o'chirmaydi.
+
+**Yaxshilandi: "Litsenziya topilmadi" endi nima qilish kerakligini aytadi.**
+
+Odatda sabab litsenziya yo'qligi emas, faylning ilova bundle'iga tushmagani
+bo'ladi — iOS'da uni Xcode'da maqsadning *Copy Bundle Resources* bosqichiga
+qo'shish kerak, buni o'tkazib yuborish oson va ilova ikkala holatda bir xil
+ko'rinadi. Endi xabar bundle ichida nima borligini tekshirib aytadi.
+
+Litsenziyani konfiguratsiya orqali ham berish mumkin: `EImzoConfig(license:)`
+(Android va iOS), Flutter'da `EimzoConfig(license: ...)`.
+
+Yo'l-yo'lakay: iOS sozlamalar ekrani `Versiya 2.0.0` ko'rsatib turgan edi.
+
+## 2.1.1 — 2026-08-26
+
+**Tuzatish: kalitsiz imzolashda kalit qo'sha olmaslik.**
+
+Deeplink bilan kirgan, kaliti yo'q foydalanuvchi kalitlar ekranida tiqilib
+qolishi mumkin edi — bo'sh ro'yxat, hech qanday harakat yo'q. Bosh ekrandagi
+kartaning butun foni bosiladigan edi va u yerga o'tkazardi; kalitlar ekranida
+esa ro'yxat bo'sh bo'lsa qo'shish qatori chiqmasdi. Ikkalasi ham tuzatildi.
+
+**Tuzatish: litsenziya tekshiruvi paytida ortga qaytilsa ilova qulardi.**
+
+Tekshiruv asinxron, javob esa activity tirikmi-yo'qmi ko'rmasdan qaytarilardi.
+Endi yopilayotgan activity'ga javob yetkazilmaydi — bu himoya
+`checkLicenseAndInit` ichida, ya'ni o'z activity'ingizni uzatsangiz ham amal
+qiladi.
+
+iOS binariga tegilmadi — u 2.1.0 da qoladi.
+
+## 2.1.0 — 2026-08-26
+
+**BUZUVCHI — raqam minor bo'lsa ham.** Ommaviy API faqat UI kirish
+nuqtasidan iborat bo'ldi.
+
+Odatda bunday o'zgarish major raqamni talab qiladi. Minor tanlandi, chunki
+bu metodlarni to'g'ridan-to'g'ri chaqirayotgan integrator yo'q — ular hech
+qachon hujjatlashtirilmagan ham edi.
+
+Ilgari SDK'ning butun ichki mexanizmi tashqarida ochiq turardi — imzolash,
+kalit qo'shish, kalit ombori, model'lar, callback interfeyslari. README esa
+har doim faqat `EImzoActivity` ni ko'rsatgan, ya'ni ular hech qachon
+hujjatlashtirilmagan edi. Endi kod ham shuni aytadi.
+
+**Android** — tashqarida qolgani:
+
+- `EImzoActivity` — SDK'ning kirish nuqtasi
+- `EImzoConfig`
+- `EImzoSDK.checkLicenseAndInit(activity, config) { allowed -> … }`
+
+`importPfxKey`, `importQrKey`, `importNfcKey`, `importUsbTokenKey`,
+`signWithQrKey`, `signWithNfc`, `signWithUsbToken`, `getAllKeys`, `deleteKey`,
+`getCertInfo` va callback interfeyslari `internal` bo'ldi.
+
+**iOS** — tashqarida qolgani: `EImzoView`, `EImzoConfig`, `SignResult`.
+UI'dan tashqari 141 ta ommaviy e'lon o'rniga uchtasi. `KeyStore`,
+`EImzoSigner`, `EImzoApiClient`, `PkiUtils`, `HexUtils`, `TokenSession`,
+`EImzoApplet` endi ko'rinmaydi.
+
+### Nega
+
+Imzolash oqimi litsenziya tekshiruvi, PIN so'rash, sessiya muddati va backend
+bilan aloqani o'z ichiga oladi. Uni bo'lak-bo'lak tashqariga chiqarish har bir
+integratorga o'sha ketma-ketlikni qayta yig'ish — va noto'g'ri yig'ish —
+imkonini berardi.
+
+### Migratsiya
+
+`EImzoActivity` (Android) yoki `EImzoView` (iOS) ni ochsangiz, hech narsa
+o'zgarmaydi. Agar ichki metodlarni to'g'ridan-to'g'ri chaqirayotgan bo'lsangiz,
+`info@yt.uz` ga yozing — nima kerakligini birga ko'rib chiqamiz.
+
+2.0.x maven'da qoladi.
+
+## 2.0.2 — 2026-08-26
+
+**Bosh ekrandan qayta dizayndan qolgan tugmalar olib tashlandi.**
+
+TEZ IMZO ostida eski interfeysning uchta bo'lagi turardi: "USB TOKENNI ULANG"
+tugmasi, "Kalit qo'shish" ajratgichi va "ERI qo'shish" qatori. Kalit qo'shish
+kartasi va TEZ IMZO ularning o'rnini bosgan edi — ekranda bir xil narsa ikki
+marta ko'rinardi. Endi ekran TEZ IMZO da tugaydi.
+
+**E'tibor bering:** USB tokendan to'g'ridan-to'g'ri, hech nima saqlamasdan
+imzolash tugmasi kalit saqlagan foydalanuvchilarga ham ko'rinardi. U endi yo'q —
+token "USB token orqali" yo'li bilan kalit sifatida qo'shiladi va odatdagidek
+imzolanadi. `signWithUsbToken` API'si o'zgarmagan, ya'ni o'z interfeysingizdan
+chaqirsangiz ishlayveradi.
+
+iOS binariga tegilmadi — u 2.0.0 da qoladi.
+
+## 2.0.1 — 2026-08-26
+
+**Tuzatish: SDK ekranlari release build'da ochilmasdi.**
+
+2.0.0 da to'rtta ekran — sozlamalar, til, mavzu va imzo natijasi — AAR ichida
+umuman yo'q edi. Ularni ochmoqchi bo'lganda ilova `ClassNotFoundException`
+bilan yiqilardi.
+
+Sabab kutubxonaning o'zida edi: u release'da R8 bilan qisqartirilardi. Bu
+ekranlar faqat navigatsiya grafidan, `android:name` orqali chaqiriladi,
+kutubxona uchun AAPT yozadigan keep qoidalari esa navigatsiya grafini qamrab
+olmaydi — u faqat manifest komponentlarini va layout'dagi custom view'larni
+ko'radi. R8 shu sababli ularni "hech kim chaqirmaydi" deb hisoblab, AAR'dan
+olib tashlagan.
+
+Endi kutubxona o'zini qisqartirmaydi. Ilovangizning R8'i uchun qo'shimcha
+ProGuard qoidasi kerak emas — ilova darajasida AAPT nav-graf fragmentlari
+uchun keep qoidasini o'zi yozadi.
+
+**2.0.0 dan foydalanmang.** Agar unga o'tgan bo'lsangiz, 2.0.1 ga yangilang;
+API, litsenziya va sozlamalar o'zgarmagan, faqat versiya raqamini almashtirasiz.
+
+iOS binariga tegilmadi — u 2.0.0 da qoladi.
+
+## 2.0.0 — 2026-08-25
+
+**BUZUVCHI: litsenziya majburiy bo'ldi.**
+
+Firestore ro'yxatidan tekshirish olib tashlandi. SDK endi faqat YT chiqargan
+imzolangan oflayn litsenziya bilan ishlaydi; litsenziyasiz ilova bloklanadi
+va orqada tushadigan zaxira yo'l yo'q.
+
+Chiqarilgan ilovalarga tegmaydi — ular o'z SDK versiyasi bilan ishlashda
+davom etadi. O'zgarish 2.0.0 ga yangilanganda kuchga kiradi.
+
+### Migratsiya
+
+1. `info@yt.uz` ga release APK imzo sertifikatining SHA-256 ini yuboring:
+   `apksigner verify --print-certs app-release.apk | grep -i "SHA-256"`
+2. Kelgan faylni `app/src/main/assets/eimzo-license.txt` ga qo'ying
+   (yoki matnini `EImzoConfig(license = "EIMZO1.…")` orqali bering).
+3. `implementation 'uz.eimzo:eimzo-sdk:2.0.0'`
+
+Debug build'lar uchun alohida litsenziya kerak — debug keystore boshqa
+sertifikat bilan imzolaydi. Debug hash'ini ham yuboring.
+
+### R8 / ProGuard
+
+AAR ichidagi consumer qoidalariga BouncyCastle qo'shildi. Litsenziya Ed25519
+bilan imzolangan va uni tekshiruvchi shu kutubxonada — R8 uni olib tashlasa,
+har bir litsenziya tekshiruvdan o'tmaydi va ilova bloklanadi.
+
+### Boshqa
+
+- Yangi dizayn tizimi: qorong'i rejim, uz/ru/en, Montserrat, tanlanadigan
+  oboylar, qayta ishlangan 11 ta ekran.
+- USB-token endi kalit sifatida saqlanadi (ilgari faqat imzolash uchun edi).
+- `uses-feature android:required="false"` — usiz Google Play ilovani USB
+  host'i yo'q qurilmalardan filtrlardi.
+- Sozlamalardagi versiya endi SDK'niki (ilgari host ilovaning versiyasini
+  ko'rsatardi).
+- "Ruxsat so'rash" dialogi olib tashlandi — o'rniga `info@yt.uz`.
+
+## 1.2.10 — 2026-06-29
+
+🐛 **Kalit qo'shishda krash tuzatildi** (`Parameter specified as non-null
+is null: …RoomSQLiteQuery`).
+
+- Server `pki.cert_info` javobida `serial_number` (yoki boshqa
+  maydonlar) bo'lmasa, Gson `Unsafe` orqali obyekt yaratgani uchun
+  non-null Kotlin maydonlari `null` bo'lib qolar va bu `null` Room'ga
+  yetib borib ilovani yiqitardi. Ko'pincha yaroqsiz yoki ro'yxatdan
+  o'tmagan (masalan, test) kalitda yuz berardi.
+- Endi `EImzoApiClient.certInfo()` javobni bir joyda tekshiradi:
+  `serial_number` bo'lmasa krash o'rniga tushunarli xato ko'rsatiladi,
+  qolgan maydonlar esa coalesce qilinib Room'ga hech qachon `null`
+  tushmaydi.
+
+## 1.2.9 — 2026-06-29
+
+🔧 **Test muhiti URL manzili yangilandi.**
+
+- `EImzoConfig.testApiUrl` endi `https://test.e-imzo.uz/api/rpc`
+  (avval `https://m.test.e-imzo.uz/api/rpc` edi). Production URL
+  (`https://m.e-imzo.uz/api/rpc`) o'zgarmagan.
+
+## 1.2.8 — 2026-06-12
+
+🔌 **USB token orqali imzolash tuzatildi** (FEITIAN 2.0.1.7 oqimi,
+jismoniy JavaCard Token V1.0 bilan tasdiqlangan).
+
+### Tuzatishlar
+
+- **Birinchi urinishda "USB token topilmadi" xatosi.** FEITIAN
+  2.0.1.7 kutubxonasi USB ruxsat so'ralayotganda darhol "Device Not
+  Found" tashlaydi. Endi token jismonan ulangan bo'lsa bu xato
+  yutiladi va ruxsat kutiladi.
+- **Ruxsat berilgach jarayon osilib qolishi.** Kutubxona ruxsatdan
+  keyin `USB_IN` xabarini yubormaydi — endi ruxsat broadcast'i
+  ko'ringach `readerFind()` avtomatik qayta chaqiriladi.
+- **Reader noto'g'ri adreslanardi.** 2.0.1.7 slot chaqiruvlari
+  Android `UsbDevice` nomini (`/dev/bus/usb/...`) kutadi —
+  `readerOpen(null)` o'rniga endi device nomi uzatiladi.
+- **Tokenlarda karta hech aniqlanmasdi.** FT JavaCard tokenlarда
+  interrupt endpoint yo'q, shuning uchun kutubxonaning karta-poller'i
+  `CARD_IN` yubora olmaydi. Endi reader ochilgach slot holati
+  to'g'ridan-to'g'ri so'raladi va karta bor bo'lsa imzolash darhol
+  boshlanadi.
+- Sessiya yakunida slot endi kanal yopilishidan **oldin**
+  o'chiriladi (soxta "no device connected" cleanup xatosi yo'q).
+
+## 1.2.7 — 2026-06-12
+
+📐 **16 KB page size muvofiqligi (Android 15+).**
+
+Android 15+ va 16 KB xotira sahifali qurilmalar native `.so`
+kutubxonalarning ELF LOAD segmentlari 16 KB ga tekislanishini
+talab qiladi. Aks holda qurilma ogohlantiradi va haqiqiy 16 KB
+rejimda `dlopen` ishlamaydi. Google Play SDK 35 ni target qiluvchi
+yuklamalar uchun 2025-yil 1-noyabrdan majburiy.
+
+### Tuzatishlar
+
+- **`libgojni.so` (pfx2qr) 16 KB ga tekislandi.** Go manbasidan
+  `-Wl,-z,max-page-size=16384` bilan qayta build qilindi. ELF LOAD
+  segmentlari endi `2**14` (16 KB).
+- **FEITIAN kutubxonasi `1.0.9.6 → 2.0.1.7` ga yangilandi.** Eski
+  `libFTReaderPCSC_1.0.9.6.so` 4 KB tekislangan edi va manba bizda
+  yo'q. FEITIAN'ning rasmiy SDK 2.0.1.7 versiyasi 16 KB tekislangan
+  `.so` bilan keladi (4 ABI). API o'zgarishi: `readerXfr`,
+  `readerClose`, `readerPowerOn/Off` endi reader nomini (String)
+  qabul qiladi — `UsbTokenManager` / `FtCardChannel` shunga
+  moslashtirildi.
+
+Endi ikkala bundlangan native lib ham **16 KB** ELF.
+
+### ⚠️ Integratorlar uchun muhim
+
+SDK 16 KB tekislangan `.so` beradi (avtomatik), lekin **yakuniy
+APK ZIP alignment** sizning ilovangiz AGP versiyasiga bog'liq:
+
+| AGP | Native lib zipalign |
+|---|---|
+| < 8.5.1 | 4 KB ❌ |
+| **≥ 8.5.1** | 16 KB ✅ avtomatik |
+
+To'liq 16 KB muvofiqlik uchun **AGP 8.5.1+** ishlating.
+
+### Migratsiya
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.7'
+```
+
+> USB token imzolash FEITIAN 2.0.1.7 API'ga o'tdi — jismoniy token
+> bilan test qilish tavsiya etiladi.
+
+---
+
+## 1.2.6 — 2026-06-11
+
+🔒 **Muddati tugagan sertifikat bilan imzolash bloklandi.**
+
+### Yangiliklar
+
+- **Muddati o'tgan kalit bilan imzolab bo'lmaydi.** Sertifikatning
+  `validTo` sanasi o'tgan bo'lsa:
+  - Kalit kartochkasida qizil **"Muddati tugagan"** badge chiqadi.
+  - Home ekranida **IMZOLASH** tugmasi o'chiriladi (alpha 0.4) va
+    kartochka biroz xira ko'rinadi (alpha 0.75) — foydalanuvchiga
+    kalit ishlamasligi darhol bildiriladi.
+  - "Mening kalitlarim" ro'yxatida ham har bir muddati o'tgan
+    kartochka badge bilan belgilanadi va xira ko'rinadi (alpha 0.7),
+    lekin tanlash / o'chirish uchun bosish mumkin.
+  - Defence-in-depth: agar tugma holati biror sabab bilan o'tib
+    ketsa ham, bosilganda "Bu kalit muddati tugagan — imzolab
+    bo'lmaydi" toast chiqadi va imzolash boshlanmaydi.
+- **`PfxKey.isExpired()` public helper.** `validTo` timestamp'ini
+  joriy vaqt bilan solishtiradi (Soliq `yyyy.MM.dd HH:mm:ss` va NFC
+  `yyyy.MM.dd` formatlari qo'llab-quvvatlanadi). Parse qilib bo'lmasa
+  import paytidagi `validNow` ga fallback qiladi.
+
+### Migratsiya
+
+`1.2.5` dan o'tish uchun **kod o'zgartirish kerak emas**:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.6'
+```
+
+---
+
+## 1.2.5 — 2026-06-10
+
+🐛 **PFX import hot-fix №2: R8 minifying consumer apps still crashed even with 1.2.4.**
+
+### Tuzatish
+
+1.2.4 versiyada `libgojni.so` va `pfx2qr.jar` AAR ichiga bundle qilingan
+edi, lekin `R8 minification` yoqilgan integrator app'lar (`uz.soliq.edo.mobile`
+kabi) hali ham PFX qo'shganda crash qilardi:
+
+```
+F/go/Seq : failed to find method Seq.getRef
+F/libc   : Fatal signal 6 (SIGABRT) in Java_go_Seq_init
+```
+
+**Sabab:** `libgojni.so` JNI orqali Java tomondagi `go.Seq.getRef`,
+`go.Seq.incRef` kabi metodlarni nom orqali topadi. Integrator
+app'ning R8 minification'i Kotlin/Java koddan hech kim ularni
+chaqirmasligini ko'rib, ularni rename/strip qilar edi — keyin
+native kod ularni topa olmasdi va class loader `<clinit>` paytida
+abort qilardi.
+
+**Yechim:** SDK ning `consumer-rules.pro` ga `go.**` paketini
+butunlay saqlash qoidalari qo'shildi:
+
+```proguard
+-keep class go.** { *; }
+-keepclassmembers class go.** { *; }
+-dontwarn go.**
+```
+
+Bu qoidalar AAR ichida ship qilinadi va consumer app R8 ga
+avtomatik ravishda qo'shiladi — qo'shimcha sozlash kerak emas.
+
+### Migratsiya
+
+`1.2.4` dan o'tish uchun **kod o'zgartirish kerak emas**:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.5'
+```
+
+---
+
+## 1.2.4 — 2026-06-10
+
+🐛 **Muhim tuzatish: PFX fayldan import ommaviy Maven foydalanuvchilarida ishlamayotgan edi.**
+
+### Tuzatishlar
+
+- 🚨 **PFX import crash.** `1.0.0`–`1.2.3` versiyalarda ommaviy
+  Maven repodan SDK o'rnatgan integratorlar fayl orqali kalit
+  qo'shganda quyidagi crash bilan to'qnashardi:
+  ```
+  java.lang.UnsatisfiedLinkError: dlopen failed:
+    library "libgojni.so" not found
+  ```
+  Sabab: SDK `uz.yt:pfx2qr:1.0` ga bog'liq edi, lekin u kutubxona
+  faqat YT ichki Nexus repositorysida joylashgan — ommaviy Maven
+  consumer'larida hech qachon resolve qila olmasdi. PFX faylni o'qish
+  uchun zarur bo'lgan `libgojni.so` (4.5 MB native lib) va `pfx2qr.jar`
+  (Java wrapper) endi to'g'ridan-to'g'ri AAR ichiga bundled qilingan
+  — barcha 4 ABI (arm64-v8a, armeabi-v7a, x86, x86_64) uchun.
+
+### Hajm
+
+- AAR endi **~11 MB** (avval ~989 KB). O'sish to'liq `libgojni.so` × 4
+  ABI = ~18 MB native code bundlanganidan. R8 hech qanday native
+  kodni olib tashlay olmaydi.
+
+### Migratsiya
+
+`1.2.3` dan o'tish uchun **kod o'zgartirish kerak emas**. Faqat
+versiya raqamini yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.4'
+```
+
+---
+
+## 1.2.3 — 2026-06-09
+
+🎨 **UX yaxshilanishlar va NFC imzolashda muhim bug-fix.**
+
+### Yangiliklar
+
+- **Sessiya taymeri deeplink uchun (103 sekund).** Tashqi
+  `eimzo://sign?qc=...` deeplink kelganida endi sarlavhada toza,
+  qisqa taymer ko'rsatiladi (`Sessiya: 1:43 qoldi`). Foydalanuvchi
+  kerak bo'lsa kalit qo'shishi va keyin imzolashi mumkin —
+  deeplink ushlab turiladi. QR hash matni endi ekranga
+  chiqarilmaydi (ortiqcha, foydalanuvchiga ma'nosiz edi).
+- **Orqaga qaytish tugmasi.** AppBar'ga back tugmasi qo'shildi:
+  Home ekranida deeplink orqali ochilganda integrator ilovasiga
+  qaytish, AddKey va Keys ekranlarida toolbar-back navigatsiyasi.
+- **NFC imzolashda bottom sheet.** Endi NFC kalit bilan
+  imzolashda ham xuddi kalit qo'shishda bo'lganidek 3 ta Lottie
+  animatsiyasi (kartani yaqinlashtiring → o'qilmoqda → bajarildi)
+  ko'rsatiladi. Avval faqat oddiy Toast bor edi.
+
+### Tuzatishlar
+
+- 🐛 **NFC tag tashlanmasdi.** `dispatchNfcTag` resumed
+  fragment'larni qidirgan, lekin OS NFC intent'ini yuborganda
+  Activity qisqa vaqtga pause→resume tsikliga kiradi va o'sha
+  paytda hech bir fragment "resumed" emas — natijada tag jim
+  tashlanardi. Endi `NavController.primaryNavigationFragment`
+  ishlatiladi.
+- 🐛 **Imzolashda crash.** `HomeFragment.disableNfcForeground`
+  Activity hali resumed bo'lmaganida chaqirilib
+  `IllegalStateException: You must disable foreground dispatching
+  while your activity is still resumed` xatosi bilan crash
+  qilardi. Endi try-catch ichida.
+- 🐛 **Sessiya tugaganda app yopilib qolardi.** 103 sekundlik
+  taymer NFC kalit qo'shish vaqtidan tezroq tugar edi va keyin
+  app majburan yopilib ketardi — foydalanuvchi imzolay olmasdi.
+  Endi taymer faqat informatsion: tugaganida "Sessiya tugadi"
+  toast chiqadi, lekin deeplink saqlanib qoladi va foydalanuvchi
+  imzolashga harakat qilishi mumkin.
+
+### Migratsiya
+
+`1.2.2` dan o'tish uchun **kod o'zgartirish kerak emas**. Faqat
+versiya raqamini yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.3'
+```
+
+---
+
+## 1.2.2 — 2026-06-06
+
+🔌 **USB token avtomatik aniqlash + ommaviy API tozalandi.**
+
+### Yangiliklar
+
+- **USB token avtomatik aniqlash.** "USB Token orqali imzolash" tugmasi
+  endi faqat FEITIAN / CCID smart-card reader telefonga ulanganda
+  faollashadi. SDK `USB_DEVICE_ATTACHED` / `DETACHED` broadcastlarini
+  real vaqtda kuzatadi (yangi `UsbTokenDetector` klassi) va tugmani
+  yoqadi / o'chiradi. Ulanmagan paytda matn "USB tokenni ulang" ga
+  o'zgaradi.
+
+### Tuzatishlar
+
+- **USB ulanganda ilova endi avtomatik ochilmaydi.** Avvalgi
+  versiyalarning birida `USB_DEVICE_ATTACHED` intent-filter
+  qo'shilgan edi — natijada foydalanuvchi tokenni boshqa maqsadda
+  ulasa ham OS native UI'ni majburan ochib yuborardi. Intent-filter
+  olib tashlandi; aniqlash hali ham ishlaydi — faqat foydalanuvchi
+  native UI ichida bo'lganida.
+
+### Ichki o'zgarishlar
+
+- **Ommaviy API tozalandi.** Barcha ichki implementatsiya klasslari
+  (`UsbTokenManager`, `NfcManager`, `EImzoApiClient`, Room
+  `KeyDao`/`KeyDatabase`/`KeyEntity`, `LicenseGuard`,
+  `QrCryptoManager`, `PkiUtils`, `HexUtils`, ViewModel'lar,
+  adapterlar va boshqalar) Kotlin `internal` deb belgilandi. Endi
+  AAR consumer'larida IDE autocomplete faqat haqiqatan zarur
+  APIlarni ko'rsatadi: `EImzoSDK`, `EImzoConfig`, callback
+  interfeyslar va model klasslar.
+- **Past darajali `signUsbHash` primitivi yashirildi.** USB token
+  imzolash uchun yagona ommaviy API endi
+  `signWithUsbToken(pin, deepLink, callback)`.
+- Manifest'da `USB_DEVICE_ATTACHED` intent-filter va
+  `res/xml/eimzo_usb_device_filter.xml` olib tashlandi.
+
+### Migratsiya
+
+`1.0.2` dan o'tish uchun **kod o'zgartirish kerak emas** — `EImzoSDK`
+fasadi va public callback'lar saqlangan. Faqat versiya raqamini
+yangilang:
+
+```gradle
+implementation 'uz.eimzo:eimzo-sdk:1.2.2'
+```
+
+---
+
+## 1.0.2 — 2026-06-04
+
+🔐 **Security hardening.**
+
+- **Saved passwords encrypted in Room.** `PasswordCipher.kt` uses
+  AndroidKeyStore-bound AES-256-GCM to wrap the saved-password column.
+  Rooted-device SQLite reads and `adb backup` extracts yield ciphertext
+  only — the symmetric key is bound to the application UID via
+  AndroidKeyStore and cannot be exfiltrated.
+- **Backup exclusion.** New `res/xml/eimzo_backup_rules.xml` +
+  `eimzo_data_extraction_rules.xml` exclude `eimzo_keys.db` and the
+  SDK's encrypted SharedPreferences from `auto-backup`, Google Drive
+  cloud backup, and Android 12+ device-transfer. Consumer-app data is
+  unaffected — only the SDK's storage paths are filtered.
+- Manifest declares `android:fullBackupContent` +
+  `android:dataExtractionRules` with `tools:replace` so the exclusion
+  applies even if the host app sets `android:allowBackup="true"` for
+  its own data.
+
+# Changelog
+
+E-IMZO Mobile SDK uchun barcha muhim o'zgartirishlar shu yerda yoziladi.
+Format [Keep a Changelog](https://keepachangelog.com/) standartiga mos.
+
+## [1.0.1] - 2026-06-03
+
+### Tuzatishlar
+
+- 🐛 **Asosiy bug:** PFX/QR kalit import qilishda `JsonIOException: Abstract classes can't be instantiated! Class name: uz.eimzo.sdk.network.JsonRpcResponse` xatosi tuzatildi. R8 minifikatsiya tarmoq DTO klasslarining no-arg konstruktorlarini olib tashlagan edi va Gson reflektsiya orqali javobni deserializatsiya qila olmadi. ProGuard qoidalariga `uz.eimzo.sdk.network.*` paketidagi barcha DTO klasslari uchun aniq `-keep` qoidalari qo'shildi:
+  - `JsonRpcRequest`, `JsonRpcResponse`
+  - `CertInfoParams`, `CertInfoResult`
+  - `SiteInfoParams`, `SiteInfoResult`
+  - `SendPkcs7Params`, `Pkcs7Result`
+- 🔧 Diagnostik logging kuchaytirildi: kalit import va tarmoq qatlamida exception klassi va to'liq stack trace log xabariga to'g'ridan-to'g'ri yoziladi (R8 olib tashlamasligi uchun).
+
+### Texnik tafsilotlar
+
+- **AAR hajmi:** 994 KB (oldingi 971 KB — qo'shilgan keep qoidalari tufayli)
+- **Public API:** o'zgarishsiz qoldi
+- **Migratsiya:** version raqamini `1.0.0` → `1.0.1` ga o'zgartirish kifoya
+
+---
+
+## [1.0.0] - 2026-06-03
+
+### Birinchi rasmiy reliz
+
+**Asosiy funksiyalar:**
+- ✨ PFX (.pfx) fayldan kalit import qilish
+- ✨ QR kod orqali kalit import (kamera)
+- ✨ NFC ID-karta orqali kalit import
+- ✨ OzDST 1092 elektron imzo (milliy standart)
+- ✨ OzDST 1106 hash funksiyasi (GOST 34.311 oilasi)
+- ✨ Deeplink qo'llab-quvvatlash (`eimzo://sign?qc=...`)
+- ✨ Sertifikat validatsiyasi (Soliq serveri orqali)
+- ✨ USB Token bilan imzolash (FT-1280)
+- ✨ Parolni saqlash (ixtiyoriy)
+
+**UI komponentlari:**
+- ✨ NfcWaitBottomSheet (Lottie animatsiyali NFC kutish)
+- ✨ LoadingOverlay (spinner + logo)
+- ✨ BlockedAppActivity (license blocked ekran)
+- ✨ Sakura background, gradient kartochkalar
+
+**Xavfsizlik:**
+- 🔐 R8 obfuscation + 5x optimization passes
+- 🔐 String encryption (Firebase API key XOR-encoded)
+- 🔐 Anti-tamper (Frida/Xposed/root manager detection)
+- 🔐 License guard (Firebase Firestore orqali)
+- 🔐 In-app access request (pending_integrators)
+
+**Tasdiqlangan komponentlar:**
+- ✅ OzDST 1106 hash — standart test vektorlari bilan
+- ✅ EC scalar multiplication (Q=G\*d) — standart test vektor
+- ✅ EC signature (r, s) — standart test vektor
+- ✅ End-to-end imzolash — server `send.success` qaytaradi
+
+### Texnik tafsilotlar
+
+- **MinSdk:** 24 (Android 7.0)
+- **TargetSdk:** 34 (Android 14)
+- **Kotlin:** 1.9.0
+- **Compose:** native View tizimi (Compose qo'llanmagan)
+- **Hajmi:** 681 KB (himoyalangan AAR)
+- **NDK:** 21.1.6352462
+
+---
+
+## [Unreleased]
+
+### Rejalashtirilgan
+
+- 🚧 iOS qo'llab-quvvatlash (alohida framework)
+- 🚧 Flutter plugin (eimzo_flutter)
+- 🚧 EncryptedSharedPreferences (parol shifrlangan saqlash)
+- 🚧 Native code (NDK) — license check
+- 🚧 Certificate pinning (Soliq serveriga TLS pin)
+
+---
+
+[1.2.7]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.7
+[1.2.6]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.6
+[1.2.5]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.5
+[1.2.4]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.4
+[1.2.3]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.3
+[1.2.2]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.2.2
+[1.0.1]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.1
+[1.0.0]: https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v1.0.0
