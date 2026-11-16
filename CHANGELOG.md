@@ -1,3 +1,21 @@
+## 2.6.1 — 2026-11-16
+
+**Tuzatildi: 2.6.0 dagi ikki crash.**
+
+- **Fayldan kalit qo'shish (Android).** Parol kiritilib «Davom etish»
+  bosilganda tanlangan fayl asosiy oqimda butunligicha o'qilardi. Kalit
+  o'rniga katta fayl tanlansa, xotira tugab integratorning butun ilovasi
+  yopilardi (OutOfMemoryError). Endi fayl fonda va ko'pi bilan 1 MB
+  o'qiladi. Kattaroq fayl kalit emas: «Faylni ochib bo'lmadi» xabari
+  chiqadi va gateway'ga `file_too_large` kodi bilan hisobot boradi.
+- **QR skaner (iOS).** Kamera sessiyasi kamera ko'rinishi uni olmasdan
+  ishga tushardi. Ikkisi ustma-ust tushsa, ilova yopilardi yoki qotib
+  qolardi. Endi sessiya ko'rinish uni olgandan keyin ishga tushadi. iOS'da
+  ham katta fayl xuddi shunday rad etiladi.
+
+API o'zgarmagan: `implementation 'uz.eimzo:eimzo-sdk:2.6.1'`, Flutter'da
+`eimzo_flutter: ^2.6.1`, iOS'da `from: "2.6.1"`.
+
 ## 2.6.0 — 2026-11-12
 
 **Yangi: Kalitlar API'da kalit qo'shish.** Ilova kalitni SDK oynasini
