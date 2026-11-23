@@ -446,7 +446,8 @@ EImzoSDK.getKeys { json ->
   `tin` bor kalit — yuridik shaxs kaliti. 2.6 dan oldin qo'shilgan ID karta
   va USB token kalitlarida STIR saqlanmagan: kalit qayta qo'shilguncha `null`;
 - `type` (2.5 dan) — kalit turi: `pfx` (kalit fayli, fayldan yoki QR koddan
-  qo'shilgan), `id_card` (ID karta) yoki `token` (USB yoki BAIK token);
+  qo'shilgan), `id_card` (ID karta), `token` (USB token) yoki `baik_token`
+  (BAIK token; 2.7 dan, 2.5–2.6 da u ham `token` edi);
 - `validFrom`, `validTo` — sertifikat muddati, `yyyy-MM-dd`; o'qib bo'lmasa `null`.
 
 Bitta odamning bir nechta kaliti bo'lsa (masalan, ID karta, token va kalit
