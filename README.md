@@ -156,8 +156,10 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 - [example/ios-swift/](example/ios-swift/) — xuddi shu SwiftUI'da, SDK
   [eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk) dan SPM orqali.
 
-Ikkalasida [Kalitlar API](#-kalitlar-api) tugmalari ham bor: «Kalitlar ro'yxati»
-va «Tanlangan kalit bilan imzolash» (YT ruxsatisiz — `api_not_allowed`).
+Ikkalasida [Kalitlar API](#-kalitlar-api) tugmalari ham bor: «Kalitlar ro'yxati»,
+«Tanlangan kalit bilan imzolash» va 2.7 dan «Sayt QR kodini skanerlab
+imzolash» hamda QR matni maydoni bilan «QR matnini imzolash» (YT ruxsatisiz —
+`api_not_allowed`).
 
 Ikkalasi ham `eimzo://` havolalarini tashqaridan qabul qilmaydi.
 
@@ -375,6 +377,9 @@ ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 2.6.0 dan ilova kalitni SDK oynasisiz o'zi ham qo'shadi — `addPfxKey`,
 `addQrKey`, `addIdCardKey`, `addTokenKey` ([Kalit qo'shish](#kalit-qoshish-26-dan)).
 
+2.7.0 dan sayt QR kodini ham imzolaydi — `scanAndSign`, `signQrCode`
+([Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan)).
+
 Hammasi javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
 main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
 bilan bir xil.
@@ -489,6 +494,35 @@ ekranga murojaat qiling. Imzolangan hujjatni (PKCS#7) E-IMZO avvalgidek
 backend'ingizga beradi, ilova uni olmaydi: `signed` dan keyin hujjat holatini
 backend'ingizdan biling.
 
+### Sayt QR kodi bilan imzo (2.7 dan)
+
+Sayt imzo so'rovini E-IMZO QR kodi qilib ko'rsatadi (odatda kompyuter
+ekranida). Foydalanuvchi uni telefon bilan o'qiydi va `getKeys()` dagi kalit
+bilan imzolaydi:
+
+```kotlin
+// SDK'ning o'z skaneri o'qiydi
+EImzoSDK.scanAndSign(this, keyId) { json -> handle(JSONObject(json)) }
+
+// yoki ilovangiz skaneri o'qigan matn
+EImzoSDK.signQrCode(this, keyId, scannedText) { json -> handle(JSONObject(json)) }
+```
+
+- Kod o'qilgach hammasi `sign` dagidek: o'sha oyna, o'sha natijalar va xato
+  kodlari. Bir vaqtda bitta imzo: `sign`, `scanAndSign` va `signQrCode`
+  bitta joyni bo'lishadi — boshqasi `busy`.
+- Oynada xesh doim ko'rinadi: sayt boshqa ekranda, foydalanuvchi xeshni
+  saytdagi bilan solishtiradi. `hashDisplay` bunga ta'sir qilmaydi.
+- `scanAndSign` skaneri SDK ekranlaridagi skaner: chiroq, «Kod qayerda?»,
+  kamera ruxsati (rad etilsa, joyida aytiladi). Imzo so'rovi bo'lmagan kod
+  banner bilan aytiladi va skaner o'qishda davom etadi. Skaner yopilsa —
+  `{"status":"cancelled"}`. Kalit va ruxsat skaner ochilishidan oldin
+  tekshiriladi.
+- `signQrCode`: matn imzo so'rovining QR kodi bo'lmasa (masalan, kalit QR
+  kodi) — `invalid_request`.
+- iOS'da usullar xuddi shunday (`EImzoAPI.scanAndSign`, `signQrCode`);
+  `Info.plist` da `NSCameraUsageDescription` bo'lishi shart.
+
 ### Kalit qo'shish (2.6 dan)
 
 Ilova kalitni SDK oynasini ochmasdan, o'z kodidan qo'shadi:
@@ -576,10 +610,10 @@ Muhim:
 | `not_initialized` | `EImzoSDK.checkLicenseAndInit` bu jarayonda hali `true` qaytarmagan |
 | `blocked` | Litsenziya tekshiruvi yoki gateway ilovani yoki telefonni rad etdi; `message` — gateway kodi, masalan `app_blocked` |
 | `network` | Gateway'ga ulanib bo'lmadi yoki u javob bermadi |
-| `invalid_request` | `deepLink` imzo so'rovi emas yoki E-IMZO undagi saytni tanimaydi |
+| `invalid_request` | `deepLink` (yoki `signQrCode` ning `qrCode` i) imzo so'rovi emas yoki E-IMZO undagi saytni tanimaydi |
 | `key_not_found` | Shu muhitda bu `id` li kalit yo'q |
 | `key_expired` | Kalit sertifikatining muddati tugagan |
-| `busy` | Boshqa `sign()` hali ochiq |
+| `busy` | Boshqa imzo — `sign()`, `scanAndSign()` yoki `signQrCode()` — hali ochiq |
 | `sign_failed` | E-IMZO imzoni rad etdi (`message` — uning o'z javobi), ID-karta yoki token PIN'i bloklandi (`message`: `pin_blocked`) yoki oqim boshqa xato bilan tugadi |
 
 Kalit qo'shishda yana:
@@ -715,6 +749,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | Ilova ichida yasalgan imzo so'rovi (`EImzoSignLink`) | ✅ |
 | [Kalitlar API](#-kalitlar-api): kalitlar ro'yxati va tanlangan kalit bilan SDK oynasida imzolash (YT ruxsati bilan) | ✅ |
 | [Kalit qo'shish](#kalit-qoshish-26-dan): ilova kalitni SDK oynasisiz qo'shadi (2.6, o'sha ruxsat bilan) | ✅ 2.6 |
+| [Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan): SDK skaneri yoki ilova skaneri o'qigan kod (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |

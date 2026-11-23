@@ -87,6 +87,38 @@
             android:text="@string/btn_sign_with_key"
             app:icon="@android:drawable/ic_menu_edit" />
 
+        <!-- 2.7: a site's QR code — the SDK's scanner reads it… -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScanAndSign"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:enabled="false"
+            android:text="@string/btn_scan_and_sign"
+            app:icon="@android:drawable/ic_menu_camera" />
+
+        <!-- …or the app's own scanner does, and hands over the text. -->
+        <EditText
+            android:id="@+id/editQrText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:hint="@string/hint_qr_text"
+            android:importantForAutofill="no"
+            android:inputType="textNoSuggestions"
+            android:textAppearance="?attr/textAppearanceBodySmall" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignQrText"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/btn_sign_qr_text"
+            app:icon="@android:drawable/ic_menu_edit" />
+
         <!--
           The Keys API's last JSON, as the SDK gave it. No hyphenation (on by
           default before Android 10): it adds hyphens the JSON does not have.

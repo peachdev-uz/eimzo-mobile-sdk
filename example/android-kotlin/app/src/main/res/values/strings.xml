@@ -8,4 +8,7 @@
     <string name="keys_api_note">Faqat YT ruxsat bergan integratorlar uchun (info@yt.uz). Ruxsatsiz javob: api_not_allowed</string>
     <string name="btn_list_keys">Kalitlar ro\'yxati</string>
     <string name="btn_sign_with_key">Tanlangan kalit bilan imzolash</string>
+    <string name="btn_scan_and_sign">Sayt QR kodini skanerlab imzolash</string>
+    <string name="hint_qr_text">QR kod matni</string>
+    <string name="btn_sign_qr_text">QR matnini imzolash</string>
 </resources>
