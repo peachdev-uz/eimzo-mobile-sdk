@@ -26,7 +26,7 @@ SDK_PACKAGE_URL = 'https://github.com/peachdev-uz/eimzo-ios-sdk'
 # through the YT gateway. Anything below that does not match this example's
 # code.
 SDK_MIN_VERSION = '2.7.0'
-EXAMPLE_VERSION = '2.6.1'
+EXAMPLE_VERSION = '2.7.0'
 
 SOURCES = %w[EimzoExampleApp.swift ContentView.swift].freeze
 

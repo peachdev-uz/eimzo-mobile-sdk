@@ -1,4 +1,14 @@
-## 2.7.0 — chiqmagan
+## 2.7.0 — 2026-11-23
+
+**Yangi: litsenziya muddati o'zi uzayadi.** YT litsenziya muddatini
+uzaytirsa, SDK litsenziyaning yangi faylini gateway'dan o'zi oladi va
+saqlaydi: ilovani yangilash shart emas. Yangi fayl ilovadagi fayl kabi to'liq
+tekshiriladi va faqat o'sha litsenziyaning (o'sha ilova va imzo
+sertifikatlari) muddatini uzaytiradi. Ilovadagi fayl muddati o'tgan bo'lsa,
+SDK avval gateway'dan yangisini so'raydi (internet kerak); yangisi bo'lmasa,
+avvalgidek rad etadi. Ilovaga yangi litsenziya qo'yilsa, ilovadagisi ustun.
+Litsenziyasiz ilovalarga ta'sir qilmaydi. 2.6 va eskilarida muddat
+uzaytirilsa, yangi faylni ilovaga qo'yish kerak.
 
 **Yangi: Kalitlar API'da sayt QR kodi bilan imzo.** Sayt ko'rsatgan E-IMZO
 QR kodini `getKeys()` dagi kalit bilan imzolash — o'sha «Kalitlar API»
@@ -18,6 +28,10 @@ Oynada xesh doim ko'rinadi (sayt boshqa ekranda), `hashDisplay` qanday
 bo'lmasin. iOS (`EImzoAPI.scanAndSign`, `signQrCode`) va Flutter'da
 (`scanAndSign`, `signQrCode`) ham xuddi shunday. Misollarda (Android va
 iOS) ikkala usulning tugmasi bor.
+
+Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
+`eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
+o'zgarmagan.
 
 ## 2.6.1 — 2026-11-16
 
