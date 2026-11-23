@@ -14,10 +14,12 @@ import EimzoSDK
 ///    sign request from them and `EImzoView` opens with it.
 /// 3. **Keys API** («Kalitlar API») — `EImzoAPI.getKeys` lists the keys the
 ///    user has added in `EImzoView`, as JSON, and `EImzoAPI.sign` signs the
-///    same request with the key picked here, in the SDK's own sheet. Only for
-///    an integrator YT has given the permission (info@yt.uz, after a
-///    contract); without it both answer `api_not_allowed`, and the example
-///    shows that.
+///    same request with the key picked here, in the SDK's own sheet. Since
+///    2.7.0 `EImzoAPI.scanAndSign` signs a site's QR code the SDK's scanner
+///    reads, and `EImzoAPI.signQrCode` one whose text the app hands over.
+///    Only for an integrator YT has given the permission (info@yt.uz, after
+///    a contract); without it every call answers `api_not_allowed`, and the
+///    example shows that.
 ///
 /// The app takes no `eimzo://` links from outside: that scheme is the E-IMZO
 /// app's, so there is no `CFBundleURLTypes` entry and no `onOpenURL`.
@@ -66,6 +68,8 @@ struct ContentView: View {
     @State private var keys: [KeyList.Key] = []
     @State private var keyId: String?
     @State private var keysJSON: String?
+    /// A site's QR code text, as an app's own scanner would read it.
+    @State private var qrText = ""
 
     /// The SDK's step-by-step log, in debug builds only — never ship it on.
     #if DEBUG
@@ -164,6 +168,19 @@ struct ContentView: View {
                     }
                     .disabled(keyId == nil || (try? signLink.get()) == nil)
 
+                    // 2.7.0: a site's QR code — the SDK's scanner reads it…
+                    Button("Sayt QR kodini skanerlab imzolash") {
+                        Task { await scanAndSignWithPickedKey() }
+                    }
+                    .disabled(keyId == nil)
+
+                    // …or the app's own scanner does, and hands over the text.
+                    field("QR kod matni", text: $qrText)
+                    Button("QR matnini imzolash") {
+                        Task { await signQrTextWithPickedKey() }
+                    }
+                    .disabled(keyId == nil || qrText.isEmpty)
+
                     if let keysJSON {
                         // One line that scrolls: wrapped, the JSON got
                         // hyphens it does not have.
@@ -177,7 +194,8 @@ struct ContentView: View {
                     Text("3 — Kalitlar API")
                 } footer: {
                     Text("Faqat YT ruxsat bergan integratorlar uchun (info@yt.uz, shartnomadan keyin); "
-                         + "ruxsatsiz javob — api_not_allowed. Imzo 2-bo'limdagi so'rov bilan.")
+                         + "ruxsatsiz javob — api_not_allowed. Imzo 2-bo'limdagi so'rov bilan; "
+                         + "QR kod bilan imzoda hash doim ko'rinadi.")
                 }
             }
             .navigationTitle("E-IMZO iOS")
@@ -221,6 +239,22 @@ struct ContentView: View {
     private func signWithPickedKey() async {
         guard let keyId, case .success(let link) = signLink else { return }
         keysJSON = await EImzoAPI.sign(keyId: keyId, deepLink: link, config: config)
+    }
+
+    /// «Sayt QR kodini skanerlab imzolash» (2.7.0): the SDK's scanner reads
+    /// the QR code a site shows, then its sheet signs it with the picked key.
+    /// Closing the scanner is `cancelled`. Needs `NSCameraUsageDescription`,
+    /// as `EImzoView`'s scanner does.
+    private func scanAndSignWithPickedKey() async {
+        guard let keyId else { return }
+        keysJSON = await EImzoAPI.scanAndSign(keyId: keyId, config: config)
+    }
+
+    /// «QR matnini imzolash» (2.7.0): the text an app's own scanner read off
+    /// a site's QR code, signed with the picked key in the SDK's sheet.
+    private func signQrTextWithPickedKey() async {
+        guard let keyId else { return }
+        keysJSON = await EImzoAPI.signQrCode(keyId: keyId, qrCode: qrText, config: config)
     }
 
     /// A key in the picker: its owner and `validTo` — expired keys are

@@ -1,3 +1,24 @@
+## 2.7.0 — chiqmagan
+
+**Yangi: Kalitlar API'da sayt QR kodi bilan imzo.** Sayt ko'rsatgan E-IMZO
+QR kodini `getKeys()` dagi kalit bilan imzolash — o'sha «Kalitlar API»
+ruxsati bilan:
+
+- `EImzoSDK.scanAndSign(activity, keyId, callback)` — SDK'ning o'z skaneri
+  (chiroq, «Kod qayerda?», kamera ruxsati joyida). Imzo so'rovi bo'lmagan
+  kod banner bilan aytiladi, skaner o'qishda davom etadi; skaner yopilsa —
+  `cancelled`.
+- `EImzoSDK.signQrCode(activity, keyId, qrCode, callback)` — ilovaning o'z
+  skaneri o'qigan matn; imzo so'rovi bo'lmasa — `invalid_request`.
+
+Keyin hammasi `sign()` dagidek: o'sha oyna, o'sha javoblar va xato
+kodlari, «Imzolandi» 3 soniyada ilovaga qaytadi. Yangi xato kodi yo'q.
+`sign`, `scanAndSign` va `signQrCode` bitta joyni bo'lishadi (`busy`).
+Oynada xesh doim ko'rinadi (sayt boshqa ekranda), `hashDisplay` qanday
+bo'lmasin. iOS (`EImzoAPI.scanAndSign`, `signQrCode`) va Flutter'da
+(`scanAndSign`, `signQrCode`) ham xuddi shunday. Misollarda (Android va
+iOS) ikkala usulning tugmasi bor.
+
 ## 2.6.1 — 2026-11-16
 
 **Tuzatildi: 2.6.0 dagi ikki crash.**

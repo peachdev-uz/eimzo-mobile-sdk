@@ -37,9 +37,12 @@ import java.util.Locale
  *
  * 3. **Keys API** («Kalitlar API») — [EImzoSDK.getKeys] lists the keys the
  *    user has added in the SDK, as JSON, and [EImzoSDK.sign] signs the same
- *    request with the key picked here, in the SDK's own window. Only for an
+ *    request with the key picked here, in the SDK's own window. Since 2.7
+ *    [EImzoSDK.scanAndSign] signs a site's QR code the SDK's scanner reads,
+ *    and [EImzoSDK.signQrCode] one whose text the app hands over. Only for an
  *    integrator YT has given the permission (info@yt.uz, after a contract);
- *    without it both answer `api_not_allowed`, and the example shows that.
+ *    without it every call answers `api_not_allowed`, and the example shows
+ *    that.
  *
  * Everything goes through [EImzoSDK.checkLicenseAndInit] first: it hands the
  * SDK this app's [EImzoConfig] and checks the app with the YT gateway. The
@@ -86,11 +89,16 @@ class MainActivity : AppCompatActivity() {
         // 3. Keys API — list the user's keys, sign 2's request with one of them.
         binding.btnListKeys.setOnClickListener { listKeys() }
         binding.btnSignWithKey.setOnClickListener { signWithPickedKey() }
+        // 2.7: a site's QR code, signed with the picked key.
+        binding.btnScanAndSign.setOnClickListener { scanAndSignWithPickedKey() }
+        binding.btnSignQrText.setOnClickListener { signQrTextWithPickedKey() }
         keysApi.keys.observe(this) { keys ->
             binding.spinnerKeys.adapter =
                 ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, keys.map(::label))
             binding.spinnerKeys.isVisible = keys.isNotEmpty()
             binding.btnSignWithKey.isEnabled = keys.isNotEmpty()
+            binding.btnScanAndSign.isEnabled = keys.isNotEmpty()
+            binding.btnSignQrText.isEnabled = keys.isNotEmpty()
         }
         keysApi.json.observe(this) { json -> binding.txtKeysJson.text = json }
     }
@@ -140,6 +148,28 @@ class MainActivity : AppCompatActivity() {
         EImzoSDK.sign(this, key.getString("id"), link) { json -> keysApi.json.value = json }
     }
 
+    /**
+     * «Sayt QR kodini skanerlab imzolash» (2.7): the SDK's scanner reads the
+     * QR code a site shows, then its window signs it with the picked key —
+     * the hash always on screen, to compare with the site's. Closing the
+     * scanner is `cancelled`.
+     */
+    private fun scanAndSignWithPickedKey() {
+        val key = keysApi.keys.value?.getOrNull(binding.spinnerKeys.selectedItemPosition) ?: return
+        EImzoSDK.scanAndSign(this, key.getString("id")) { json -> keysApi.json.value = json }
+    }
+
+    /**
+     * «QR matnini imzolash» (2.7): the text an app's own scanner read off a
+     * site's QR code — typed in here — signed with the picked key in the
+     * SDK's window. Text that is not a sign request is `invalid_request`.
+     */
+    private fun signQrTextWithPickedKey() {
+        val key = keysApi.keys.value?.getOrNull(binding.spinnerKeys.selectedItemPosition) ?: return
+        val qrCode = binding.editQrText.text?.toString().orEmpty()
+        EImzoSDK.signQrCode(this, key.getString("id"), qrCode) { json -> keysApi.json.value = json }
+    }
+
     /** A key in the list: its owner and `validTo` — expired keys are listed too. */
     private fun label(key: JSONObject): String {
         val name = key.getString("name")
@@ -173,6 +203,6 @@ class KeysApiViewModel : ViewModel() {
     /** The keys from the last «Kalitlar ro'yxati», the default key first. */
     val keys = MutableLiveData<List<JSONObject>>(emptyList())
 
-    /** The last JSON from `getKeys` or `sign`, as the SDK gave it. */
+    /** The last JSON from `getKeys` or a sign, as the SDK gave it. */
     val json = MutableLiveData<String>()
 }
