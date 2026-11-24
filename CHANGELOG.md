@@ -41,6 +41,11 @@ emas, `invalid_pfx` boradi (adminkada «PFX fayl yaroqsiz»), iOS'dagidek.
 «Faylni ochib bo'lmadi» xabari va Kalitlar API javobi (`invalid_key`)
 o'zgarmagan.
 
+**Tuzatildi: ID karta siljisa, hisobotda `card_lost` (iOS).** Core NFC 102
+(`readerTransceiveErrorTagResponseError`) endi `unexpected` emas,
+`card_lost` — 100, 101 va 104 kabi. «Karta o'qilmadi» oynasi va Kalitlar API
+javobi (`card_read_failed`) avvalgidek, karta uzoqlashgandagi bilan bir xil.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
