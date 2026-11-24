@@ -46,6 +46,12 @@ o'zgarmagan.
 `card_lost` — 100, 101 va 104 kabi. «Karta o'qilmadi» oynasi va Kalitlar API
 javobi (`card_read_failed`) avvalgidek, karta uzoqlashgandagi bilan bir xil.
 
+**Tuzatildi: ID karta bo'sh javob qaytarsa (Android).** Karta siljib,
+buyruqqa bo'sh javob qaytarsa, endi karta uzoqlashgandek ishlanadi: «Karta
+o'qilmadi» oynasi, Kalitlar API'da `card_read_failed`, hisobotda `card_lost`.
+Avval bu umumiy xato edi (Kalitlar API'da `add_failed`, hisobotda
+`unexpected`).
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
