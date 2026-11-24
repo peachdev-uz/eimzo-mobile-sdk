@@ -172,6 +172,11 @@ bo'lishi kerak. **info@yt.uz** ga yuboring:
 - ilovani imzolagan sertifikatning SHA-256 i: debug build uchun
   `./gradlew signingReport`, release uchun
   `apksigner verify --print-certs app-release.apk`
+- Google Play'da tarqatilsa — Play Console → App signing'dagi app signing key
+  sertifikatining SHA-256 i; u yerda bir nechta sertifikat bo'lsa (Play'ning
+  «quantum-ready» gibrid imzosi: Android 17+ uchun oddiy va post-kvant kalit,
+  eski telefonlar uchun yana bitta oddiy kalit), hammasiniki. Upload key
+  kerak emas
 - muhit: `dev` (debug build) va/yoki `prod`
 
 Misoldagi `uz.eimzo.example` o'rniga o'z `applicationId` ingizni yozing va

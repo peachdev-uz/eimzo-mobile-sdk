@@ -52,6 +52,13 @@ o'qilmadi» oynasi, Kalitlar API'da `card_read_failed`, hisobotda `card_lost`.
 Avval bu umumiy xato edi (Kalitlar API'da `add_failed`, hisobotda
 `unexpected`).
 
+**Hujjat: bir nechta app signing key (Android).** Ro'yxatdan o'tish
+bo'limiga qator qo'shildi: Play Console → App signing'da bir nechta app
+signing key sertifikati bo'lsa, hammasining SHA-256'ini yuboring. Play'ning
+«quantum-ready» gibrid imzosida shunday bo'ladi: Android 17+ uchun oddiy va
+post-kvant kalit, eski telefonlar uchun yana bitta oddiy kalit. Upload key
+kerak emas.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.

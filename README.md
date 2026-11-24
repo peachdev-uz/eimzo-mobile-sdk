@@ -50,6 +50,11 @@ kerak emas** — ilovani gateway'da ro'yxatdan o'tkazish kifoya.
   Ilova Google Play'da Play App Signing bilan tarqatilsa, Play Console'dagi
   **App signing key certificate** ning SHA-256 ini yuboring: foydalanuvchi
   telefoniga ilova shu sertifikat bilan imzolangan holda tushadi.
+  Play Console → App signing'da bir nechta app signing key sertifikati
+  bo'lsa, hammasining SHA-256 ini yuboring. Play'ning «quantum-ready» gibrid
+  imzosida shunday bo'ladi: Android 17+ uchun oddiy va post-kvant kalit, eski
+  telefonlar uchun yana bitta oddiy kalit. Upload key kerak emas: Play'dan
+  o'rnatilgan ilova u bilan imzolanmaydi.
 - **iOS** (Flutter ilovangiz iOS'da ham chiqsa) — bundle id va Team ID:
   ```
   codesign -dvvv MyApp.app 2>&1 | grep TeamIdentifier
