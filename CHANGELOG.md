@@ -35,6 +35,12 @@ javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 ilova `baik_token`ni ham token deb ko'rsatsin; noma'lum qiymatni oddiy kalit
 deb ko'rsatish qoidasi o'zgarmaydi. iOS va Flutter'da ham xuddi shunday.
 
+**Tuzatildi: PFX bo'lmagan fayl hisobotda `invalid_pfx` (Android).** Kalit
+sifatida PFX bo'lmagan fayl tanlansa, gateway hisobotiga endi `unexpected`
+emas, `invalid_pfx` boradi (adminkada «PFX fayl yaroqsiz»), iOS'dagidek.
+«Faylni ochib bo'lmadi» xabari va Kalitlar API javobi (`invalid_key`)
+o'zgarmagan.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
