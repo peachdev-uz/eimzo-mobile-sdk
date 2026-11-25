@@ -80,6 +80,16 @@ qilish» ikki qatorga bo'linib, pastdan kesilardi: endi bir qatorda, katta
 shriftda esa «Davom etish» va «Bekor qilish» ustma-ust turadi. «Kalit
 qo'shilmoqda» oynasidagi aylana o'ng va pastdan kesilardi — endi butun.
 
+**Tuzatildi: QR skaneridan keyin SDK ekranlari qorong'i qolmaydi (iOS).**
+QR orqali kalit qo'shishda skaner yopilgach (✕ bilan yoki kalit o'qilgach)
+telefon yorug' rejimda bo'lsa ham SDK ekranlari — Home, «Kalit qo'shish»
+oynasi, parol oynasi va uning klaviaturasi — SDK yopilib qayta ochilguncha
+qorong'i qolardi. Endi qorong'i rejim faqat skanerning o'z oynasiga
+qo'yiladi: skaner va «Kod qayerda?» avvalgidek qorong'i, yopilgach har bir
+ekran telefon rejimida yoki ilova `themeMode` bilan bergan rejimda.
+`scanAndSign` skanerining status bar yozuvlari ham endi oq. API o'zgarmagan.
+Android'da bu muammo yo'q edi.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
