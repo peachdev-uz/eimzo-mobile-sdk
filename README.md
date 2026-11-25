@@ -777,7 +777,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[2.7.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.7.0)** (2026-11-23)
+So'nggi versiya: **[2.7.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.7.0)** (2026-11-25)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 

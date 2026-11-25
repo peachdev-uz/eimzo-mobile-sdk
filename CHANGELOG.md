@@ -1,4 +1,4 @@
-## 2.7.0 — 2026-11-23
+## 2.7.0 — 2026-11-25
 
 **Yangi: litsenziya muddati o'zi uzayadi.** YT litsenziya muddatini
 uzaytirsa, SDK litsenziyaning yangi faylini gateway'dan o'zi oladi va
