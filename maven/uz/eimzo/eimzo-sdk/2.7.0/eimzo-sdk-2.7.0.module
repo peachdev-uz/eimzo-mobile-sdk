@@ -35,11 +35,11 @@
         {
           "name": "eimzo-sdk-2.7.0.aar",
           "url": "eimzo-sdk-2.7.0.aar",
-          "size": 13510844,
-          "sha512": "c771c934e3f63850934833af863ee5641a48e755bd6f8471d735a48d07eb454ac9d7116a0444ab9d76eb5ab4f007a89e3ee2c38c58649444557103ba621f34c1",
-          "sha256": "1bbc1638baad3c3a33cd583f7768221b8dddf748b65661be94aef82e85dad855",
-          "sha1": "15a014b9da689848c1bf5666675d87033a705b93",
-          "md5": "7e6233cbb52719a16844069becb5cd1b"
+          "size": 13512504,
+          "sha512": "fbe18d280d6687817d5df285669ade9dc7ab2861a4630147b620cc302345dcb5e7910630d445a1ca9027f686d0cd0d3bc5af5e208e8e1ab8f6f0bc56342666e6",
+          "sha256": "3aaa3bfbe04856ef7dff3555ec8fbf47637a1445b46925b72f866221a715b2ea",
+          "sha1": "b0bb2f453ab2e1d373ca078274d29825f92f8ca0",
+          "md5": "21a4bae7eb49441a53213cba2f9a1926"
         }
       ]
     },
@@ -218,11 +218,11 @@
         {
           "name": "eimzo-sdk-2.7.0.aar",
           "url": "eimzo-sdk-2.7.0.aar",
-          "size": 13510844,
-          "sha512": "c771c934e3f63850934833af863ee5641a48e755bd6f8471d735a48d07eb454ac9d7116a0444ab9d76eb5ab4f007a89e3ee2c38c58649444557103ba621f34c1",
-          "sha256": "1bbc1638baad3c3a33cd583f7768221b8dddf748b65661be94aef82e85dad855",
-          "sha1": "15a014b9da689848c1bf5666675d87033a705b93",
-          "md5": "7e6233cbb52719a16844069becb5cd1b"
+          "size": 13512504,
+          "sha512": "fbe18d280d6687817d5df285669ade9dc7ab2861a4630147b620cc302345dcb5e7910630d445a1ca9027f686d0cd0d3bc5af5e208e8e1ab8f6f0bc56342666e6",
+          "sha256": "3aaa3bfbe04856ef7dff3555ec8fbf47637a1445b46925b72f866221a715b2ea",
+          "sha1": "b0bb2f453ab2e1d373ca078274d29825f92f8ca0",
+          "md5": "21a4bae7eb49441a53213cba2f9a1926"
         }
       ]
     }
