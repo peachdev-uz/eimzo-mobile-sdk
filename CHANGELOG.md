@@ -75,6 +75,11 @@ saqlangan kalitning eski paroli o'chiriladi, ishga tushgach esa yo'q
 kalitlarning parollari tozalanadi. SDK yangilanganda kalitlar va parollar
 joyida qoladi. Android'da bu muammo yo'q edi.
 
+**Tuzatildi: kalit qo'shish oynalari (Android).** Parol oynasida «Bekor
+qilish» ikki qatorga bo'linib, pastdan kesilardi: endi bir qatorda, katta
+shriftda esa «Davom etish» va «Bekor qilish» ustma-ust turadi. «Kalit
+qo'shilmoqda» oynasidagi aylana o'ng va pastdan kesilardi — endi butun.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
