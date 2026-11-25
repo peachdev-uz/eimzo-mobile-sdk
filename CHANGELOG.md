@@ -59,6 +59,14 @@ signing key sertifikati bo'lsa, hammasining SHA-256'ini yuboring. Play'ning
 post-kvant kalit, eski telefonlar uchun yana bitta oddiy kalit. Upload key
 kerak emas.
 
+**Tuzatildi: kalit qo'shishda iOS 16 dagi crash (iOS).** iOS 16 da (iPhone 8,
+iOS 16.7) fayl yoki QR kalitining paroli tasdiqlangan zahoti ilova yopilardi,
+kalit esa saqlanib qolardi: SDK bir oynani yopib, o'rniga boshqasini darhol
+ochardi, iOS 16 esa yopilayotgan oyna ustidan ochilgan oynada exception
+tashlaydi. Endi «Kalit qo'shilmoqda» va noto'g'ri parol xabari o'sha oynada
+chiqadi, boshqa oynalar esa avvalgisi yopilgandan keyin ochiladi. API
+o'zgarmagan.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
