@@ -55,6 +55,15 @@ javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 ilova `baik_token`ni ham token deb ko'rsatsin; noma'lum qiymatni oddiy kalit
 deb ko'rsatish qoidasi o'zgarmaydi. iOS va Flutter'da ham xuddi shunday.
 
+**Tuzatildi: E-IMZO javobida `message` bo'lmasa (Android).**
+`pki.send_pkcs7` javobida `message` yo'q yoki `null` bo'lsa, SDK uni
+o'qiyotib yiqilar (NullPointerException) va E-IMZO qabul qilgan imzo ham
+«noma'lum xato» bo'lib ko'rinardi — 2.3.0 dan beri, barcha kalit turlarida,
+SDK oynasida ham, Kalitlar API'da ham. Endi: `send.success` — imzolandi;
+rad etish — E-IMZO so'zlari bilan; holatsiz javob — noma'lum xato.
+`site_info` javobida holat bo'lmasa, sayt «ro'yxatdan o'tmagan» emas,
+«tekshirib bo'lmadi» deb o'qiladi (iOS'dagidek). iOS'da o'zgarish yo'q.
+
 **Tuzatildi: PFX bo'lmagan fayl hisobotda `invalid_pfx` (Android).** Kalit
 sifatida PFX bo'lmagan fayl tanlansa, gateway hisobotiga endi `unexpected`
 emas, `invalid_pfx` boradi (adminkada «PFX fayl yaroqsiz»), iOS'dagidek.
