@@ -67,6 +67,14 @@ tashlaydi. Endi «Kalit qo'shilmoqda» va noto'g'ri parol xabari o'sha oynada
 chiqadi, boshqa oynalar esa avvalgisi yopilgandan keyin ochiladi. API
 o'zgarmagan.
 
+**Tuzatildi: saqlangan parollar ilova o'chirilgach qolmaydi (iOS).** iOS
+ilova o'chirilganda Keychain'ni o'chirmaydi: kalitlar ketardi, saqlangan
+parol va PIN'lar qolardi, qayta o'rnatilgach o'sha kalit qo'shilsa,
+«Parolni saqlash» o'chiq bo'lsa ham eski paroli qaytardi. Endi parolsiz
+saqlangan kalitning eski paroli o'chiriladi, ishga tushgach esa yo'q
+kalitlarning parollari tozalanadi. SDK yangilanganda kalitlar va parollar
+joyida qoladi. Android'da bu muammo yo'q edi.
+
 Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`, Flutter'da
 `eimzo_flutter: ^2.7.0`, iOS'da `from: "2.7.0"`. POM bog'liqliklari
 o'zgarmagan.
