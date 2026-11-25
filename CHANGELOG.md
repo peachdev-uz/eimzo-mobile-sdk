@@ -29,6 +29,26 @@ bo'lmasin. iOS (`EImzoAPI.scanAndSign`, `signQrCode`) va Flutter'da
 (`scanAndSign`, `signQrCode`) ham xuddi shunday. Misollarda (Android va
 iOS) ikkala usulning tugmasi bor.
 
+**Yangi: Kalitlar API'da SDK oynasisiz imzo.** `EImzoSDK.signDirect(activity,
+keyId, deepLink, password = null, callback)` ilova yasagan so'rovni
+`getKeys()` dagi kalit bilan SDK oynasini ochmasdan imzolaydi — o'sha
+«Kalitlar API» ruxsati bilan. Nima imzolanayotganini ilova o'zi ko'rsatadi
+va foydalanuvchi roziligini o'zi oladi; parol yoki PIN ilova kodidan o'tadi
+(kalit qo'shishdagidek, integrator shartnoma bo'yicha javob beradi).
+`password` — kalit fayli paroli yoki ID karta / token PIN'i; berilmasa,
+kalit bilan saqlangan parol ishlatiladi, u ham bo'lmasa —
+`password_required` (yangi kod). Berilgan parol saqlanmaydi; saqlangan
+parol rad etilsa, unutiladi. Barcha kalit turlari: ID karta `activity`
+ustida NFC reader mode bilan 60 soniya kutiladi (`cancelSignDirect()`
+to'xtatadi), token ulangan bo'lishi kerak; PIN qoidalari kalit
+qo'shishdagidek. Xatolar — `sign()` ning kodlari va `wrong_password`,
+`wrong_pin` (`triesLeft`), `pin_blocked`, `nfc_unavailable`,
+`card_read_failed`, `token_not_found`. `sign`, `scanAndSign`, `signQrCode`
+bilan bitta joy (`busy`). Faqat ilova yasagan so'rov uchun: sayt QR kodi
+SDK oynasida imzolanadi. `sign()` o'zgarmagan. iOS
+(`EImzoAPI.signDirect`) va Flutter'da (`signDirect`) ham xuddi shunday.
+Misollarda (Android va iOS) «Oynasiz imzolash» tugmasi bor.
+
 **O'zgardi: BAIK token endi `baik_token`.** `getKeys()` va `add…Key`
 javobidagi kalitning `type`i BAIK token uchun endi `baik_token` (2.5–2.6 da
 `token` edi); USB token avvalgidek `token`. BAIK tokenni `token` deb kutgan

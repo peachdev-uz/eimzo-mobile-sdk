@@ -38,8 +38,9 @@ import java.util.Locale
  * 3. **Keys API** («Kalitlar API») — [EImzoSDK.getKeys] lists the keys the
  *    user has added in the SDK, as JSON, and [EImzoSDK.sign] signs the same
  *    request with the key picked here, in the SDK's own window. Since 2.7
- *    [EImzoSDK.scanAndSign] signs a site's QR code the SDK's scanner reads,
- *    and [EImzoSDK.signQrCode] one whose text the app hands over. Only for an
+ *    [EImzoSDK.signDirect] signs it with no SDK window and the password typed
+ *    here, [EImzoSDK.scanAndSign] signs a site's QR code the SDK's scanner
+ *    reads, and [EImzoSDK.signQrCode] one whose text the app hands over. Only for an
  *    integrator YT has given the permission (info@yt.uz, after a contract);
  *    without it every call answers `api_not_allowed`, and the example shows
  *    that.
@@ -89,6 +90,8 @@ class MainActivity : AppCompatActivity() {
         // 3. Keys API — list the user's keys, sign 2's request with one of them.
         binding.btnListKeys.setOnClickListener { listKeys() }
         binding.btnSignWithKey.setOnClickListener { signWithPickedKey() }
+        // 2.7: the same request with no SDK window, the password typed here.
+        binding.btnSignDirect.setOnClickListener { signDirectWithPickedKey() }
         // 2.7: a site's QR code, signed with the picked key.
         binding.btnScanAndSign.setOnClickListener { scanAndSignWithPickedKey() }
         binding.btnSignQrText.setOnClickListener { signQrTextWithPickedKey() }
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
                 ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, keys.map(::label))
             binding.spinnerKeys.isVisible = keys.isNotEmpty()
             binding.btnSignWithKey.isEnabled = keys.isNotEmpty()
+            binding.btnSignDirect.isEnabled = keys.isNotEmpty()
             binding.btnScanAndSign.isEnabled = keys.isNotEmpty()
             binding.btnSignQrText.isEnabled = keys.isNotEmpty()
         }
@@ -146,6 +150,20 @@ class MainActivity : AppCompatActivity() {
         val key = keysApi.keys.value?.getOrNull(binding.spinnerKeys.selectedItemPosition) ?: return
         val link = EImzoSignLink.create(DEMO_SITE_ID, DEMO_DOCUMENT_ID, DEMO_HASH)
         EImzoSDK.sign(this, key.getString("id"), link) { json -> keysApi.json.value = json }
+    }
+
+    /**
+     * «Oynasiz imzolash» (2.7): button 2's sign request, signed with the
+     * picked key and the password or PIN typed here — left empty, the one
+     * saved with the key — with no SDK window. An ID card is waited for on
+     * this activity for up to 60 s; the SDK shows nothing, so a real app tells
+     * the user to hold the card, and first shows what is signed.
+     */
+    private fun signDirectWithPickedKey() {
+        val key = keysApi.keys.value?.getOrNull(binding.spinnerKeys.selectedItemPosition) ?: return
+        val link = EImzoSignLink.create(DEMO_SITE_ID, DEMO_DOCUMENT_ID, DEMO_HASH)
+        val password = binding.editPassword.text?.toString().orEmpty().ifEmpty { null }
+        EImzoSDK.signDirect(this, key.getString("id"), link, password) { json -> keysApi.json.value = json }
     }
 
     /**

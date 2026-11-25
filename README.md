@@ -391,7 +391,9 @@ ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 `addQrKey`, `addIdCardKey`, `addTokenKey` ([Kalit qo'shish](#kalit-qoshish-26-dan)).
 
 2.7.0 dan sayt QR kodini ham imzolaydi — `scanAndSign`, `signQrCode`
-([Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan)).
+([Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan)) — va SDK
+oynasini ochmasdan ham imzolaydi — `signDirect`
+([Oynasiz imzo](#oynasiz-imzo-27-dan)).
 
 Hammasi javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
 main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
@@ -537,6 +539,53 @@ EImzoSDK.signQrCode(this, keyId, scannedText) { json -> handle(JSONObject(json))
 - iOS'da usullar xuddi shunday (`EImzoAPI.scanAndSign`, `signQrCode`);
   `Info.plist` da `NSCameraUsageDescription` bo'lishi shart.
 
+### Oynasiz imzo (2.7 dan)
+
+`signDirect` ilova yasagan so'rovni `getKeys()` dagi kalit bilan SDK oynasini
+ochmasdan imzolaydi: imzo oynasi, parol maydoni va «Imzolandi» ekrani
+chiqmaydi.
+
+```kotlin
+val link = EImzoSignLink.create(siteId, documentId, hash)
+
+// parolni ilovangiz o'z ekranida so'radi
+EImzoSDK.signDirect(this, keyId, link, password) { json -> handle(JSONObject(json)) }
+
+// yoki kalit bilan saqlangan parol
+EImzoSDK.signDirect(this, keyId, link) { json -> handle(JSONObject(json)) }
+```
+
+- **Javobgarlik.** Foydalanuvchi hujjatni SDK'da ko'rmaydi: nima
+  imzolanayotganini ilovangiz o'z ekranida ko'rsatadi va roziligini o'zi
+  oladi. Parol yoki PIN ham ilovangiz kodidan o'tadi. Ular uchun integrator
+  YT bilan shartnoma bo'yicha javob beradi — kalit qo'shishdagidek. Ruxsat
+  o'sha «Kalitlar API».
+- **Parol.** `password` — kalit fayli paroli, ID karta yoki token uchun PIN.
+  Berilmasa (`null`), kalit bilan saqlangan parol ishlatiladi
+  (`savePassword`/`savePin` bilan yoki SDK oynasida saqlangan); u ham
+  bo'lmasa — `password_required`. Berilgan parol saqlanmaydi. Saqlangan
+  parolni kalit, karta yoki token rad etsa, SDK uni unutadi.
+- **PIN** qoidalari kalit qo'shishdagidek: ID karta va USB token — aynan 8
+  ta raqam, aks holda `wrong_pin`, kartaga hech narsa yuborilmaydi; BAIK —
+  bo'sh bo'lmasin.
+- **ID karta.** SDK kartani `activity` ustida NFC reader mode bilan 60
+  soniyagacha kutadi, hech narsa ko'rsatmaydi — foydalanuvchiga «kartani
+  tuting» deb ilovangiz aytadi. `EImzoSDK.cancelSignDirect()` kutishni
+  to'xtatadi (`cancelled`). iOS'da tizimning NFC oynasi chiqadi.
+- **Token** ulangan bo'lishi kerak, aks holda `token_not_found`.
+- **Faqat ilova yasagan so'rov.** Sayt QR kodini `signQrCode`/`scanAndSign`
+  bilan imzolang — ular sayt va xeshni ko'rsatadi.
+- Tekshiruvlar tartibi: ruxsat, so'rov, kalit, muddati, parol yoki PIN
+  (`password_required`, `wrong_pin`), `busy` (`sign`, `scanAndSign`,
+  `signQrCode` bilan bitta joy), token. Javob: `signed`, `cancelled` (faqat
+  ID karta) yoki xato — `sign` ning kodlari va kalit qo'shishning
+  `wrong_password`, `wrong_pin` (`triesLeft`), `pin_blocked`,
+  `nfc_unavailable`, `card_read_failed`, `token_not_found` kodlari hamda
+  `password_required`.
+- **PIN'ni siklda qayta yubormang** — har noto'g'ri PIN karta yoki tokenning
+  urinishlaridan birini oladi.
+- iOS'da xuddi shunday: `EImzoAPI.signDirect(keyId:deepLink:password:config:)`.
+
 ### Kalit qo'shish (2.6 dan)
 
 Ilova kalitni SDK oynasini ochmasdan, o'z kodidan qo'shadi:
@@ -627,22 +676,23 @@ Muhim:
 | `invalid_request` | `deepLink` (yoki `signQrCode` ning `qrCode` i) imzo so'rovi emas yoki E-IMZO undagi saytni tanimaydi |
 | `key_not_found` | Shu muhitda bu `id` li kalit yo'q |
 | `key_expired` | Kalit sertifikatining muddati tugagan |
-| `busy` | Boshqa imzo — `sign()`, `scanAndSign()` yoki `signQrCode()` — hali ochiq |
+| `busy` | Boshqa imzo — `sign()`, `scanAndSign()`, `signQrCode()` yoki `signDirect()` — hali ochiq |
 | `sign_failed` | E-IMZO imzoni rad etdi (`message` — uning o'z javobi), ID-karta yoki token PIN'i bloklandi (`message`: `pin_blocked`) yoki oqim boshqa xato bilan tugadi |
 
-Kalit qo'shishda yana:
+Kalit qo'shishda va oynasiz imzoda (`signDirect`) yana:
 
 | `code` | Qachon |
 |---|---|
+| `password_required` | Faqat `signDirect`: parol yoki PIN berilmagan va kalit bilan saqlanmagan |
 | `wrong_password` | Kalit fayli yoki QR kalit paroli noto'g'ri |
 | `wrong_pin` | ID karta yoki token PIN'i noto'g'ri; `triesLeft` — qolgan urinishlar, karta yoki token aytsa. PIN bo'sh yoki ID karta / USB token uchun 8 ta raqam bo'lmasa ham — `triesLeft` siz, kartaga hech narsa yuborilmagan |
 | `pin_blocked` | PIN bloklangan: urinish qolmadi |
 | `invalid_key` | Fayl kalit fayli emas, QR kalit QR kodi emas, karta E-IMZO kartasi emas, tokenda kalit yo'q yoki E-IMZO sertifikatni qabul qilmadi |
 | `nfc_unavailable` | Telefonda NFC yo'q yoki o'chiq |
-| `card_read_failed` | Karta o'qib bo'lingunicha uzoqlashdi yoki 60 soniyada tutilmadi |
-| `token_not_found` | Token ulanmagan yoki uzildi, USB ruxsati berilmadi yoki token band |
+| `card_read_failed` | Karta o'qib bo'lingunicha uzoqlashdi yoki 60 soniyada tutilmadi; `signDirect` da — bu kalitning kartasi emas |
+| `token_not_found` | Token ulanmagan yoki uzildi, USB ruxsati berilmadi yoki token band; `signDirect` da — bu kalitning tokeni emas |
 | `busy` | Boshqa kalit qo'shilyapti |
-| `add_failed` | Boshqa sabab (`message` da) — masalan, kalit boshqa muhitda qo'shilgan |
+| `add_failed` | Faqat qo'shish: boshqa sabab (`message` da) — masalan, kalit boshqa muhitda qo'shilgan |
 
 `message` — ishlab chiquvchi uchun matn: inglizcha, E-IMZO rad etganda esa
 uning o'z javobi (rus yoki o'zbek tilida bo'lishi mumkin). Foydalanuvchiga uni
@@ -764,6 +814,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | [Kalitlar API](#-kalitlar-api): kalitlar ro'yxati va tanlangan kalit bilan SDK oynasida imzolash (YT ruxsati bilan) | ✅ |
 | [Kalit qo'shish](#kalit-qoshish-26-dan): ilova kalitni SDK oynasisiz qo'shadi (2.6, o'sha ruxsat bilan) | ✅ 2.6 |
 | [Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan): SDK skaneri yoki ilova skaneri o'qigan kod (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
+| [Oynasiz imzo](#oynasiz-imzo-27-dan): ilova bergan parol yoki saqlangani bilan, SDK oynasisiz (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |
