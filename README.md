@@ -395,6 +395,9 @@ ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 oynasini ochmasdan ham imzolaydi — `signDirect`
 ([Oynasiz imzo](#oynasiz-imzo-27-dan)).
 
+Ilova kalitni SDK oynasisiz o'chira ham oladi — `deleteKey`
+([Kalitni o'chirish](#kalitni-ochirish)).
+
 Hammasi javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
 main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
 bilan bir xil.
@@ -663,6 +666,47 @@ Muhim:
 - **Token.** Android birinchi marta USB ruxsatini so'rashi mumkin.
 - Bir vaqtda bitta qo'shish: ikkinchisi `busy` oladi.
 
+### Kalitni o'chirish
+
+`deleteKey` `getKeys()` dagi kalitni telefondagi SDK'dan SDK oynasini
+ochmasdan o'chiradi — SDK kalitlar ro'yxatidagi o'chirish kabi, lekin
+tasdiqlash oynasisiz:
+
+```kotlin
+// Foydalanuvchi ilovaning o'z ekranida «Ha» degandan keyin.
+EImzoSDK.deleteKey(keyId) { json ->
+    val reply = JSONObject(json)
+    when {
+        reply.getString("status") == "deleted" -> refreshKeys()   // getKeys() qayta
+        reply.getString("code") == "busy" -> showTryLater()        // shu kalit bilan imzo hali ochiq
+        else -> showError(reply.getString("code"))
+    }
+}
+```
+
+- **So'rash — ilovada.** SDK hech narsa ko'rsatmaydi va so'ramaydi:
+  foydalanuvchidan ilovangiz o'zi so'raydi. Buning uchun integrator YT bilan
+  shartnoma bo'yicha javob beradi (kalit qo'shishdagidek).
+- **Nima o'chadi:** SDK'dagi kalit yozuvi va unga saqlangan parol yoki PIN —
+  kalit fayli, ID karta, USB va BAIK token kalitlarida bir xil. ID karta yoki
+  tokenning o'ziga tegilmaydi, ular ham, PIN ham kerak emas; sertifikat bekor
+  qilinmaydi — kalitni keyin qayta qo'shish mumkin.
+- **Asosiy kalit** o'chirilsa, SDK o'z qoidasi bilan boshqasini asosiy qiladi
+  (kalitlar ro'yxatidagi o'chirishdagidek), va `getKeys()` uni birinchi beradi.
+- **Tekshiruvlar tartibi** (har biri hech narsa o'chirmasdan xato qaytaradi):
+  SDK tayyor (`not_initialized`); ruxsat (`api_not_allowed`, `blocked`,
+  `network`); kalit shu yerda (`key_not_found` — `getKeys()` bermaydigan
+  kalit, boshqa muhitda qo'shilgani ham; muddati o'tgani o'chadi); shu kalit
+  bilan imzo ochiq emas (`busy` — `sign`, `signQrCode`, `scanAndSign` yoki
+  `signDirect` javob berguncha kuting). Gateway'ga faqat ruxsat tekshiruvi
+  boradi.
+- Javob — callback'ga bir marta, main thread'da:
+  `{"status":"deleted","key":{…}}` — o'chgan kalit `getKeys()` dagi shaklda;
+  yoki xato; kalitlar ombori o'qilmasa yoki kalit o'chmasa — `delete_failed`.
+
+iOS'da `EImzoAPI.deleteKey(keyId:config:)`, Flutter'da
+`deleteKey(keyId:)` — xuddi shunday.
+
 ### Xato kodlari
 
 `{"status":"error","code":"…","message":"…"}`:
@@ -676,7 +720,7 @@ Muhim:
 | `invalid_request` | `deepLink` (yoki `signQrCode` ning `qrCode` i) imzo so'rovi emas yoki E-IMZO undagi saytni tanimaydi |
 | `key_not_found` | Shu muhitda bu `id` li kalit yo'q |
 | `key_expired` | Kalit sertifikatining muddati tugagan |
-| `busy` | Boshqa imzo — `sign()`, `scanAndSign()`, `signQrCode()` yoki `signDirect()` — hali ochiq |
+| `busy` | Boshqa imzo — `sign()`, `scanAndSign()`, `signQrCode()` yoki `signDirect()` — hali ochiq; `deleteKey()` da — shu kalit bilan imzo hali ochiq |
 | `sign_failed` | E-IMZO imzoni rad etdi (`message` — uning o'z javobi), ID-karta yoki token PIN'i bloklandi (`message`: `pin_blocked`) yoki oqim boshqa xato bilan tugadi |
 
 Kalit qo'shishda va oynasiz imzoda (`signDirect`) yana:
@@ -693,6 +737,12 @@ Kalit qo'shishda va oynasiz imzoda (`signDirect`) yana:
 | `token_not_found` | Token ulanmagan yoki uzildi, USB ruxsati berilmadi yoki token band; `signDirect` da — bu kalitning tokeni emas |
 | `busy` | Boshqa kalit qo'shilyapti |
 | `add_failed` | Faqat qo'shish: boshqa sabab (`message` da) — masalan, kalit boshqa muhitda qo'shilgan |
+
+Kalitni o'chirishda yana:
+
+| `code` | Qachon |
+|---|---|
+| `delete_failed` | SDK'ning kalitlar ombori o'qilmadi yoki kalit o'chmadi (`message` da sababning turi) |
 
 `message` — ishlab chiquvchi uchun matn: inglizcha, E-IMZO rad etganda esa
 uning o'z javobi (rus yoki o'zbek tilida bo'lishi mumkin). Foydalanuvchiga uni
@@ -815,6 +865,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | [Kalit qo'shish](#kalit-qoshish-26-dan): ilova kalitni SDK oynasisiz qo'shadi (2.6, o'sha ruxsat bilan) | ✅ 2.6 |
 | [Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan): SDK skaneri yoki ilova skaneri o'qigan kod (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
 | [Oynasiz imzo](#oynasiz-imzo-27-dan): ilova bergan parol yoki saqlangani bilan, SDK oynasisiz (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
+| [Kalitni o'chirish](#kalitni-ochirish): ilova kalitni SDK oynasisiz o'chiradi (o'sha ruxsat bilan) | keyingi versiya |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |

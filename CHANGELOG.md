@@ -1,3 +1,22 @@
+## Keyingi versiya (chiqmagan)
+
+**Yangi: Kalitlar API'da kalitni o'chirish.** `EImzoSDK.deleteKey(keyId,
+callback)` `getKeys()` dagi kalitni telefondagi SDK'dan SDK oynasini
+ochmasdan o'chiradi, o'sha «Kalitlar API» ruxsati bilan. SDK hech narsa
+so'ramaydi: foydalanuvchidan ilova o'zi so'raydi (kalit qo'shishdagidek,
+integrator shartnoma bo'yicha javob beradi). Kalit yozuvi va unga saqlangan
+parol yoki PIN o'chadi — barcha kalit turlarida bir xil; ID karta yoki
+tokenning o'ziga tegilmaydi, ular kerak ham emas; sertifikat bekor
+qilinmaydi, kalitni qayta qo'shish mumkin. Asosiy kalit o'chirilsa, SDK
+ro'yxatidagi qoida bilan boshqasi asosiy bo'ladi va `getKeys()` uni birinchi
+beradi. Javob `{"status":"deleted","key":{…}}` — o'chgan kalit `getKeys()`
+shaklida. Xatolar: `key_not_found` (ro'yxatda yo'q, boshqa muhitniki ham),
+`busy` (shu kalit bilan imzo ochiq), `delete_failed` (yangi kod: kalitlar
+ombori o'qilmadi yoki o'zgarmadi), hamda `api_not_allowed`,
+`not_initialized`, `blocked`, `network`. Gateway'ga faqat ruxsat tekshiruvi
+boradi. iOS (`EImzoAPI.deleteKey`) va Flutter'da (`deleteKey`) ham xuddi
+shunday.
+
 ## 2.7.0 — 2026-11-25
 
 **Yangi: litsenziya muddati o'zi uzayadi.** YT litsenziya muddatini
