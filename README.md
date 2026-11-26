@@ -3,7 +3,7 @@
 > O'zbekiston Respublikasi rasmiy elektron raqamli imzo (ERI) tizimi uchun mobil SDK.
 > **Android** native + **Flutter** plugin.
 
-[![Version](https://img.shields.io/badge/version-2.7.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
+[![Version](https://img.shields.io/badge/version-2.8.0-blue.svg)](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases)
 [![Android](https://img.shields.io/badge/Android-API%2024+-green.svg)](https://developer.android.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.10+-blue.svg)](https://flutter.dev)
 [![pub.dev](https://img.shields.io/pub/v/eimzo_flutter?label=pub.dev)](https://pub.dev/packages/eimzo_flutter)
@@ -110,8 +110,8 @@ Yangi ilova uchun litsenziya kerak emas — yuqoridagi ro'yxatdan o'tish yetarli
 1. Ilovani `dev` va `prod` uchun ro'yxatdan o'tkazing (yuqoriga qarang).
    Ilovangizda litsenziya bo'lsa, avval info@yt.uz ga yozing va YT
    tasdiqlamaguncha 2.2 da qoling.
-2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.7.0'`
-   (Flutter: `eimzo_flutter: ^2.7.0`).
+2. Versiyani yangilang: `implementation 'uz.eimzo:eimzo-sdk:2.8.0'`
+   (Flutter: `eimzo_flutter: ^2.8.0`).
 3. `AndroidManifest.xml` dan `eimzo` sxemali `intent-filter` ni olib tashlang;
    Flutter ilovasida iOS `Info.plist` dagi `CFBundleURLTypes` dan `eimzo` ni ham.
    2.2 da bu filtr SDK'ning o'z manifest'idan ham qo'shilardi. 2.3 da u yo'q,
@@ -135,7 +135,7 @@ Manifest'ga boshqa hech narsa qo'shilmaydi: 2.3 da kerak bo'lgan
 
 ### Android
 
-📥 **[eimzo-sdk-2.7.0.aar](android/eimzo-sdk-2.7.0.aar)** (13 MB) — to'liq UI bundlangan
+📥 **[eimzo-sdk-2.8.0.aar](android/eimzo-sdk-2.8.0.aar)** (3 MB) — to'liq UI bundlangan
 
 Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/latest)**
 
@@ -143,7 +143,7 @@ Yoki Releases sahifasidan: **[GitHub Releases →](https://github.com/peachdev-u
 
 ```yaml
 dependencies:
-  eimzo_flutter: ^2.7.0
+  eimzo_flutter: ^2.8.0
 ```
 
 🔗 https://pub.dev/packages/eimzo_flutter
@@ -154,14 +154,14 @@ Alohida SDK — **[eimzo-ios-sdk](https://github.com/peachdev-uz/eimzo-ios-sdk)*
 (Swift Package Manager, iOS 16+):
 
 ```swift
-.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.7.0")
+.package(url: "https://github.com/peachdev-uz/eimzo-ios-sdk", from: "2.8.0")
 ```
 
 ---
 
 ## 🎯 Misollar
 
-[`example/`](example/) dagi ikkala misol ham 2.7.0 uchun:
+[`example/`](example/) dagi ikkala misol ham 2.8.0 uchun:
 
 - [example/android-kotlin/](example/android-kotlin/) — pastdagi 4 qadam asosida
   yozilgan ilova: SDK'ni ochish va `EImzoSignLink.create` bilan yasalgan so'rov
@@ -209,7 +209,7 @@ android {
     }
 }
 dependencies {
-    implementation 'uz.eimzo:eimzo-sdk:2.7.0'
+    implementation 'uz.eimzo:eimzo-sdk:2.8.0'
 }
 ```
 
@@ -395,8 +395,8 @@ ilovaning `ThemeData`sidan oladi. iOS'da — `EImzoConfig(appearance:…)`.
 oynasini ochmasdan ham imzolaydi — `signDirect`
 ([Oynasiz imzo](#oynasiz-imzo-27-dan)).
 
-Ilova kalitni SDK oynasisiz o'chira ham oladi — `deleteKey`
-([Kalitni o'chirish](#kalitni-ochirish)).
+2.8.0 dan kalitni SDK oynasisiz o'chiradi ham — `deleteKey`
+([Kalitni o'chirish](#kalitni-ochirish-28-dan)).
 
 Hammasi javobni JSON qatori sifatida `EImzoResultCallback` ga bir marta,
 main thread'da beradi. JSON va xato kodlari iOS SDK va Flutter plaginidagi
@@ -666,7 +666,7 @@ Muhim:
 - **Token.** Android birinchi marta USB ruxsatini so'rashi mumkin.
 - Bir vaqtda bitta qo'shish: ikkinchisi `busy` oladi.
 
-### Kalitni o'chirish
+### Kalitni o'chirish (2.8 dan)
 
 `deleteKey` `getKeys()` dagi kalitni telefondagi SDK'dan SDK oynasini
 ochmasdan o'chiradi — SDK kalitlar ro'yxatidagi o'chirish kabi, lekin
@@ -805,15 +805,15 @@ Maven repo'siz, offline kerak bo'lsa:
 ```
 your-app/
 └── app/libs/
-    └── eimzo-sdk-2.7.0.aar
+    └── eimzo-sdk-2.8.0.aar
 ```
 
-Yuklab olish: **[android/eimzo-sdk-2.7.0.aar](android/eimzo-sdk-2.7.0.aar)** (13 MB)
+Yuklab olish: **[android/eimzo-sdk-2.8.0.aar](android/eimzo-sdk-2.8.0.aar)** (3 MB)
 
 ### 2. `app/build.gradle`
 ```gradle
 dependencies {
-    implementation files('libs/eimzo-sdk-2.7.0.aar')
+    implementation files('libs/eimzo-sdk-2.8.0.aar')
 
     // Tranzit dependency'larni qo'lda yozing:
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
@@ -841,7 +841,7 @@ dependencies {
 }
 ```
 
-Ro'yxat [eimzo-sdk-2.7.0.pom](maven/uz/eimzo/eimzo-sdk/2.7.0/eimzo-sdk-2.7.0.pom)
+Ro'yxat [eimzo-sdk-2.8.0.pom](maven/uz/eimzo/eimzo-sdk/2.8.0/eimzo-sdk-2.8.0.pom)
 dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi.
 
 ### 3. Ishga tushirish — yuqoridagi 4-qadam bilan bir xil
@@ -865,7 +865,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 | [Kalit qo'shish](#kalit-qoshish-26-dan): ilova kalitni SDK oynasisiz qo'shadi (2.6, o'sha ruxsat bilan) | ✅ 2.6 |
 | [Sayt QR kodi bilan imzo](#sayt-qr-kodi-bilan-imzo-27-dan): SDK skaneri yoki ilova skaneri o'qigan kod (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
 | [Oynasiz imzo](#oynasiz-imzo-27-dan): ilova bergan parol yoki saqlangani bilan, SDK oynasisiz (2.7, o'sha ruxsat bilan) | ✅ 2.7 |
-| [Kalitni o'chirish](#kalitni-ochirish): ilova kalitni SDK oynasisiz o'chiradi (o'sha ruxsat bilan) | keyingi versiya |
+| [Kalitni o'chirish](#kalitni-ochirish-28-dan): ilova kalitni SDK oynasisiz o'chiradi (2.8, o'sha ruxsat bilan) | ✅ 2.8 |
 | Sertifikat va sayt tekshiruvi (E-IMZO, YT gateway orqali) | ✅ |
 | Ro'yxatdan o'tish: YT gateway, key attestation | ✅ |
 | Xato va crash hisobotlari | ✅ |
@@ -879,7 +879,7 @@ dagi bilan bir xil; `kotlin-stdlib`ni ilovangizdagi Kotlin plagini o'zi qo'shadi
 
 ## 📋 Versiyalar
 
-So'nggi versiya: **[2.7.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.7.0)** (2026-11-25)
+So'nggi versiya: **[2.8.0](https://github.com/peachdev-uz/eimzo-mobile-sdk/releases/tag/v2.8.0)** (2026-11-26)
 
 **O'zgartirishlar** uchun: [CHANGELOG.md](CHANGELOG.md)
 

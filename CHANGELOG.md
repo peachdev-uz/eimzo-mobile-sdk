@@ -1,4 +1,32 @@
-## Keyingi versiya (chiqmagan)
+## 2.8.0 — 2026-11-26
+
+**O'zgardi: SDK'da Go kutubxonasi yo'q (Android).** PFX kalit fayli endi
+Go'dagi `libgojni.so` bilan emas, SDK'ning o'zidagi Kotlin kodi bilan
+o'qiladi. AAR 12.9 MB dan 3 MB ga tushdi: to'rt ABI uchun `libgojni.so`
+(har biri 4–5 MB) ilovangizga endi qo'shilmaydi. Fayldan chiqadigan kalit Go
+bergani bilan baytma-bayt bir xil, shuning uchun saqlangan kalitlar va
+imzolash o'zgarmaydi; xato kodlari ham o'sha (`wrong_password`,
+`invalid_pfx`). O'z build'ingizda `libgojni.so` uchun `pickFirst` yoki
+`go.**` uchun R8 qoidasi yozgan bo'lsangiz, ularni olib tashlashingiz
+mumkin; qolsa ham zarar qilmaydi.
+
+**Tuzatildi: boshqa Go kutubxonasi bor ilovalarda yiqilish (Android).**
+O'zida boshqa Go kutubxonasi bor ilova (masalan Flutter'ning `fast_rsa`
+paketi) SDK oynasi ochilgach bir necha soniyada izsiz yopilardi (SIGSEGV):
+bitta Android jarayonida ikkita Go runtime ishlay olmaydi. SDK'da Go
+qolmagani uchun bu endi bo'lmaydi.
+
+**Yaxshilandi: ko'proq PFX fayl ochiladi.** Go rad etgan, lekin to'g'ri
+fayllar endi ochiladi: BER kodlangan fayl, shifrlanmagan keyBag, ikkitadan
+ko'p konteyner, parolda BMP'dan tashqari belgi (masalan emoji). XchA egri
+chizig'idagi kalit `invalid_pfx` bilan rad etiladi (Go unda ilovani
+yiqitardi). iOS'da ham xuddi shunday.
+
+**O'zgardi: iOS'da bitta framework.** iOS SDK'da ham Go qolmadi: PFX fayl
+Swift'da o'qiladi, `Pfx2qr.xcframework` yo'q, reliz zip'i bitta —
+`EimzoSDK.xcframework.zip` (4.8 MB; 2.7.0 da 8.5 MB va 7.7 MB edi). SwiftPM
+va Flutter plaginida hech narsa qilish shart emas; xcframework'ni qo'lda
+qo'shganlar `Pfx2qr.xcframework`ni loyihadan olib tashlaydi.
 
 **Yangi: Kalitlar API'da kalitni o'chirish.** `EImzoSDK.deleteKey(keyId,
 callback)` `getKeys()` dagi kalitni telefondagi SDK'dan SDK oynasini
@@ -16,6 +44,10 @@ ombori o'qilmadi yoki o'zgarmadi), hamda `api_not_allowed`,
 `not_initialized`, `blocked`, `network`. Gateway'ga faqat ruxsat tekshiruvi
 boradi. iOS (`EImzoAPI.deleteKey`) va Flutter'da (`deleteKey`) ham xuddi
 shunday.
+
+Ulash: `implementation 'uz.eimzo:eimzo-sdk:2.8.0'`, Flutter'da
+`eimzo_flutter: ^2.8.0`, iOS'da `from: "2.8.0"`. POM bog'liqliklari
+o'zgarmagan.
 
 ## 2.7.0 — 2026-11-25
 
